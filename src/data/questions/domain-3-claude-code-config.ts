@@ -899,4 +899,181 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q3-x-0001',
+    domain: 3,
+    scenarioId: null,
+    taskStatements: ['3.3'],
+    selectCount: 1,
+    stem: "You want a consistent naming convention enforced for every *.module.css file in your project, regardless of which component directory it lives in, without bloating every session with this guidance when unrelated files are being edited. What's the best approach?",
+    options: [
+      {
+        id: 'A',
+        text: "Write the convention into the root CLAUDE.md so it's always loaded for every session.",
+        rationale: 'Wrong — always-loaded content in root CLAUDE.md adds irrelevant context and token usage on every session, even for unrelated files.',
+      },
+      {
+        id: 'B',
+        text: 'Create a CLAUDE.md file inside every single component directory that contains a *.module.css file.',
+        rationale: 'Wrong — duplicating the same convention across every component directory is a maintenance burden path-specific rules exist to avoid.',
+      },
+      {
+        id: 'C',
+        text: 'Create a .claude/rules/ file with YAML frontmatter paths: ["**/*.module.css"], so the convention loads only when a matching file is being edited.',
+        rationale:
+          'Correct — a glob-pattern rule in .claude/rules/ applies the convention only when a matching file type is being worked on, regardless of directory.',
+      },
+      {
+        id: 'D',
+        text: 'Rename all CSS module files to a single shared directory outside their components.',
+        rationale:
+          'Wrong — restructuring the codebase just to work around a configuration limitation is a disruptive, unnecessary change when a simple configuration fix exists.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Glob-pattern rules in .claude/rules/ apply conventions to a file type regardless of directory, loading only when relevant rather than bloating every session.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-x-0002',
+    domain: 3,
+    scenarioId: null,
+    taskStatements: ['3.5'],
+    selectCount: 1,
+    stem: 'You want Claude Code to implement a moderately complex data-validation function correctly on the first real attempt, rather than iterating back and forth many times after subtle bugs are found in production. What\'s an effective approach?',
+    options: [
+      {
+        id: 'A',
+        text: 'Write a test suite covering expected behavior and edge cases first, then have Claude implement against it, sharing any test failures for it to address.',
+        rationale:
+          'Correct — test-driven iteration, writing test suites first, then iterating by sharing test failures, is the documented technique for guiding progressive improvement toward a correct implementation.',
+      },
+      {
+        id: 'B',
+        text: 'Ask Claude to implement the function with no tests at all, and only write tests afterward if problems come up later.',
+        rationale: 'Wrong — deferring tests until after problems arise in production is the reactive approach this technique is meant to improve upon.',
+      },
+      {
+        id: 'C',
+        text: 'Ask Claude to implement five different versions of the function and pick the one that looks best by inspection.',
+        rationale:
+          "Wrong — generating multiple versions to pick by visual inspection doesn't provide the systematic verification a test suite gives, and is far less efficient.",
+      },
+      {
+        id: 'D',
+        text: 'Provide only a one-sentence description of the function\'s purpose with no further detail or examples.',
+        rationale:
+          'Wrong — a one-sentence description with no tests or examples is unlikely to yield a correct first attempt for a "moderately complex" function.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Test-driven iteration — writing test suites first, then iterating by sharing test failures — is the documented technique for guiding progressive improvement toward a correct implementation.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-x-0003',
+    domain: 3,
+    scenarioId: null,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: "You need to decide between two ways of integrating a new payment provider — one requiring new infrastructure and webhook endpoints, the other reusing your existing infrastructure with more limited features — and the tradeoffs aren't yet clear. Should you use plan mode or direct execution to begin this work?",
+    options: [
+      {
+        id: 'A',
+        text: 'Direct execution, since integrating a new payment provider is a common, well-understood task type.',
+        rationale:
+          'Wrong — being a "common task type" in general doesn\'t make this specific instance well-scoped; the tradeoffs between the two approaches are explicitly unclear.',
+      },
+      {
+        id: 'B',
+        text: 'Plan mode, since choosing between integration approaches with different infrastructure requirements is exactly the kind of architectural decision plan mode is designed to help explore before committing to changes.',
+        rationale:
+          'Correct — plan mode is designed for exactly this kind of task: multiple valid approaches with different infrastructure requirements and unclear tradeoffs.',
+      },
+      {
+        id: 'C',
+        text: 'Direct execution, but only after writing a one-page internal memo first, without any codebase exploration.',
+        rationale:
+          'Wrong — writing a memo without any actual codebase exploration skips the investigative value plan mode provides for understanding how each approach would integrate.',
+      },
+      {
+        id: 'D',
+        text: 'Neither — this decision should be made entirely outside of Claude Code, with implementation starting only after every detail is finalized elsewhere.',
+        rationale: 'Wrong — this discards the value Claude Code can add to exploring the tradeoffs directly, pushing all the investigative work elsewhere unnecessarily.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Plan mode is designed for architectural decisions between multiple valid approaches with different infrastructure implications and unclear tradeoffs.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-x-0004',
+    domain: 3,
+    scenarioId: null,
+    taskStatements: ['3.1'],
+    selectCount: 1,
+    stem: "Your root CLAUDE.md uses @import to include an enormous, all-encompassing 'company-wide-standards.md' file into every single package's CLAUDE.md, even though most packages only need a small fraction of that file's content. What problem does this cause?",
+    options: [
+      {
+        id: 'A',
+        text: '@import syntax only works for files smaller than 50 lines, so this configuration will fail outright.',
+        rationale: 'Wrong — there is no such file-size limitation on @import; the problem here is one of granularity/relevance, not a technical failure.',
+      },
+      {
+        id: 'B',
+        text: 'This is a purely cosmetic issue with no real consequence, since @import is free regardless of file size.',
+        rationale: 'Wrong — importing irrelevant content still consumes context and token budget in every session, which is a real, not merely cosmetic, cost.',
+      },
+      {
+        id: 'C',
+        text: 'This will cause a compilation error, since CLAUDE.md files are compiled like source code.',
+        rationale: 'Wrong — CLAUDE.md files are not compiled like source code; there is no such compilation step or error to be triggered.',
+      },
+      {
+        id: 'D',
+        text: 'Every package ends up loading a large amount of irrelevant content into context, undermining the modularity benefit @import is meant to provide, when smaller, more targeted standards files per package would be more appropriate.',
+        rationale:
+          '@import syntax exists to selectively include relevant standards; importing an overly broad file into every package undermines that modularity.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      "Importing an overly broad, all-encompassing file into every package undermines the modularity @import is meant to enable — targeted, package-specific files are more appropriate.",
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

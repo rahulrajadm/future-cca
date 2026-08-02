@@ -810,4 +810,178 @@ export const domain4Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q4-x-0001',
+    domain: 4,
+    scenarioId: null,
+    taskStatements: ['4.1'],
+    selectCount: 1,
+    stem: "Your code review tool labels findings as \"low,\" \"medium,\" or \"high\" severity, but different reviewers using the tool disagree about which label an identical type of issue should get, since the prompt only says \"use your judgment on severity.\" What would produce more consistent severity classification?",
+    options: [
+      {
+        id: 'A',
+        text: 'Remove severity labels entirely, since consistent classification is impossible to achieve.',
+        rationale: 'Wrong — removing labels discards a genuinely useful signal instead of fixing the actual source of inconsistency, which is vague criteria.',
+      },
+      {
+        id: 'B',
+        text: "Let each individual developer's local prompt override the severity definitions however they personally prefer.",
+        rationale: 'Wrong — letting each developer define severity differently would produce even less consistency across the team, not more.',
+      },
+      {
+        id: 'C',
+        text: "Define explicit severity criteria with concrete code examples illustrating what qualifies as low, medium, and high for each category, replacing the vague \"use your judgment\" instruction.",
+        rationale:
+          'Correct — defining explicit severity criteria with concrete code examples for each level is the documented technique for achieving consistent classification.',
+      },
+      {
+        id: 'D',
+        text: "Replace the three severity levels with a single, undifferentiated 'issue' label for everything.",
+        rationale: 'Wrong — collapsing all severities into one label removes the useful distinction the team wants, rather than making it more consistent.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Explicit severity criteria with concrete code examples for each level achieve consistent classification, unlike vague "use your judgment" instructions.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-x-0002',
+    domain: 4,
+    scenarioId: null,
+    taskStatements: ['4.2'],
+    selectCount: 1,
+    stem: "Your extraction prompt for product listings needs to capture a \"weight\" field, but source listings describe weight inconsistently — \"approx 2 lbs,\" \"~900g,\" \"weighs about two pounds\" — and the model sometimes fails to extract a value at all when the phrasing is informal. What technique would most help it handle this variety reliably?",
+    options: [
+      {
+        id: 'A',
+        text: 'Require listings to be manually rewritten into a single standard phrasing before extraction, defeating much of the purpose of automation.',
+        rationale:
+          'Wrong — manually standardizing every source listing before extraction defeats much of the purpose of using extraction to handle inconsistently formatted input.',
+      },
+      {
+        id: 'B',
+        text: 'Provide few-shot examples showing correct extraction from several differently-phrased, informal weight descriptions, demonstrating the expected normalized output for each.',
+        rationale:
+          'Correct — few-shot examples demonstrating correct extraction from varied, informal phrasing are effective for reducing hallucination and missed extractions on format diversity.',
+      },
+      {
+        id: 'C',
+        text: 'Remove the weight field from the schema entirely, since informal phrasing makes it too unreliable to extract.',
+        rationale: 'Wrong — removing the field discards a genuinely extractable and valuable piece of data instead of improving handling of its varied phrasing.',
+      },
+      {
+        id: 'D',
+        text: "Only extract weight when it's expressed using a single specific unit, ignoring all other unit formats.",
+        rationale: 'Wrong — restricting to a single unit format ignores the majority of realistic listings described in other units, discarding usable data.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Few-shot examples demonstrating correct extraction from varied, informal phrasing reduce hallucination and missed extractions caused by format diversity.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-x-0003',
+    domain: 4,
+    scenarioId: null,
+    taskStatements: ['4.1'],
+    selectCount: 1,
+    stem: "You want your automated code review to stop flagging minor, team-accepted local style variations (e.g., trailing commas, quote style) while continuing to reliably flag real bugs and security issues. Simply telling it to \"be less picky\" hasn't worked. What's a more effective instruction design?",
+    options: [
+      {
+        id: 'A',
+        text: "Explicitly list the categories the review should report (e.g., bugs, security vulnerabilities) and separately list the categories it should skip (e.g., minor style, accepted local conventions), rather than relying on a vague \"be less picky\" framing.",
+        rationale:
+          'Correct — explicit criteria defining which categories to report versus skip is more effective than vague, subjectivity-based instructions like "be less picky."',
+      },
+      {
+        id: 'B',
+        text: "Tell the review to be 'less picky' but repeat the instruction three times in the prompt for extra emphasis.",
+        rationale: "Wrong — repeating the same vague instruction doesn't add the specific categorical information actually needed to change behavior.",
+      },
+      {
+        id: 'C',
+        text: 'Disable the review tool entirely, since it cannot be tuned to match team preferences.',
+        rationale: 'Wrong — disabling the tool entirely discards its useful bug/security detection over an addressable precision problem in one category.',
+      },
+      {
+        id: 'D',
+        text: 'Have the review flag every possible issue, and rely on developers to mentally filter out the style-related ones themselves.',
+        rationale: 'Wrong — pushing the filtering burden onto every developer manually defeats the purpose of having automated, pre-filtered review output.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Explicit criteria defining which issue categories to report versus skip is more effective than vague, confidence-based instructions like "be less picky."',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-x-0004',
+    domain: 4,
+    scenarioId: null,
+    taskStatements: ['4.6'],
+    selectCount: 1,
+    stem: "You want to verify that a Claude-generated solution to a coding problem is actually correct, and you're deciding between (a) asking the same conversation that generated the solution to \"check its own work,\" or (b) giving the problem statement and the generated solution to a separate, independent Claude conversation with no knowledge of how the solution was produced, and asking it to find flaws. Which is generally more effective at catching subtle mistakes, and why?",
+    options: [
+      {
+        id: 'A',
+        text: 'Option (a), because the original conversation has full context about its own reasoning and intentions.',
+        rationale:
+          'Wrong — "full context about its own reasoning" is precisely what makes the original conversation less likely to challenge its own prior decisions.',
+      },
+      {
+        id: 'B',
+        text: 'Both are exactly equally effective, since they use the same model with the same capabilities.',
+        rationale: 'Wrong — despite using the same underlying model, retained reasoning context measurably changes review behavior.',
+      },
+      {
+        id: 'C',
+        text: 'Neither is effective; only human reviewers can catch subtle mistakes in generated code.',
+        rationale: 'Wrong — this overstates the limitation; independent Claude review instances are documented as effective at catching subtle issues.',
+      },
+      {
+        id: 'D',
+        text: 'Option (b), because an independent instance without the original reasoning context is less biased toward confirming the original approach and is more likely to catch subtle issues.',
+        rationale:
+          'Correct — independent review instances without prior reasoning context are more effective at catching subtle issues than the same session reviewing its own output.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Independent review instances without prior reasoning context are more effective at catching subtle issues than the same session self-reviewing its own generated output.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

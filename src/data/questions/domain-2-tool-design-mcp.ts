@@ -727,4 +727,227 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q2-x-0001',
+    domain: 2,
+    scenarioId: null,
+    taskStatements: ['2.1'],
+    selectCount: 1,
+    stem: "A tool's description states its purpose and input format but doesn't mention that it returns an empty array (not an error) when no matches are found. Developers report the agent sometimes treats empty results as if something went wrong. What's the most direct fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'Update the tool description to explicitly state that an empty array is a valid, successful result meaning no matches were found, distinguishing it from an error.',
+        rationale:
+          'Correct — including edge case behavior in the tool description directly addresses the ambiguity causing the agent to misinterpret a valid empty result as an error.',
+      },
+      {
+        id: 'B',
+        text: 'Change the tool to always return at least one placeholder result, even when nothing matches.',
+        rationale:
+          "Wrong — fabricating a placeholder result when there's genuinely no match would misrepresent the data, creating a worse and more confusing problem.",
+      },
+      {
+        id: 'C',
+        text: "Remove the tool from the agent's available tools entirely.",
+        rationale: 'Wrong — removing the tool eliminates its function entirely instead of fixing a documentation gap.',
+      },
+      {
+        id: 'D',
+        text: "Add a separate tool whose only purpose is to check whether the first tool's result was empty.",
+        rationale:
+          'Wrong — adding an entirely separate tool for this purpose is an over-engineered workaround compared to simply clarifying the description of the existing tool.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Tool descriptions should document edge case behavior, such as what an empty result means, to prevent the agent from misinterpreting valid results as errors.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-x-0002',
+    domain: 2,
+    scenarioId: null,
+    taskStatements: ['2.2'],
+    selectCount: 1,
+    stem: "Your agent attempts a tool call that fails because the authenticated account lacks permission for that specific operation — distinct from a validation error (bad input) or a transient error (timeout). If this is reported to the agent as just \"Error: request failed,\" what problem does this create?",
+    options: [
+      {
+        id: 'A',
+        text: 'No real problem, since the agent will attempt the exact same call again immediately, which typically succeeds on retry.',
+        rationale:
+          'Wrong — a permission error is generally not resolved by simply retrying the identical call; retrying a permission failure wastes effort on something retries cannot fix.',
+      },
+      {
+        id: 'B',
+        text: 'The agent cannot recognize this as a permission issue, so it may keep retrying a call that will never succeed regardless of retries, or fail to explain the real cause to the user.',
+        rationale:
+          'Correct — without distinguishing permission errors from other categories, the agent lacks the information needed to avoid futile retries or correctly explain the real cause.',
+      },
+      {
+        id: 'C',
+        text: "The tool call will be automatically escalated to a human without the agent's involvement.",
+        rationale: 'Wrong — nothing about a generic error message triggers an automatic escalation mechanism by itself.',
+      },
+      {
+        id: 'D',
+        text: 'The application will crash immediately upon receiving any generic error message.',
+        rationale:
+          "Wrong — a generic but well-formed error message wouldn't itself cause an application crash; the problem is about the agent's decision-making.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Without distinguishing error categories like permission errors, the agent cannot avoid futile retries or correctly explain the real cause of a failure to the user.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-x-0003',
+    domain: 2,
+    scenarioId: null,
+    taskStatements: ['2.3'],
+    selectCount: 1,
+    stem: 'With tool_choice set to "auto" (the default), what behavior should you expect from Claude regarding tool use?',
+    options: [
+      {
+        id: 'A',
+        text: 'Claude will always call at least one tool on every single turn, without exception.',
+        rationale: 'Wrong — this describes tool_choice: "any" behavior, not "auto"; "auto" permits, but does not force, a tool call.',
+      },
+      {
+        id: 'B',
+        text: 'Claude will never call a tool under any circumstances.',
+        rationale: 'Wrong — "auto" allows tool calls when appropriate; it does not prevent them.',
+      },
+      {
+        id: 'C',
+        text: 'Claude may either call an available tool or respond with plain conversational text, choosing based on what the request actually requires.',
+        rationale:
+          'Correct — with "auto" (the default), the model may return text instead of calling a tool, choosing based on the situation.',
+      },
+      {
+        id: 'D',
+        text: 'Claude will call every available tool simultaneously on every turn.',
+        rationale:
+          "Wrong — nothing about \"auto\" causes every available tool to be called simultaneously; the model selects what's relevant, if anything.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'tool_choice: "auto" (the default) permits but does not force a tool call, distinct from "any" (must call some tool) or a forced choice (must call one specific tool).',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-x-0004',
+    domain: 2,
+    scenarioId: null,
+    taskStatements: ['2.4'],
+    selectCount: 1,
+    stem: "Your team's .mcp.json needs to configure an authentication token for a shared MCP server, but you don't want to commit the actual secret value into version control. What's the recommended approach?",
+    options: [
+      {
+        id: 'A',
+        text: "Commit the actual token value directly into .mcp.json, since it's needed for the server to authenticate.",
+        rationale: 'Wrong — committing the actual secret value into version control exposes it to everyone with repo access and to the entire git history.',
+      },
+      {
+        id: 'B',
+        text: 'Store the token in a separate, uncommitted file that every team member must remember to manually merge into .mcp.json before use.',
+        rationale: 'Wrong — a manual merge-before-use process is error-prone and easy to forget, and still risks accidental commits of the merged secret.',
+      },
+      {
+        id: 'C',
+        text: 'Ask every team member to hardcode their own personal token directly into their local copy of .mcp.json and never commit their changes.',
+        rationale:
+          'Wrong — while avoiding commits, this still requires manually maintaining local hardcoded values with no standard mechanism, unlike a supported expansion syntax.',
+      },
+      {
+        id: 'D',
+        text: 'Use environment variable expansion in .mcp.json (e.g., ${GITHUB_TOKEN}) so the actual secret lives in each user\'s environment rather than in the committed file.',
+        rationale:
+          "Correct — environment variable expansion lets the configuration file reference a variable name while the actual secret lives in each user's own environment, never committed.",
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Environment variable expansion in .mcp.json is the recommended mechanism for credential management without committing secrets to version control.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-x-0005',
+    domain: 2,
+    scenarioId: null,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: 'You need to find every test file (matching **/*.test.ts) that references a specific deprecated function by name. What is the most direct way to do this using built-in tools?',
+    options: [
+      {
+        id: 'A',
+        text: 'Use Read to open every file in the repository one at a time and manually check each for both conditions.',
+        rationale: 'Wrong — manually reading every file to check two conditions is far slower and more error-prone than using purpose-built search tools.',
+      },
+      {
+        id: 'B',
+        text: 'Use Glob to find all files matching **/*.test.ts, then use Grep scoped to that result set (or with a matching path filter) to search for the specific function name.',
+        rationale:
+          'Correct — combining Glob (file pattern matching) with Grep (content search), appropriately scoped, directly addresses both the file-name and content-search aspects of the request.',
+      },
+      {
+        id: 'C',
+        text: 'Use Bash to search for the function name across the entire repository, then manually filter the results to those with .test.ts in the name by eye.',
+        rationale:
+          'Wrong — while technically workable, manually eyeballing results to apply the file-name filter is less reliable and efficient than using the tools designed for pattern matching directly.',
+      },
+      {
+        id: 'D',
+        text: 'Use Edit to search and replace the function name, then check which files reported a change.',
+        rationale:
+          "Wrong — using Edit's search-and-replace mechanism to detect matches is a misuse of a file-modification tool for a read-only search task, and risks unintended changes.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Combining Glob (file pattern matching) with Grep (content search) directly addresses a request with both a file-name pattern and a content-search condition.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

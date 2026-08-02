@@ -774,4 +774,450 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q1-x-0001',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: 'During an agentic loop, one of the tools Claude calls returns an error result (not a crash — a structured error response). What should the orchestration code do next?',
+    options: [
+      {
+        id: 'A',
+        text: 'Immediately stop the loop and set stop_reason manually to "end_turn", since an error means the task cannot continue.',
+        rationale:
+          "Wrong — stop_reason is returned by the API based on Claude's own response; orchestration code doesn't set it manually, and an error result doesn't inherently mean the task must end.",
+      },
+      {
+        id: 'B',
+        text: 'Add the error result to the conversation history like any other tool result and send the next request, letting Claude reason about how to respond to the error (e.g., retry, try a different tool, or inform the user).',
+        rationale:
+          'Correct — tool results, including error results, should be appended to conversation history like any other result so the model can reason about the next appropriate action.',
+      },
+      {
+        id: 'C',
+        text: 'Discard the error result without including it in the conversation, and send an empty tool result instead.',
+        rationale: 'Wrong — discarding the real error and substituting an empty result hides information Claude needs to reason correctly about what happened.',
+      },
+      {
+        id: 'D',
+        text: 'Restart the entire conversation from the first user message.',
+        rationale: 'Wrong — restarting the entire conversation from scratch over a single tool error discards all prior legitimate progress unnecessarily.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Tool results, including error results, should be added to conversation history like any other result so Claude can reason about the appropriate next action.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0002',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: 'A coordinator delegates the same broad topic to two subagents without dividing it into distinct parts, resulting in significant duplicated effort and overlapping findings. What should the coordinator do differently?',
+    options: [
+      {
+        id: 'A',
+        text: 'Continue delegating the same undivided topic to both subagents, since redundancy improves reliability.',
+        rationale:
+          'Wrong — redundancy without a specific reason wastes effort and produces overlapping findings, as already observed, rather than adding reliability.',
+      },
+      {
+        id: 'B',
+        text: 'Delegate the topic to only one subagent going forward and eliminate the second entirely.',
+        rationale:
+          "Wrong — this may lose useful parallel capacity where genuine partitioning would preserve it, and doesn't fix the underlying delegation design.",
+      },
+      {
+        id: 'C',
+        text: 'Partition the topic into distinct, non-overlapping subtopics or source types before delegating, assigning each subagent a clearly different piece of the work.',
+        rationale:
+          "Correct — partitioning research scope across subagents to minimize duplication, assigning distinct subtopics or source types to each, is exactly the coordinator's role in task decomposition.",
+      },
+      {
+        id: 'D',
+        text: 'Have the two subagents communicate directly with each other to sort out the overlap on their own.',
+        rationale:
+          "Wrong — direct subagent-to-subagent coordination bypasses the coordinator's role in routing and observability, undermining the hub-and-spoke pattern.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Partitioning research scope across subagents into distinct subtopics or source types is the coordinator\'s role in task decomposition, minimizing duplicated effort.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0003',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "You've completed a shared baseline analysis of a codebase and now want to explore two different refactoring strategies independently, without either exploration affecting the other or needing to redo the baseline analysis. What Agent SDK mechanism directly supports this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Giving both explorations access to the same live conversation simultaneously.',
+        rationale:
+          'Wrong — sharing the same live conversation would let the two explorations interfere with and influence each other, rather than remaining independent.',
+      },
+      {
+        id: 'B',
+        text: 'fork_session, to create independent branches from the shared baseline for each refactoring strategy.',
+        rationale:
+          'Correct — fork-based session management is exactly for exploring divergent approaches from a shared analysis baseline, independently.',
+      },
+      {
+        id: 'C',
+        text: 'allowedTools, to restrict which files each exploration can read.',
+        rationale: 'Wrong — allowedTools controls tool access, not session branching or independence between explorations.',
+      },
+      {
+        id: 'D',
+        text: 'tool_choice: "any", to force each exploration to use a tool on its first turn.',
+        rationale: "Wrong — tool_choice controls whether/which tool must be called on a given turn; it doesn't create independent session branches.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'fork_session creates independent branches from a shared analysis baseline, exactly suited to exploring divergent approaches without redoing the baseline or interfering with each other.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0004',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: "Your agent can both draft and publish blog posts autonomously. You want a hard guarantee that publish_content can never be called unless review_content has already run and returned an approval for that specific draft. Currently this ordering is only described in the system prompt. What's the most reliable way to guarantee it?",
+    options: [
+      {
+        id: 'A',
+        text: 'Trust that the model will follow the described order, since Claude generally follows well-written instructions.',
+        rationale:
+          'Wrong — "generally follows" is exactly the probabilistic compliance that is not a guarantee, which is what is being asked for here.',
+      },
+      {
+        id: 'B',
+        text: 'Remove the publish_content tool entirely so publishing can never happen.',
+        rationale:
+          "Wrong — removing the tool entirely prevents publishing altogether, which isn't the goal; the goal is enforcing the correct order, not eliminating the capability.",
+      },
+      {
+        id: 'C',
+        text: 'Add a few-shot example showing review before publish, in addition to the existing prompt instruction.',
+        rationale:
+          'Wrong — a few-shot example strengthens typical-case compliance but still does not provide a hard guarantee against every possible case.',
+      },
+      {
+        id: 'D',
+        text: 'Add a programmatic prerequisite that blocks publish_content calls unless a corresponding successful review_content approval for that draft has been recorded.',
+        rationale:
+          'Correct — a programmatic prerequisite gate that blocks the dependent tool call until the required prior step has genuinely completed is the deterministic mechanism for guaranteeing an ordering requirement.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'A programmatic prerequisite gate is the deterministic mechanism for guaranteeing a tool-call ordering requirement — prompt instructions and few-shot examples remain probabilistic.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0005',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.5'],
+    selectCount: 1,
+    stem: "You want a guarantee that your agent's delete_record tool can never be called with a wildcard/all-records argument, regardless of what the conversation says. What's the most reliable way to enforce this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add a system prompt instruction telling the agent never to call delete_record with a wildcard argument.',
+        rationale:
+          'Wrong — a prompt instruction is probabilistic compliance, not a guarantee, for a destructive action that needs deterministic prevention.',
+      },
+      {
+        id: 'B',
+        text: 'Implement a hook that intercepts outgoing tool calls to delete_record and blocks any call whose argument matches a wildcard/all-records pattern, redirecting to an error or escalation.',
+        rationale:
+          'Correct — a hook that intercepts outgoing tool calls and blocks policy-violating arguments provides a deterministic guarantee, appropriate when compliance must be guaranteed.',
+      },
+      {
+        id: 'C',
+        text: "Rename the delete_record tool to make its danger more obvious in its name.",
+        rationale: "Wrong — a more alarming tool name doesn't prevent the call from being made; it's not an enforcement mechanism.",
+      },
+      {
+        id: 'D',
+        text: 'Add a few-shot example showing the agent declining to use a wildcard argument.',
+        rationale: 'Wrong — a few-shot example, like the system prompt instruction, remains probabilistic guidance rather than a guaranteed block.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Hooks that intercept outgoing tool calls and block policy-violating arguments provide a deterministic guarantee, appropriate for destructive actions requiring guaranteed compliance.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0006',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: 'Which of these two tasks is better suited to a fixed, prompt-chained pipeline, and which to dynamic, adaptive decomposition: (1) running a standard, always-identical pre-release checklist across a well-known set of files, and (2) investigating the root cause of an unfamiliar, intermittent production incident with unknown scope?',
+    options: [
+      {
+        id: 'A',
+        text: 'Both tasks are better suited to a fixed, prompt-chained pipeline, since fixed pipelines are always safer.',
+        rationale:
+          "Wrong — a fixed pipeline poorly fits the incident investigation, where the right next step depends entirely on what's discovered, which can't be predicted in advance.",
+      },
+      {
+        id: 'B',
+        text: 'Both tasks are better suited to dynamic, adaptive decomposition, since letting the model decide is always more powerful.',
+        rationale:
+          'Wrong — dynamic decomposition adds unnecessary variability to the checklist task, which benefits from uniform, repeatable steps every time.',
+      },
+      {
+        id: 'C',
+        text: 'The pre-release checklist should use dynamic decomposition, and the incident investigation should use a fixed pipeline.',
+        rationale: 'Wrong — this is exactly backwards from the task characteristics described.',
+      },
+      {
+        id: 'D',
+        text: 'The pre-release checklist should use a fixed, prompt-chained pipeline (predictable, uniform steps), and the incident investigation should use dynamic, adaptive decomposition (unpredictable, evolving findings).',
+        rationale:
+          'Correct — fixed pipelines suit predictable, uniform work like a standard checklist, while dynamic decomposition suits open-ended investigation where next steps depend on unpredictable findings.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Task decomposition strategy should match the workflow: fixed pipelines for predictable, uniform work; dynamic decomposition for open-ended investigation with unpredictable findings.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0007',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: "You're using a named Claude Code session (--resume my-investigation) to track a multi-day investigation into a performance issue. On day two, you want to continue exactly where you left off, with all prior findings intact. What should you do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Run --resume my-investigation to continue the same named session, preserving its prior context and findings.',
+        rationale:
+          'Correct — named session resumption using --resume <session-name> is exactly the mechanism for continuing a specific prior conversation with its context intact.',
+      },
+      {
+        id: 'B',
+        text: 'Start a brand new, unnamed session each day and manually re-explain everything found so far from memory.',
+        rationale: 'Wrong — manually re-explaining everything from memory each day is exactly the inefficiency named session resumption is meant to eliminate.',
+      },
+      {
+        id: 'C',
+        text: 'Use fork_session instead, since --resume is only for single-day sessions.',
+        rationale:
+          'Wrong — fork_session is for branching into divergent parallel approaches from a baseline, not for straightforward continuation of the same ongoing investigation across days.',
+      },
+      {
+        id: 'D',
+        text: "Copy the previous day's terminal output into a text file and manually paste it as the first message of a new session.",
+        rationale:
+          'Wrong — manually copying and pasting raw terminal output is an unreliable, effortful workaround when built-in session resumption already preserves context directly.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Named session resumption via --resume <session-name> is the mechanism for continuing a specific prior conversation with its context and findings intact.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0008',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "You're defining a subagent whose only job is to format citations into a consistent style. Its AgentDefinition currently grants it the same broad tool access as the coordinator, including tools for web search and code execution it will never use. What's the recommended fix?",
+    options: [
+      {
+        id: 'A',
+        text: "Leave the tool access as-is, since having broader access can't cause any problems as long as the subagent doesn't intend to use those tools.",
+        rationale:
+          'Wrong — broader-than-needed access is exactly what increases the risk of tool misuse and degrades selection reliability, even if unintended.',
+      },
+      {
+        id: 'B',
+        text: "Remove the subagent's AgentDefinition entirely so it has no tools at all.",
+        rationale: "Wrong — removing all tools would prevent the subagent from doing its actual citation-formatting job at all.",
+      },
+      {
+        id: 'C',
+        text: "Restrict the subagent's AgentDefinition tool access to only what its citation-formatting role actually needs, consistent with scoped tool access reducing misuse and selection complexity.",
+        rationale:
+          'Correct — AgentDefinition tool restrictions should scope each subagent to what its specific role needs, reducing misuse and decision complexity.',
+      },
+      {
+        id: 'D',
+        text: "Give the subagent access to every tool in the system so it's maximally flexible for future use cases.",
+        rationale: 'Wrong — maximal access for hypothetical future flexibility directly contradicts the scoped-access principle and its documented benefits.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'AgentDefinition tool restrictions should scope each subagent to what its specific role needs, which is the recommended design for reducing misuse and decision complexity.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0009',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: 'An agent needs to escalate a complex case to a human who has no access to the conversation transcript. What should the escalation handoff include?',
+    options: [
+      {
+        id: 'A',
+        text: "A structured summary containing the essential details a human would need — such as relevant identifiers, root cause analysis, and recommended next steps — rather than just a note saying 'this case is too complex.'",
+        rationale:
+          'Correct — a structured handoff summary with the essential details a human needs, since they lack access to the conversation transcript, is exactly the documented pattern for mid-process escalation.',
+      },
+      {
+        id: 'B',
+        text: "Just the words 'escalated' with no further detail, since the human can ask the customer for details directly.",
+        rationale: 'Wrong — providing no substantive detail forces the human to reconstruct context from scratch, defeating the purpose of a handoff.',
+      },
+      {
+        id: 'C',
+        text: 'The full raw conversation transcript with no summarization, on the assumption that more detail is always better.',
+        rationale:
+          'Wrong — dumping the full raw transcript without any structuring or summarization pushes the burden of extracting what matters onto the human.',
+      },
+      {
+        id: 'D',
+        text: 'Only the timestamp of when the escalation occurred.',
+        rationale: 'Wrong — a bare timestamp provides no substantive information for the human to act on.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Structured handoff summaries with essential details (identifiers, root cause, recommended action) are the documented pattern for escalating to humans who lack conversation transcript access.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-x-0010',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: 'A coordinator agent receives a simple query that only requires a single, targeted lookup. Should it still route the query through every specialized subagent in its full pipeline (e.g., a 4-stage research pipeline), or handle it differently?',
+    options: [
+      {
+        id: 'A',
+        text: 'It should always route through the full pipeline for every query, regardless of complexity, to maintain consistency.',
+        rationale:
+          "Wrong — always routing every query through the full pipeline adds unnecessary latency and cost for simple queries that don't need every stage.",
+      },
+      {
+        id: 'B',
+        text: 'It should never use subagents at all, and should always answer directly without delegation.',
+        rationale: 'Wrong — this goes too far in the other direction, discarding legitimate delegation entirely, including for queries that genuinely need it.',
+      },
+      {
+        id: 'C',
+        text: 'It should randomly select a subset of subagents to invoke for variety.',
+        rationale: 'Wrong — random selection ignores the actual requirements of the query, which is precisely what should drive the routing decision.',
+      },
+      {
+        id: 'D',
+        text: "It should analyze the query's actual requirements and dynamically select which subagents to invoke, rather than always routing through the full pipeline, when a simpler query doesn't need every stage.",
+        rationale:
+          'Correct — coordinators should analyze query requirements and dynamically select which subagents to invoke based on complexity, rather than uniformly routing everything through the full pipeline.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Coordinators should dynamically select which subagents to invoke based on query complexity, rather than always routing through the full pipeline regardless of need.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
