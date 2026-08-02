@@ -1341,4 +1341,178 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q3-s4-0006',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.2'],
+    selectCount: 1,
+    stem: "You've built a skill that generates a changelog entry, but it requires a version number as an argument. When a developer invokes the skill without providing one, they're unsure what parameter is expected. What skill frontmatter option addresses this?",
+    options: [
+      {
+        id: 'A',
+        text: 'allowed-tools',
+        rationale: 'Wrong — allowed-tools restricts which tools the skill can use, unrelated to prompting for missing arguments.',
+      },
+      {
+        id: 'B',
+        text: 'context: fork',
+        rationale: 'Wrong — context: fork controls whether the skill runs in an isolated sub-agent context, unrelated to argument prompting.',
+      },
+      {
+        id: 'C',
+        text: 'description',
+        rationale:
+          'Wrong — description documents what the skill does generally, but argument-hint is specifically for surfacing required parameters when invoked without them.',
+      },
+      {
+        id: 'D',
+        text: 'argument-hint, which prompts developers for the required parameter when they invoke the skill without arguments.',
+        rationale:
+          'Correct — argument-hint frontmatter is specifically designed to prompt developers for required parameters when they invoke a skill without arguments.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'argument-hint frontmatter prompts developers for required parameters when a skill is invoked without arguments, distinct from allowed-tools, context: fork, and description.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s4-0007',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.3'],
+    selectCount: 1,
+    stem: 'Your project has SQL migration files named like 001_create_users.sql, 002_add_index.sql, scattered across multiple service directories (services/api/migrations/, services/billing/migrations/, etc.). You want a convention (always include a rollback comment block at the top) applied to any file matching this migration naming pattern, regardless of which service directory it\'s in. What\'s the best approach?',
+    options: [
+      {
+        id: 'A',
+        text: 'Add the convention to the root CLAUDE.md so it applies to every file in the project, including unrelated ones.',
+        rationale: 'Wrong — always loading the convention for every file, including unrelated ones, wastes context and token usage.',
+      },
+      {
+        id: 'B',
+        text: 'Create a .claude/rules/ file with a glob pattern like paths: ["**/migrations/*.sql"] so the convention loads only when a matching migration file is being edited.',
+        rationale:
+          'Correct — a glob-pattern rule targeting the migration file naming pattern applies the convention only when relevant, regardless of which service directory the file lives in.',
+      },
+      {
+        id: 'C',
+        text: "Create a separate CLAUDE.md file inside each service's migrations directory, each repeating the same convention.",
+        rationale: 'Wrong — duplicating the same convention across multiple directory-level CLAUDE.md files is exactly the maintenance burden path-specific rules exist to avoid.',
+      },
+      {
+        id: 'D',
+        text: 'Rename all migration files to remove the numeric prefix, since the prefix is causing the inconsistency.',
+        rationale:
+          "Wrong — renaming files to remove the numeric prefix doesn't address the actual goal (a rollback-comment convention) and is an unrelated, disruptive change.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A glob-pattern rule targeting a file naming pattern applies a convention only when relevant, regardless of which directory the matching file lives in.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s4-0008',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: "Before fixing a security vulnerability in a legacy authentication flow, Claude Code needs to trace how authentication currently works across many files it hasn't seen before — a process expected to involve dozens of file reads. You want this investigation to happen without consuming most of the context available for actually implementing and testing the fix afterward. What should you do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Use the Explore subagent to conduct the investigation, returning a concise summary of the authentication flow to the main conversation rather than the full trace of every file read.',
+        rationale:
+          "Correct — the Explore subagent isolates verbose discovery output and returns summaries, preserving the main conversation's context for the fix implementation and testing that follow.",
+      },
+      {
+        id: 'B',
+        text: 'Read every file in the codebase directly in the main conversation to be thorough.',
+        rationale: 'Wrong — reading every file directly in the main conversation consumes exactly the context budget that should be preserved for implementation.',
+      },
+      {
+        id: 'C',
+        text: 'Skip understanding the current authentication flow and jump directly to writing a fix based on assumptions.',
+        rationale: 'Wrong — skipping understanding of a security-sensitive authentication flow before modifying it risks an incomplete or incorrect fix.',
+      },
+      {
+        id: 'D',
+        text: 'Increase max_tokens for the main conversation so the investigation and the fix can both fit regardless of size.',
+        rationale: "Wrong — max_tokens affects generated output length, not how much of the context window a verbose investigation consumes.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'The Explore subagent isolates verbose discovery output, returning summaries to preserve the main conversation\'s context for subsequent implementation and testing work.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s4-0009',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.1'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are true about the CLAUDE.md configuration hierarchy? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Project-level CLAUDE.md instructions apply to every team member who clones the repo.',
+        rationale: 'Correct — project-level CLAUDE.md is version-controlled and applies to every team member who clones the repo.',
+      },
+      {
+        id: 'B',
+        text: "User-level CLAUDE.md instructions are automatically synced to every teammate's machine.",
+        rationale: 'Wrong — user-level CLAUDE.md is personal and never automatically synced to teammates.',
+      },
+      {
+        id: 'C',
+        text: 'The /memory command can be used to verify which memory files are currently loaded.',
+        rationale: 'Correct — /memory is the documented diagnostic command for verifying which memory files are currently loaded.',
+      },
+      {
+        id: 'D',
+        text: 'Directory-level CLAUDE.md files override project-level CLAUDE.md files entirely, ignoring project-level content.',
+        rationale:
+          "Wrong — directory-level CLAUDE.md files add additional, more specific context; they don't wholesale override or ignore project-level content.",
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Project-level CLAUDE.md is shared with every team member via version control, and /memory is the diagnostic command for verifying which memory files are loaded — user-level files are never auto-synced, and directory-level files add to (not replace) project-level content.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

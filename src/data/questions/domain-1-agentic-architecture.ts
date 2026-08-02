@@ -1753,4 +1753,137 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q1-s4-0007',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: "During a long autonomous refactor, one of Claude's responses is cut short with stop_reason \"max_tokens\" rather than \"tool_use\" or \"end_turn\" — the response was truncated because it hit the token limit before finishing. What should the orchestration code do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Treat "max_tokens" exactly like "end_turn" and consider the task complete.',
+        rationale: 'Wrong — treating a truncated response as a complete answer risks acting on an incomplete, possibly malformed result.',
+      },
+      {
+        id: 'B',
+        text: 'Treat "max_tokens" exactly like "tool_use" and execute whatever tool calls happen to be present in the truncated response, if any.',
+        rationale: "Wrong — a truncated response might contain an incomplete tool call that isn't safe to execute as-is.",
+      },
+      {
+        id: 'C',
+        text: 'Recognize that "max_tokens" indicates an incomplete response (not genuine task completion or a clean tool request) and handle it distinctly — for example, by continuing the generation or adjusting max_tokens — rather than treating it as either of the other two cases.',
+        rationale:
+          'Correct — max_tokens is a distinct stop_reason indicating the response was cut off, not a genuine completion signal or a clean tool request; it needs its own handling.',
+      },
+      {
+        id: 'D',
+        text: 'Ignore the stop_reason field entirely for this response and restart the entire task from the beginning.',
+        rationale: 'Wrong — restarting the entire task from scratch is a disproportionate response to a single truncated turn.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'stop_reason values beyond "tool_use" and "end_turn", like "max_tokens", indicate a distinct condition (an incomplete response) that orchestration code should handle explicitly rather than conflating with either of the other two.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s4-0008',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: "Your developer productivity agent has Bash access and is generally careful, but your team wants a hard guarantee that it can never run a destructive command like 'rm -rf' against any path outside a designated scratch directory, no matter what the conversation says. What's the most reliable mechanism?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add a system prompt instruction telling the agent to be careful with destructive Bash commands.',
+        rationale:
+          'Wrong — a prompt instruction is probabilistic guidance, not a guarantee, for an action with potentially catastrophic and irreversible consequences.',
+      },
+      {
+        id: 'B',
+        text: 'Implement a hook that intercepts outgoing Bash tool calls and blocks any command matching a destructive pattern targeting paths outside the designated scratch directory.',
+        rationale:
+          'Correct — a hook intercepting outgoing tool calls and blocking policy-violating commands provides the deterministic guarantee needed for an irreversible, high-risk action.',
+      },
+      {
+        id: 'C',
+        text: "Trust that the agent's general carefulness will prevent this from ever happening.",
+        rationale:
+          'Wrong — general carefulness is exactly the kind of unenforced assumption that does not hold reliably, which is why a hard guarantee was requested.',
+      },
+      {
+        id: 'D',
+        text: 'Add a few-shot example showing the agent declining to run a destructive command.',
+        rationale: 'Wrong — a few-shot example remains probabilistic guidance, not a guarantee.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A hook intercepting outgoing tool calls and blocking policy-violating commands provides the deterministic guarantee needed for an irreversible, high-risk action like a destructive Bash command.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s4-0009',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: "You've been building a feature across multiple work sessions using a named Claude Code session. On day 3, you want to continue exactly where day 2 left off, including all the codebase context Claude had already built up. What's the appropriate command?",
+    options: [
+      {
+        id: 'A',
+        text: 'claude --resume <session-name>, continuing the same named session from where it left off.',
+        rationale:
+          'Correct — --resume <session-name> is exactly the mechanism for continuing a specific prior conversation with its accumulated context intact.',
+      },
+      {
+        id: 'B',
+        text: 'claude, starting a completely new unnamed session and manually re-explaining the entire feature from scratch.',
+        rationale:
+          'Wrong — starting fresh and manually re-explaining everything discards the built-up context and is exactly the inefficiency session resumption is meant to eliminate.',
+      },
+      {
+        id: 'C',
+        text: 'fork_session, since resuming linear progress across days requires forking rather than resuming.',
+        rationale:
+          'Wrong — fork_session is for branching into divergent parallel approaches from a baseline, not straightforward linear continuation of the same ongoing work.',
+      },
+      {
+        id: 'D',
+        text: 'There is no way to continue a Claude Code session across multiple days; all context is always lost between sessions.',
+        rationale: 'Wrong — this is false; named session resumption across days is explicitly supported.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      '--resume <session-name> continues a specific prior conversation with its accumulated context intact, appropriate for linear continuation of work across multiple days.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
