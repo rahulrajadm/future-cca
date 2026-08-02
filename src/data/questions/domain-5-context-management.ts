@@ -681,4 +681,269 @@ export const domain5Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q5-s6-0001',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.5'],
+    selectCount: 1,
+    stem: 'Your extraction pipeline reports 97% overall accuracy across all documents processed last quarter. Before deciding to reduce human review, what should you check first?',
+    options: [
+      {
+        id: 'A',
+        text: 'Nothing further — a 97% aggregate accuracy is high enough on its own to justify reducing human review across the board.',
+        rationale:
+          'Wrong — this is exactly the risk being tested: a strong aggregate number can hide a segment with much worse performance that shouldn\'t yet have reduced review.',
+      },
+      {
+        id: 'B',
+        text: "Whether 97% is higher than a competing extraction vendor's published accuracy figure.",
+        rationale: "Wrong — a competitor's figure is irrelevant to whether your own pipeline's accuracy is uniformly reliable across your own document types and fields.",
+      },
+      {
+        id: 'C',
+        text: 'Whether accuracy is consistently high across all document types and fields, since an aggregate figure can mask poor performance on specific segments even when the overall number looks strong.',
+        rationale:
+          'Correct — aggregate accuracy metrics may mask poor performance on specific document types or fields; validating accuracy by segment is necessary before automating high-confidence extractions.',
+      },
+      {
+        id: 'D',
+        text: 'Whether the pipeline processed more documents this quarter than last quarter.',
+        rationale: "Wrong — processing volume doesn't speak to whether accuracy is consistent across segments, which is the actual question that matters here.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Aggregate accuracy metrics may mask poor performance on specific document types or fields; validating accuracy by segment is necessary before reducing human review.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s6-0002',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.5'],
+    selectCount: 1,
+    stem: "You want an ongoing way to measure the true error rate of extractions your pipeline marks as \"high confidence,\" including catching novel error patterns you haven't seen before, without manually reviewing every single high-confidence extraction (which would defeat the purpose of automation). What approach supports this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Only review high-confidence extractions when a developer happens to notice something looks wrong.',
+        rationale: "Wrong — relying on incidental noticing is unsystematic and won't reliably catch error patterns, especially rare or subtle ones.",
+      },
+      {
+        id: 'B',
+        text: 'Implement stratified random sampling of high-confidence extractions for ongoing error rate measurement and novel pattern detection.',
+        rationale:
+          'Correct — stratified random sampling of high-confidence extractions is the documented approach for ongoing error rate measurement and detecting novel error patterns.',
+      },
+      {
+        id: 'C',
+        text: 'Review every single high-confidence extraction manually, since sampling can never be as accurate as full review.',
+        rationale: 'Wrong — full manual review of every high-confidence extraction defeats the purpose of automating that class of extraction in the first place.',
+      },
+      {
+        id: 'D',
+        text: 'Stop measuring error rates on high-confidence extractions entirely, since they are high confidence by definition.',
+        rationale:
+          'Wrong — "high confidence" is the model\'s own self-assessment, not a guarantee of correctness; skipping measurement removes the check needed to validate that assessment.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Stratified random sampling of high-confidence extractions enables ongoing error rate measurement and novel pattern detection without full manual review.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s6-0003',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.5'],
+    selectCount: 1,
+    stem: "Your model outputs a confidence score for each extracted field, but you're not sure whether a score of \"0.8\" actually corresponds to a meaningfully different error rate than a score of \"0.6\" — the raw numbers might not be well calibrated. How should you determine appropriate confidence thresholds for routing to human review?",
+    options: [
+      {
+        id: 'A',
+        text: "Calibrate review thresholds using a labeled validation set, comparing the model's confidence scores against actual known-correct answers to see what threshold meaningfully separates accurate from inaccurate extractions.",
+        rationale:
+          'Correct — calibrating review thresholds using labeled validation sets is how you determine what a given confidence score actually means in terms of real accuracy.',
+      },
+      {
+        id: 'B',
+        text: 'Pick a threshold of exactly 0.9 for every field, since that is a conventionally round number.',
+        rationale:
+          'Wrong — an arbitrary round number without validating it against actual outcomes doesn\'t address whether that threshold meaningfully separates accurate from inaccurate extractions.',
+      },
+      {
+        id: 'C',
+        text: 'Ignore the confidence scores entirely, since raw model-reported numbers can never be trusted for any purpose.',
+        rationale: 'Wrong — this overreacts to the calibration concern; the fix is validating and calibrating the scores, not discarding them as inherently useless.',
+      },
+      {
+        id: 'D',
+        text: 'Route every extraction to human review regardless of confidence score, making the score irrelevant to the decision.',
+        rationale: 'Wrong — routing everything to review regardless of confidence defeats the purpose of having a confidence-based routing mechanism at all.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Field-level confidence scores should be calibrated against a labeled validation set to determine what threshold actually separates accurate from inaccurate extractions.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s6-0004',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.5'],
+    selectCount: 1,
+    stem: "During extraction, one document contains a shipping address that appears twice with two different values — likely a data entry error somewhere upstream. The model reports moderate confidence on the address field due to this internal contradiction within the source document itself. What's the appropriate handling?",
+    options: [
+      {
+        id: 'A',
+        text: 'Automatically select the first-listed address without flagging the discrepancy anywhere.',
+        rationale:
+          'Wrong — silently picking one value without flagging the contradiction risks propagating a wrong address downstream with no visibility into the uncertainty.',
+      },
+      {
+        id: 'B',
+        text: 'Automatically select the second-listed address, since later values in a document are generally assumed more authoritative.',
+        rationale: 'Wrong — "later is more authoritative" is an unsupported heuristic assumption, not a validated rule, and should not be applied silently.',
+      },
+      {
+        id: 'C',
+        text: 'Discard the entire document from processing because one field is ambiguous.',
+        rationale: 'Wrong — discarding the whole document over one ambiguous field wastes all the other, unambiguous information it likely contains.',
+      },
+      {
+        id: 'D',
+        text: 'Route this extraction to human review specifically because the source document itself is internally contradictory, prioritizing limited reviewer capacity for genuinely ambiguous cases like this one.',
+        rationale:
+          'Correct — routing extractions with ambiguous or contradictory source documents to human review, prioritizing limited reviewer capacity, is exactly the appropriate design.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Extractions with ambiguous or contradictory source documents should be routed to human review, prioritizing limited reviewer capacity for genuinely uncertain cases.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s6-0005',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: 'Your document ingestion pipeline passes raw OCR output directly into the extraction prompt for every page, including repeated page headers, footers, and watermark text that appears identically on all 200 pages of a long contract. This bloats the prompt and increases cost without adding extraction value. What is the most effective fix?',
+    options: [
+      {
+        id: 'A',
+        text: 'Increase max_tokens on the extraction call so the model has more room to process the repeated content.',
+        rationale: 'Wrong — max_tokens affects generated output length, not the size or noise level of the input being provided.',
+      },
+      {
+        id: 'B',
+        text: "Strip repeated, non-substantive boilerplate (headers, footers, watermarks) from the OCR output before it's included in the extraction prompt, keeping only the substantive content.",
+        rationale:
+          'Correct — trimming irrelevant, repeated content before it enters the prompt directly reduces token usage and cost without losing extraction-relevant information.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the model to ignore headers and footers in its reasoning without removing them from the input.',
+        rationale: "Wrong — asking the model to \"ignore\" content already in the prompt doesn't remove the tokens being consumed or the cost of processing them.",
+      },
+      {
+        id: 'D',
+        text: 'Split every page into its own separate API call regardless of content, to reduce the size of any single request.',
+        rationale:
+          "Wrong — splitting into per-page calls regardless of content doesn't address the actual source of bloat and could fragment context needed to extract data spanning multiple pages.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Trimming repeated, non-substantive boilerplate before it enters the prompt reduces token usage and cost, the same principle as trimming verbose tool outputs to relevant fields.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s6-0006',
+    domain: 5,
+    scenarioId: 6,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: 'You ask Claude to extract every defined term and its definition from a 150-page legal contract in a single request. It correctly extracts terms defined in the first and last few pages but misses several terms defined in the middle of the document. What is the most effective fix?',
+    options: [
+      {
+        id: 'A',
+        text: 'Increase the model\'s temperature so it explores the document more thoroughly.',
+        rationale:
+          "Wrong — temperature affects output randomness, not the model's positional attention across a long input; it doesn't address the lost-in-the-middle effect.",
+      },
+      {
+        id: 'B',
+        text: 'Ask the model to try again with the exact same single request, expecting a different result.',
+        rationale: 'Wrong — repeating the identical request over the same full-length input is likely to reproduce the same positional miss.',
+      },
+      {
+        id: 'C',
+        text: 'Split the document into smaller sections and run extraction on each section separately, then combine the results, rather than processing the entire 150 pages in one pass.',
+        rationale:
+          'Correct — this is the lost-in-the-middle effect; splitting a long document into smaller sections for separate extraction passes directly mitigates the reduced attention to middle content.',
+      },
+      {
+        id: 'D',
+        text: 'Reformat the contract to remove all section headers before extraction.',
+        rationale:
+          'Wrong — removing section headers does not address the underlying positional attention issue and could make the document harder to navigate.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'The lost-in-the-middle effect causes reduced attention to content in the middle of long inputs. Splitting into smaller sections for separate passes is the standard mitigation.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

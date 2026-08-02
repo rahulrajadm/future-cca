@@ -454,4 +454,360 @@ export const domain4Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q4-s6-0001',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "You're extracting structured invoice data (vendor, line items, total) from PDFs using Claude. Occasionally the model's raw JSON output has a syntax error — a missing comma or unescaped quote — which breaks your downstream parser. What is the most reliable way to eliminate this class of error?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add a post-processing regex step that attempts to fix common JSON syntax mistakes after generation.',
+        rationale:
+          'Wrong — a regex patch treats symptoms of the underlying approach rather than eliminating the class of error at its source, and can itself introduce new mistakes.',
+      },
+      {
+        id: 'B',
+        text: 'Define an extraction tool with a JSON schema as its input parameters, and require Claude to call that tool (tool_use) rather than asking it to write raw JSON as free text.',
+        rationale:
+          'Correct — tool use with JSON schemas is the most reliable approach for guaranteed schema-compliant structured output, eliminating JSON syntax errors that free-text generation is prone to.',
+      },
+      {
+        id: 'C',
+        text: "Instruct the model more emphatically to \"always produce valid JSON, no exceptions.\"",
+        rationale: 'Wrong — stronger wording is still a prompt-based, probabilistic approach to a problem that has a structural solution.',
+      },
+      {
+        id: 'D',
+        text: 'Lower the temperature setting to reduce randomness in the generated text.',
+        rationale:
+          'Wrong — temperature affects output diversity/randomness in phrasing, not whether generated free-text JSON is syntactically well-formed.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Tool use with JSON schemas is the most reliable approach for guaranteed schema-compliant structured output, eliminating the JSON syntax errors free-text generation is prone to.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0002',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "You have three different extraction tools for three different document types (invoices, receipts, purchase orders), but at the time of the API call you don't yet know which document type you're processing. You want to guarantee the model calls exactly one of these tools — never returning plain conversational text instead — while still letting it choose which one fits. What tool_choice setting achieves this?",
+    options: [
+      {
+        id: 'A',
+        text: 'tool_choice: "any" — the model must call some tool, but can choose which of the three fits the document.',
+        rationale:
+          'Correct — tool_choice: "any" guarantees the model calls a tool but leaves the choice of which tool up to the model, matching "must extract with some schema, but the right one is unknown up front."',
+      },
+      {
+        id: 'B',
+        text: 'tool_choice: "auto" — the model may return text instead of calling a tool if it prefers.',
+        rationale: 'Wrong — "auto" explicitly allows the model to return conversational text instead of calling a tool, which does not guarantee structured output.',
+      },
+      {
+        id: 'C',
+        text: 'A forced tool_choice naming one specific tool, e.g. {"type": "tool", "name": "extract_invoice"}.',
+        rationale:
+          'Wrong — forcing one specific named tool would incorrectly extract every document as if it were that one type, regardless of its actual type.',
+      },
+      {
+        id: 'D',
+        text: 'Omitting tool_choice entirely, since the default behavior always requires a tool call.',
+        rationale:
+          'Wrong — the default tool_choice behavior is "auto" (model may choose not to call a tool), not a guaranteed tool call.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'tool_choice: "any" guarantees a tool call is made while letting the model choose which tool fits, appropriate when the correct schema is unknown ahead of time.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0003',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "Your invoice-extraction schema marks \"purchase_order_number\" as a required string field. Many of your invoices legitimately have no purchase order number at all. What problem does this cause, and what's the fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'No problem — Claude will correctly recognize the field is missing and the tool call will simply omit it despite being marked required.',
+        rationale:
+          'Wrong — required fields generally must be present in the tool call, and models tend to feel pressure to fill them somehow, not to reliably recognize and skip a documented-required field.',
+      },
+      {
+        id: 'B',
+        text: 'The extraction will fail outright and no data will be returned for any invoice missing a purchase order number.',
+        rationale: 'Wrong — the actual documented risk is fabrication of a value, not an outright hard failure with no data returned at all.',
+      },
+      {
+        id: 'C',
+        text: "The problem is unrelated to the field being required; it's caused by the field's name being too long.",
+        rationale: 'Wrong — field name length is unrelated to this problem; the issue is the required/optional design choice given genuinely absent information.',
+      },
+      {
+        id: 'D',
+        text: 'Marking a field required when the source document may not contain that information can lead the model to fabricate a plausible-looking value to satisfy the schema; making the field optional/nullable prevents this.',
+        rationale:
+          'Correct — designing schema fields as optional (nullable) when source documents may not contain the information prevents the model from fabricating values to satisfy required fields.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Marking a field required when source documents may not contain that information risks the model fabricating a value; nullable/optional fields prevent this.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0004',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "Your document-type classification field uses a fixed enum: invoice, receipt, purchase_order. You start receiving a new, unanticipated document type (a credit memo) that doesn't fit any existing category, and the model is forced to misclassify it as one of the three. What schema design would have handled this gracefully?",
+    options: [
+      {
+        id: 'A',
+        text: 'Remove the enum constraint entirely and allow completely free-text values for the field.',
+        rationale:
+          'Wrong — fully free-text values reintroduce the inconsistency problem enums exist to prevent, losing the benefit of a constrained category set for the common cases.',
+      },
+      {
+        id: 'B',
+        text: "Require the pipeline to reject and discard any document that doesn't match one of the three existing categories.",
+        rationale: 'Wrong — discarding legitimate documents just because they don\'t fit a fixed set is a worse outcome than accurately capturing them under an "other" category.',
+      },
+      {
+        id: 'C',
+        text: 'Add an "other" enum value alongside a separate free-text "other_detail" field, so novel document types can be captured accurately without forcing a misclassification.',
+        rationale:
+          'Correct — an "other" + detail-string pattern is the documented approach for extensible categorization, letting genuinely novel cases be captured accurately.',
+      },
+      {
+        id: 'D',
+        text: 'Expand the enum to include every conceivable document type in advance, no matter how rare.',
+        rationale: 'Wrong — trying to anticipate every conceivable category in advance is unbounded and impractical, unlike a designed extension point for unanticipated cases.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'The "other" + detail-string pattern is the designed way to handle extensible categorization, capturing novel cases accurately without forcing a misclassification.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0005',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "A contract document contains two dates: a \"signing date\" and a separately stated \"effective date\" that begins 30 days later. Your extraction schema has a single generic \"date\" field, and different documents in your dataset inconsistently populate it with either the signing date or the effective date depending on which one appeared more prominently. What schema change would resolve this ambiguity?",
+    options: [
+      {
+        id: 'A',
+        text: 'Replace the single generic "date" field with explicitly named fields — e.g., "signing_date" and "effective_date" — so each captured value has unambiguous meaning regardless of document layout.',
+        rationale:
+          'Correct — the ambiguity comes from a single generic field trying to represent two semantically distinct concepts; explicitly naming the fields removes the ambiguity structurally.',
+      },
+      {
+        id: 'B',
+        text: "Keep the single \"date\" field, but instruct the model to always prefer whichever date appears in a larger font.",
+        rationale:
+          'Wrong — font size is an unreliable, document-layout-dependent heuristic with no guaranteed connection to which date matters for downstream use.',
+      },
+      {
+        id: 'C',
+        text: 'Remove date extraction from the schema entirely, since dates are inherently too ambiguous to extract reliably.',
+        rationale:
+          'Wrong — removing date extraction entirely discards clearly extractable, valuable information instead of fixing the schema design actually causing the inconsistency.',
+      },
+      {
+        id: 'D',
+        text: 'Keep the single "date" field and have a human manually resolve the ambiguity for every single document after the fact.',
+        rationale:
+          'Wrong — manually resolving every single document defeats much of the purpose of automated extraction, when a structural schema fix could resolve it for all documents at once.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'A single generic field representing two semantically distinct concepts causes ambiguity; explicitly named schema fields resolve it structurally regardless of document layout.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0006',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: "Your extraction pipeline validates that all line item amounts sum to the stated invoice total. For one document, validation fails because the extracted values don't sum correctly. For a different document, validation fails because the required 'tax_id' field is empty — but on inspection, that document genuinely never included a tax ID anywhere in its text. How should these two failures be handled differently?",
+    options: [
+      {
+        id: 'A',
+        text: 'Retry both documents identically, since retrying with the same prompt and document eventually resolves any validation failure.',
+        rationale:
+          'Wrong — retries are ineffective when the required information is simply absent from the source document, unlike structural or format mismatches self-correction can fix.',
+      },
+      {
+        id: 'B',
+        text: "Retry the first document with the specific validation error appended to the prompt, since a math/structural mismatch is often fixable through self-correction; do not expect a retry to fix the second, since the information simply doesn't exist in the source.",
+        rationale:
+          'Correct — retry-with-error-feedback is effective for structural/semantic errors like a sum mismatch, but retries cannot manufacture information that was never present in the source document.',
+      },
+      {
+        id: 'C',
+        text: 'Give up on both documents immediately without attempting any retry, since validation failed.',
+        rationale: 'Wrong — giving up immediately discards a case (the sum mismatch) that a targeted retry could plausibly fix.',
+      },
+      {
+        id: 'D',
+        text: "Treat the second document's missing tax ID as a critical pipeline failure requiring the entire batch to stop.",
+        rationale:
+          "Wrong — one document's genuinely absent field doesn't warrant halting the entire batch; it should be handled per-document rather than stopping everything.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Retry-with-error-feedback is effective for structural/semantic validation errors, but ineffective when required information is genuinely absent from the source document.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0007',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: 'You want your extraction pipeline to automatically catch invoices where the printed total doesn\'t match what the line items actually add up to, without requiring a human to manually re-check the math on every single invoice. What schema/validation design supports this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Extract both a "calculated_total" (computed by summing the extracted line items) and a "stated_total" (the total as printed on the document) as separate fields, and flag a discrepancy whenever they don\'t match.',
+        rationale:
+          'Correct — extracting "calculated_total" alongside "stated_total" to flag discrepancies is exactly the self-correction validation design pattern for automatically catching this class of error.',
+      },
+      {
+        id: 'B',
+        text: 'Extract only the "stated_total" field and trust it is always correct as printed.',
+        rationale: 'Wrong — trusting the printed total without any cross-check provides no way to automatically catch this class of error.',
+      },
+      {
+        id: 'C',
+        text: 'Extract only the "calculated_total" field and discard the printed total from the document entirely.',
+        rationale: 'Wrong — discarding the printed total removes the very value needed to compare against to detect a real-world discrepancy.',
+      },
+      {
+        id: 'D',
+        text: 'Round both totals to the nearest ten before comparing them, to avoid flagging minor rounding differences as discrepancies.',
+        rationale:
+          'Wrong — rounding before comparing could mask genuine discrepancies rather than reliably surfacing them; the comparison should be exact.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Extracting both a calculated and a stated value for the same figure, then flagging discrepancies, is the self-correction validation pattern for automatically catching arithmetic mismatches.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q4-s6-0008',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: "Your extraction pipeline occasionally flags 'low confidence' on fields that developers reviewing the output almost always confirm are actually correct, wasting review time. You want to systematically analyze which specific document patterns are causing these unnecessary low-confidence flags, so you can improve the prompt for those patterns specifically. What would help you do this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Ignore the pattern and accept the wasted review time as an unavoidable cost of using confidence scoring at all.',
+        rationale: 'Wrong — accepting the waste without investigating forgoes an available, documented way to actually reduce it.',
+      },
+      {
+        id: 'B',
+        text: "Remove confidence scoring from the pipeline entirely, since it's producing unhelpful flags.",
+        rationale: 'Wrong — removing confidence scoring entirely discards its real value elsewhere just because some specific patterns are currently over-triggering.',
+      },
+      {
+        id: 'C',
+        text: 'Ask developers to stop reviewing flagged fields altogether.',
+        rationale: 'Wrong — telling developers to stop reviewing removes the safety check the confidence flagging exists to support, rather than fixing the flagging itself.',
+      },
+      {
+        id: 'D',
+        text: 'Add a field (e.g., detected_pattern) to each structured finding that records what specifically triggered the low-confidence flag, enabling systematic analysis of which patterns are frequently dismissed as false alarms.',
+        rationale:
+          'Correct — adding a detected_pattern field to structured findings enables systematic analysis of which patterns trigger dismissed findings, directly supporting targeted prompt improvements.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Tracking a detected_pattern field on structured findings enables systematic analysis of dismissal patterns, supporting targeted prompt improvements for specific over-triggering cases.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
