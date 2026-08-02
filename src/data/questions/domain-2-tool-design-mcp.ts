@@ -1170,4 +1170,177 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q2-s3-0006',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.1'],
+    selectCount: 1,
+    stem: "Your synthesis subagent has both a verify_fact tool (quick, scoped fact-checking) and access to the full web_search tool. Both are described only as \"Searches for information.\" The subagent begins using web_search for simple fact-checks that verify_fact was specifically designed to handle more efficiently. What's the most direct fix?",
+    options: [
+      {
+        id: 'A',
+        text: "Remove web_search from the synthesis subagent entirely, even though it's occasionally needed for complex verification.",
+        rationale: 'Wrong — web_search may still be genuinely needed for complex verification cases; removing it entirely overcorrects.',
+      },
+      {
+        id: 'B',
+        text: 'Rewrite both tools\' descriptions to clearly differentiate them — verify_fact for quick, scoped fact-checks, web_search for broader, open-ended research — so the subagent can select correctly based on the situation.',
+        rationale:
+          'Correct — clearly differentiated descriptions specifying each tool\'s intended scope directly address the ambiguity causing the subagent to default to the wrong tool.',
+      },
+      {
+        id: 'C',
+        text: 'Rename verify_fact to fact_checker_tool_v2 without changing its description.',
+        rationale: "Wrong — a name change without a clearer description doesn't give the model the information it needs to differentiate the tools' purposes.",
+      },
+      {
+        id: 'D',
+        text: 'Instruct the synthesis subagent to flip a coin when deciding between the two tools.',
+        rationale: "Wrong — this isn't a sensible instruction and doesn't address the actual root cause of the misrouting.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      "Clearly differentiated tool descriptions specifying each tool's intended scope fix misrouting between overlapping tools, more directly than removing a tool or renaming without clarifying purpose.",
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s3-0007',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.2'],
+    selectCount: 1,
+    stem: "Your document-analysis subagent searches a source document for information relevant to the research topic and finds none — the document is simply not relevant to this particular query. Separately, on other occasions, the subagent fails to open a document at all due to a corrupted file. If both cases return the same \"no relevant information\" result, what problem does this create?",
+    options: [
+      {
+        id: 'A',
+        text: 'The coordinator cannot distinguish a document that was successfully checked and found irrelevant from one that failed to be checked at all, potentially causing it to under-report a coverage gap when a document could not actually be analyzed.',
+        rationale:
+          'Correct — this is the access-failure-vs-valid-empty-result distinction; collapsing them hides a genuine analysis failure behind what looks like a normal, irrelevant result.',
+      },
+      {
+        id: 'B',
+        text: 'The research system will crash whenever an irrelevant document is encountered.',
+        rationale: 'Wrong — nothing about this result-reporting ambiguity causes the system to crash.',
+      },
+      {
+        id: 'C',
+        text: 'The synthesis subagent will automatically discard all findings from every other document as well.',
+        rationale: 'Wrong — a same-looking result from one document does not cause blanket discarding of findings from unrelated documents.',
+      },
+      {
+        id: 'D',
+        text: 'The web-search subagent will stop returning any further results for the remainder of the session.',
+        rationale: "Wrong — this problem is scoped to the document-analysis subagent's own reporting, not the web-search subagent's behavior.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Collapsing a genuine analysis failure and a valid empty result into the same generic response hides information the coordinator needs to correctly report coverage gaps.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s3-0008',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.4'],
+    selectCount: 1,
+    stem: 'Your research system has two MCP servers configured: one for web search, one for an internal document repository. Both are configured and connected. What should you expect regarding tool availability to the agent?',
+    options: [
+      {
+        id: 'A',
+        text: "Only the first-configured MCP server's tools will be available; the second is ignored.",
+        rationale: 'Wrong — configuring a second server does not cause the first to take precedence or the second to be ignored.',
+      },
+      {
+        id: 'B',
+        text: "The agent must explicitly 'switch' between servers using a dedicated tool before either server's tools become available.",
+        rationale: "Wrong — there's no such 'switching' mechanism required; tools from all connected servers are simply available together.",
+      },
+      {
+        id: 'C',
+        text: 'Tools from both configured MCP servers are discovered at connection time and are available to the agent simultaneously.',
+        rationale:
+          'Correct — tools from all configured MCP servers are discovered at connection time and available simultaneously to the agent.',
+      },
+      {
+        id: 'D',
+        text: 'Only one MCP server can be connected to an agent at any given time.',
+        rationale: 'Wrong — multiple MCP servers can be connected and used together; this is exactly the case described in the scenario.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Tools from all configured MCP servers are discovered at connection time and available simultaneously to the agent — no switching between servers is required.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s3-0009',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.3'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are true about scoping tools to reduce misuse? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Giving a subagent access to significantly more tools than its role needs degrades tool-selection reliability.',
+        rationale: 'Correct — access to many more tools than a role needs increases decision complexity and degrades selection reliability.',
+      },
+      {
+        id: 'B',
+        text: 'Agents never misuse tools outside their specialization, regardless of how many they have access to.',
+        rationale:
+          'Wrong — this directly contradicts the documented risk that agents with tools outside their specialization tend to misuse them.',
+      },
+      {
+        id: 'C',
+        text: 'Providing a narrowly scoped cross-role tool for a high-frequency simple need can reduce round-trips while preserving specialization.',
+        rationale:
+          'Correct — scoped cross-role tools for specific high-frequency needs are the documented pattern for reducing overhead while preserving the principle of least privilege.',
+      },
+      {
+        id: 'D',
+        text: 'tool_choice: "auto" guarantees the model will always call a tool on every turn.',
+        rationale: 'Wrong — "auto" permits but does not force a tool call; "any" is the setting that guarantees a tool call is made.',
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Excess tool access degrades selection reliability, while narrowly scoped cross-role tools for high-frequency needs reduce overhead without abandoning the principle of least privilege.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

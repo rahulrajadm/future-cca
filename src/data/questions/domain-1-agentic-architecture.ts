@@ -1533,4 +1533,224 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q1-s3-0008',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: "Your web-search subagent's orchestration code stops its internal agentic loop as soon as the assistant's response contains a URL-like string, on the assumption that a URL means the search is complete. What risk does this introduce?",
+    options: [
+      {
+        id: 'A',
+        text: 'The subagent will be unable to call the search tool more than once per session.',
+        rationale: "Wrong — nothing about this text-scanning approach limits the number of search tool calls; it's unrelated to this specific risk.",
+      },
+      {
+        id: 'B',
+        text: 'The loop will never terminate, running indefinitely.',
+        rationale: 'Wrong — this describes premature termination, the opposite of a loop that never ends.',
+      },
+      {
+        id: 'C',
+        text: 'This has no risk, since a URL always indicates the search is genuinely finished.',
+        rationale: "Wrong — a URL appearing in generated text doesn't guarantee the search is actually complete.",
+      },
+      {
+        id: 'D',
+        text: 'The assistant might reference a URL in an intermediate reasoning step (e.g., planning to search a specific site next) without having actually completed the search, causing the loop to stop prematurely; the loop should check stop_reason instead of scanning text content.',
+        rationale:
+          'Correct — this is the anti-pattern of parsing text content for completion signals instead of checking the structured stop_reason field, risking premature termination based on an unreliable heuristic.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Scanning assistant text for completion signals (like a URL) is an anti-pattern; the model may reference such content in an intermediate step without the task actually being complete. Loop control should check stop_reason instead.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0009',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.2'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are true about the hub-and-spoke coordination pattern? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'The coordinator has visibility into all subagent communication.',
+        rationale:
+          'Correct — the coordinator managing all inter-subagent communication is the defining property of hub-and-spoke, giving it observability into everything.',
+      },
+      {
+        id: 'B',
+        text: 'Subagents automatically share conversation history with each other without coordinator involvement.',
+        rationale: 'Wrong — subagents do not automatically share context/history with each other; all communication routes through the coordinator.',
+      },
+      {
+        id: 'C',
+        text: 'The coordinator is responsible for aggregating results from multiple subagents.',
+        rationale: "Correct — result aggregation is one of the coordinator's core responsibilities in this pattern.",
+      },
+      {
+        id: 'D',
+        text: 'Hub-and-spoke requires every subagent to have identical tool access.',
+        rationale:
+          "Wrong — hub-and-spoke doesn't require identical tool access; scoped, role-specific tool access across subagents is the recommended design.",
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      "The coordinator's central role in hub-and-spoke is managing all inter-subagent communication (giving it observability) and aggregating results — not enforcing identical tool access across subagents.",
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0010',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "Your document-analysis subagent extracts a relevant excerpt from a source but doesn't record which page number it came from, only including it as an offhand mention within a paragraph of prose (\"this appears somewhere in the middle of the document\"). What is the most effective fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'Have the subagent read the entire document again from the beginning every time a page number is needed later.',
+        rationale: 'Wrong — re-reading the entire document is a wasteful, unreliable workaround for a data-formatting problem that should be solved at the source.',
+      },
+      {
+        id: 'B',
+        text: 'Require the subagent to output the excerpt and its page number as separate, clearly labeled structured fields, rather than embedding the page reference informally within prose.',
+        rationale:
+          'Correct — using structured data formats to separate content from metadata (like page numbers) when passing context between agents is the recommended pattern for preserving attribution.',
+      },
+      {
+        id: 'C',
+        text: "Remove page number tracking as a requirement entirely, since it's not essential information.",
+        rationale: "Wrong — page number tracking is valuable for accurate citation and shouldn't be dropped just because the current implementation handles it poorly.",
+      },
+      {
+        id: 'D',
+        text: "Ask the synthesis subagent to guess the page number based on the excerpt's position in the final report.",
+        rationale: 'Wrong — guessing a page number fabricates information rather than preserving accurate attribution.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Structured data formats separating content from metadata (like page numbers) preserve attribution when passing context between agents, unlike embedding references informally within prose.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0011',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: "Your research system generates reports on a wide variety of topics — some narrow and technical, some broad and multifaceted. You're deciding whether the report structure should always follow the same fixed template (Introduction, Background, Findings, Conclusion) or adapt its structure based on what the research actually surfaces. Which is more appropriate, and why?",
+    options: [
+      {
+        id: 'A',
+        text: 'Always use the fixed template, since consistency across all reports is more important than fitting the specific topic.',
+        rationale:
+          'Wrong — forcing every report, including multifaceted ones, into an identical rigid template can poorly fit topics whose natural organization doesn\'t match it.',
+      },
+      {
+        id: 'B',
+        text: 'Never use a fixed template, since flexibility is always superior to any structure.',
+        rationale:
+          'Wrong — complete flexibility with no consistent elements at all can make reports harder to compare and navigate; some structural consistency still has value.',
+      },
+      {
+        id: 'C',
+        text: 'It depends: predictable elements (like a findings section) can follow a consistent structure, but topic-specific organization (e.g., how findings are grouped or which sections are needed) should adapt to what the research actually surfaces, especially for broad or multifaceted topics.',
+        rationale:
+          'Correct — predictable, uniform elements can follow fixed patterns while genuinely variable aspects should adapt to what is actually discovered, rather than treating structure as all-fixed or all-flexible.',
+      },
+      {
+        id: 'D',
+        text: 'The structure should be decided entirely by the customer requesting the report, with no involvement from the research system.',
+        rationale:
+          "Wrong — while customer input could be a nice-to-have, it doesn't address the actual technical decomposition question being asked.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Predictable elements can follow fixed structure while genuinely variable, topic-dependent organization should adapt to what research surfaces — decomposition strategy need not be all-fixed or all-flexible.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0012',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: 'You resume a named research investigation session two weeks after your last work on it using --resume. Some of the web pages your earlier searches referenced may have since changed or been taken down. What should you do?',
+    options: [
+      {
+        id: 'A',
+        text: 'Recognize that the previously gathered tool results may now be stale, and consider starting a fresh session with a structured summary of prior findings rather than blindly trusting two-week-old search results to still be accurate.',
+        rationale:
+          'Correct — starting a new session with a structured summary is more reliable than resuming with results that may now be stale, particularly for time-sensitive information like web content.',
+      },
+      {
+        id: 'B',
+        text: 'Resume the session and treat all previously gathered search results as still perfectly accurate with no further consideration.',
+        rationale: 'Wrong — treating potentially two-week-old web results as still perfectly accurate ignores the real risk that source content may have changed.',
+      },
+      {
+        id: 'C',
+        text: 'Refuse to continue the investigation at all, since any amount of time passing invalidates all prior research.',
+        rationale: 'Wrong — this overreacts; not all research becomes invalid after two weeks, and rejecting all prior work is wasteful and unnecessary.',
+      },
+      {
+        id: 'D',
+        text: 'Automatically re-run every single search query from the original session before doing anything else, regardless of whether the findings are still relevant.',
+        rationale:
+          'Wrong — blindly re-running every query regardless of relevance is inefficient; targeted refreshing of genuinely time-sensitive findings is more appropriate.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Starting a new session with a structured summary is more reliable than resuming with stale tool results, especially for time-sensitive information that may have changed.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
