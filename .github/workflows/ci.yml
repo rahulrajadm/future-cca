@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    env:
+      # Every question merged into main must be verified. Feature branches
+      # targeting main still run this same job with the same requirement —
+      # relax locally with ALLOW_UNVERIFIED=true while a batch is mid-authoring.
+      ALLOW_UNVERIFIED: 'false'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - run: npm run test
+
+      - run: npm run check:verification-log
+
+      - run: npm run build
