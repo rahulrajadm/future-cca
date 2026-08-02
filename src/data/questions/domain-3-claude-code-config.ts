@@ -677,4 +677,226 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q3-s5-0001',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: 'Your GitHub Actions workflow runs `claude "Summarize the changes in this pull request"` as a step, but the job hangs and eventually times out. What is the most likely cause and fix?',
+    options: [
+      {
+        id: 'A',
+        text: 'The prompt string needs to be wrapped in single quotes instead of double quotes.',
+        rationale: 'Wrong — quoting style is not the cause of a hang; the issue is about interactive vs non-interactive mode.',
+      },
+      {
+        id: 'B',
+        text: "GitHub Actions doesn't support running CLI tools that accept natural language prompts.",
+        rationale: 'Wrong — GitHub Actions runs arbitrary CLI commands including Claude Code; the tool itself works fine in CI once configured correctly.',
+      },
+      {
+        id: 'C',
+        text: "Claude Code is waiting for interactive input because it wasn't run in non-interactive mode; adding the -p (or --print) flag fixes this.",
+        rationale:
+          'Correct — without -p (or --print), Claude Code runs in interactive mode and waits for input a CI environment can never provide; -p processes the prompt, outputs to stdout, and exits.',
+      },
+      {
+        id: 'D',
+        text: "The workflow needs to install a separate 'claude-ci' package instead of the standard CLI.",
+        rationale: "Wrong — there is no such separate package; the standard Claude Code CLI supports non-interactive mode via a flag.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'The -p (--print) flag runs Claude Code in non-interactive mode, which is required to prevent CI pipelines from hanging while waiting for input that will never arrive.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s5-0002',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: "You want your CI pipeline to parse Claude Code's code review findings programmatically and post them as inline PR comments, rather than as one big block of unstructured text. What CLI flags support this?",
+    options: [
+      {
+        id: 'A',
+        text: '--output-format json combined with --json-schema, to produce machine-parseable structured findings matching a defined schema.',
+        rationale:
+          'Correct — --output-format json with --json-schema is the documented mechanism for enforcing structured, machine-parseable output in CI contexts.',
+      },
+      {
+        id: 'B',
+        text: '--pretty-print, to format the text output with nicer indentation.',
+        rationale: 'Wrong — pretty-printing addresses text formatting, not the need for structured, schema-conformant data to parse programmatically.',
+      },
+      {
+        id: 'C',
+        text: '--verbose, to include more detailed prose explanations in the output.',
+        rationale: 'Wrong — more prose detail is the opposite of what is needed for reliable programmatic parsing.',
+      },
+      {
+        id: 'D',
+        text: '--interactive, to allow the CI system to answer follow-up questions from Claude.',
+        rationale:
+          'Wrong — --interactive would reintroduce the non-interactive-mode problem CI environments need to avoid, and is not a real mechanism for structured output.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      '--output-format json with --json-schema is the CLI mechanism for producing machine-parseable structured findings, suitable for automated posting as inline PR comments.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s5-0003',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: 'Your CI-invoked Claude Code review consistently suggests test cases that duplicate ones your team already considers low-value (e.g., trivial getter/setter tests), while missing the specific edge cases your team actually cares about. What is the most effective way to improve this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Increase max_tokens so Claude Code can generate a larger number of test suggestions.',
+        rationale: "Wrong — generating more suggestions doesn't fix a relevance problem; it might produce more low-value suggestions rather than fewer.",
+      },
+      {
+        id: 'B',
+        text: "Document your team's testing standards, valuable test criteria, and available fixtures in CLAUDE.md so CI-invoked Claude Code has the project context to generate more relevant suggestions.",
+        rationale:
+          'Correct — CLAUDE.md is the mechanism for providing project context — testing standards, fixture conventions, and review criteria — to CI-invoked Claude Code.',
+      },
+      {
+        id: 'C',
+        text: 'Disable test-generation review checks entirely, since they cannot be made more accurate.',
+        rationale: 'Wrong — disabling the check entirely discards useful functionality instead of improving its accuracy with available context.',
+      },
+      {
+        id: 'D',
+        text: 'Re-run the exact same review request multiple times and keep only the last output.',
+        rationale:
+          "Wrong — repeating the same under-specified request doesn't add missing project context; it would likely produce similarly generic results.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Documenting testing standards, valuable test criteria, and available fixtures in CLAUDE.md gives CI-invoked Claude Code the project context needed to reduce low-value, generic test suggestions.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s5-0004',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: 'Your CI pipeline uses the same Claude Code session both to generate a bug fix and, immediately afterward, to review that fix for correctness. Code review quality has been disappointing — the review rarely flags issues with the code it just wrote. What is the most likely explanation?',
+    options: [
+      {
+        id: 'A',
+        text: 'Claude Code cannot review any code it did not write itself.',
+        rationale:
+          'Wrong — Claude Code can review code regardless of who or what wrote it; the issue here is specifically about self-review using the same session.',
+      },
+      {
+        id: 'B',
+        text: 'The CI pipeline is running out of memory during the review step.',
+        rationale:
+          'Wrong — nothing in the scenario points to a resource problem; the described symptom is about review quality, not a crash or resource exhaustion.',
+      },
+      {
+        id: 'C',
+        text: "The review step needs a larger context window to catch its own mistakes.",
+        rationale: "Wrong — window size isn't the limiting factor here; the issue is retained reasoning bias, not insufficient context capacity.",
+      },
+      {
+        id: 'D',
+        text: 'The same session retains reasoning context from generating the fix, making it less likely to question its own decisions; an independent review instance without that prior reasoning context would be more effective.',
+        rationale:
+          'Correct — a session that generated code retains its own reasoning context, making it less likely to challenge its own prior decisions; an independent instance without that context is more effective at catching subtle issues.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Session context isolation matters for review quality: the same session that generated code retains reasoning context that makes it less likely to question its own decisions, unlike an independent review instance.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s5-0005',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: 'Your CI pipeline runs an automated Claude Code review on every new commit to an open pull request. After the third commit, developers complain that the review keeps re-posting comments about issues they already fixed in earlier commits, alongside genuinely new findings. What is the most effective way to fix this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Include the prior review findings in context when re-running the review, and instruct Claude to report only new or still-unaddressed issues.',
+        rationale:
+          'Correct — including prior review findings in context and instructing Claude to report only new or unaddressed issues is the documented pattern for avoiding duplicate comments across re-reviews.',
+      },
+      {
+        id: 'B',
+        text: 'Only run the review once, on the very first commit, and never re-run it for subsequent commits.',
+        rationale:
+          'Wrong — never re-reviewing after the first commit means genuinely new issues introduced by later commits would never be caught.',
+      },
+      {
+        id: 'C',
+        text: "Increase the review's severity threshold so fewer issues are reported overall.",
+        rationale:
+          "Wrong — raising the severity threshold reduces noise generally, but doesn't specifically address re-posting already-fixed issues, and risks missing real new problems too.",
+      },
+      {
+        id: 'D',
+        text: 'Have the review always post a completely fresh, full list of every issue found in the entire PR on every commit, regardless of history.',
+        rationale:
+          'Wrong — this is literally the behavior causing the complaint; reposting the full list every time is what generates duplicate comments about already-fixed issues.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Including prior review findings in context and instructing Claude to report only new or unaddressed issues prevents duplicate comments across re-reviews of the same PR.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
