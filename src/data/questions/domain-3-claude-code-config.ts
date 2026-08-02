@@ -6,4 +6,453 @@ import type { Question } from '../../types/question'
  * primarily from Scenario 2 (Code Generation), Scenario 4 (Developer
  * Productivity), and Scenario 5 (CI/CD).
  */
-export const domain3Questions: Question[] = []
+export const domain3Questions: Question[] = [
+  {
+    id: 'q3-s2-0001',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.1'],
+    selectCount: 1,
+    stem: "Your team's testing conventions have worked correctly in Claude Code for months, but a new engineer who just joined reports that Claude Code never applies those conventions in their sessions. Investigating, you find the conventions were originally written into the project lead's personal ~/.claude/CLAUDE.md file, not the project's own CLAUDE.md. What is the most likely explanation, and the correct fix?",
+    options: [
+      {
+        id: 'A',
+        text: "~/.claude/CLAUDE.md is user-level and applies only to that individual; since it isn't shared via version control, the new engineer never received it — the conventions should be moved to the project-level CLAUDE.md so they apply to everyone who clones the repo.",
+        rationale:
+          "Correct — user-level settings apply only to that user and are never distributed via version control; moving the conventions into the project-level file is what makes them apply to every team member automatically.",
+      },
+      {
+        id: 'B',
+        text: "The new engineer needs to manually copy the project lead's ~/.claude/CLAUDE.md file to their own machine.",
+        rationale:
+          'Wrong — this "fixes" the symptom for one person by manual copying, but does not scale; every future new hire would need the same manual step.',
+      },
+      {
+        id: 'C',
+        text: 'CLAUDE.md files only take effect after being explicitly loaded with the /memory command, which the new engineer has not run yet.',
+        rationale:
+          'Wrong — /memory is a diagnostic command for verifying which memory files are currently loaded, not a required activation step for CLAUDE.md to take effect.',
+      },
+      {
+        id: 'D',
+        text: 'User-level CLAUDE.md files require an explicit @import from the project-level file to take effect for other users.',
+        rationale:
+          "Wrong — @import is used to selectively include external files into a CLAUDE.md; it is not a mechanism for user-level files to reach other users, who never see another user's personal configuration regardless.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'User-level CLAUDE.md configuration applies only to the individual who wrote it and is not shared via version control. Conventions meant for the whole team belong in project-level configuration.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0002',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.1'],
+    selectCount: 1,
+    stem: "Your project's root CLAUDE.md has grown to over 600 lines, covering testing conventions, API design standards, deployment procedures, and database migration guidelines all in one file. Team members report it's hard to find relevant guidance, and unrelated sections get loaded into context even for narrowly-scoped tasks. What's the recommended way to reorganize this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Split the content into focused, topic-specific files under .claude/rules/ (e.g., testing.md, api-conventions.md, deployment.md), rather than keeping one monolithic CLAUDE.md.',
+        rationale:
+          '.claude/rules/ exists specifically as an alternative to a monolithic CLAUDE.md, letting topic-specific guidance live in its own focused file.',
+      },
+      {
+        id: 'B',
+        text: 'Delete the least frequently referenced sections to reduce the file\'s overall length.',
+        rationale: 'Wrong — deleting content loses guidance the team still needs; the problem is organization, not volume that must be reduced.',
+      },
+      {
+        id: 'C',
+        text: 'Convert the entire file into a single custom slash command that developers can invoke on demand.',
+        rationale:
+          'Wrong — a slash command is for on-demand, task-specific invocation, not for always-relevant standards that should be present automatically.',
+      },
+      {
+        id: 'D',
+        text: 'Split the content across multiple root-level files named CLAUDE.md, CLAUDE2.md, and CLAUDE3.md.',
+        rationale:
+          "Wrong — there's no mechanism that recognizes numbered CLAUDE2.md/CLAUDE3.md files as part of the configuration hierarchy.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      '.claude/rules/ is the designed alternative to a monolithic CLAUDE.md for organizing topic-specific guidance into focused files, especially when combined with path-scoping to reduce irrelevant context.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0003',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.2'],
+    selectCount: 1,
+    stem: "You're building a custom Claude Code skill that performs a deep, exploratory analysis of an unfamiliar codebase — tracing every import, cataloging every module, and producing pages of intermediate notes — before finally returning a concise summary of the architecture. Currently, all of that exploratory output ends up in the main conversation, consuming a large amount of context. How should you configure the skill to fix this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Set context: fork in the skill\'s frontmatter so the exploratory work runs in an isolated sub-agent context, and only the final summary returns to the main conversation.',
+        rationale:
+          'Correct — context: fork runs a skill in an isolated sub-agent context specifically so verbose intermediate output does not pollute the main conversation.',
+      },
+      {
+        id: 'B',
+        text: 'Set allowed-tools to an empty list in the skill\'s frontmatter to prevent the skill from producing any output.',
+        rationale:
+          'Wrong — restricting to no tools would prevent the skill from doing any exploration at all, not just from polluting context.',
+      },
+      {
+        id: 'C',
+        text: 'Add an argument-hint to the skill\'s frontmatter so developers know what parameters to pass.',
+        rationale: 'Wrong — argument-hint is about prompting for required parameters, unrelated to isolating verbose output.',
+      },
+      {
+        id: 'D',
+        text: 'Move the skill from .claude/skills/ to .claude/commands/ so it runs as a slash command instead.',
+        rationale:
+          'Wrong — commands and skills are different mechanisms, and relocating the file does not provide context isolation; only context: fork does that.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'The context: fork frontmatter option runs a skill in an isolated sub-agent context, preventing verbose skill output from polluting the main conversation.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0004',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.2'],
+    selectCount: 1,
+    stem: "You're building a skill that formats and writes a changelog entry to CHANGELOG.md based on recent commits. You want to make sure this skill can never accidentally run arbitrary shell commands or modify other files, even if a future edit to the skill's prompt introduces that possibility. What should you do?",
+    options: [
+      {
+        id: 'A',
+        text: "Configure allowed-tools in the skill's frontmatter to restrict it to only the file-write operation it actually needs.",
+        rationale:
+          'Correct — allowed-tools frontmatter restricts which tools are available during the skill\'s execution, making over-broad tool use structurally impossible rather than merely discouraged.',
+      },
+      {
+        id: 'B',
+        text: "Add a comment at the top of the skill's prompt asking future editors not to add Bash usage.",
+        rationale: "Wrong — a comment is a request, not an enforcement mechanism; it doesn't prevent a future prompt edit from enabling broader tool use.",
+      },
+      {
+        id: 'C',
+        text: "Store the skill in ~/.claude/skills/ instead of .claude/skills/ so it's personal and can't be shared accidentally.",
+        rationale: 'Wrong — user-scoping controls sharing with teammates, not what tools the skill can access once invoked.',
+      },
+      {
+        id: 'D',
+        text: "Rename the skill file to make its limited purpose obvious to future editors.",
+        rationale: 'Wrong — a clearer name might reduce confusion but provides no actual restriction on tool access.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'allowed-tools in skill frontmatter is the mechanism for restricting tool access during skill execution, providing a structural guarantee rather than relying on prompt wording.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0005',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.3'],
+    selectCount: 1,
+    stem: "Your codebase has GraphQL resolver files (*.resolver.ts) scattered across many different feature directories, and you want a consistent convention applied whenever Claude edits any of them — but you don't want this guidance loaded into context when working on unrelated files. What's the best approach?",
+    options: [
+      {
+        id: 'A',
+        text: 'Create a file in .claude/rules/ with YAML frontmatter specifying a glob pattern like paths: ["**/*.resolver.ts"], so the rule loads only when a matching file is being edited.',
+        rationale:
+          'Correct — path-specific rules with glob patterns apply based on file type/name regardless of directory location, exactly suited to conventions for a file type spread across many directories.',
+      },
+      {
+        id: 'B',
+        text: 'Create a CLAUDE.md file in each feature directory that contains a resolver file, duplicating the same convention in each one.',
+        rationale:
+          'Wrong — duplicating the same content across many directory-level CLAUDE.md files is exactly the maintenance burden path-specific rules exist to avoid.',
+      },
+      {
+        id: 'C',
+        text: "Add the convention to the root CLAUDE.md so it's always loaded regardless of which files are being edited.",
+        rationale:
+          'Wrong — the root CLAUDE.md is always loaded, defeating the goal of only loading the convention when relevant.',
+      },
+      {
+        id: 'D',
+        text: 'Rename all resolver files to live in a single top-level /resolvers directory, then add a CLAUDE.md there.',
+        rationale:
+          'Wrong — this requires a significant, disruptive codebase restructuring just to work around a configuration limitation, when a much simpler configuration-only solution exists.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Glob-pattern rules in .claude/rules/ apply conventions to files by type regardless of directory location, which is the advantage over directory-level CLAUDE.md files for conventions spanning many directories.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0006',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.3'],
+    selectCount: 1,
+    stem: 'You\'ve defined a rule file at .claude/rules/api-conventions.md with YAML frontmatter paths: ["src/api/**/*"]. When does Claude Code load this rule\'s content into context?',
+    options: [
+      {
+        id: 'A',
+        text: 'Only when Claude is working with a file whose path matches the glob pattern, such as src/api/handlers/users.ts.',
+        rationale:
+          "Correct — the paths frontmatter is what makes a rule file's activation conditional on the files currently being worked with, matching the glob pattern.",
+      },
+      {
+        id: 'B',
+        text: 'On every session, regardless of which files are being edited, because rule files are always loaded like CLAUDE.md.',
+        rationale:
+          "Wrong — this describes always-loaded CLAUDE.md behavior, not path-scoped rules; the entire benefit of path-scoped rules is that they don't always load.",
+      },
+      {
+        id: 'C',
+        text: 'Only once, the first time the project is opened, and then it remains cached for the rest of the session regardless of files touched.',
+        rationale: 'Wrong — activation is tied to which files are currently relevant, not to a one-time, session-start check.',
+      },
+      {
+        id: 'D',
+        text: 'Only when a developer manually runs a slash command referencing api-conventions.md.',
+        rationale: 'Wrong — rule files activate automatically based on file path matching; they are not invoked manually like slash commands.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Path-scoped rules load only when editing matching files, based on the glob patterns in their paths frontmatter, reducing irrelevant context and token usage.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0007',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: 'A developer asks Claude Code to add a null check to a single function after a stack trace clearly identifies the exact line causing a crash. Should they use plan mode or direct execution?',
+    options: [
+      {
+        id: 'A',
+        text: 'Direct execution — this is a simple, well-scoped change with a clear location and fix, not a case requiring architectural exploration.',
+        rationale:
+          'Correct — plan mode is intended for complex, multi-file, or architecturally ambiguous work; a single-line fix with a clear stack trace is exactly the well-scoped case direct execution is meant for.',
+      },
+      {
+        id: 'B',
+        text: 'Plan mode — any production bug fix should go through a planning phase first.',
+        rationale: 'Wrong — treating every bug fix as requiring a planning phase adds unnecessary overhead to changes that are already unambiguous.',
+      },
+      {
+        id: 'C',
+        text: 'Plan mode — the Explore subagent should be used to search the entire codebase for similar bugs before making any change.',
+        rationale:
+          "Wrong — searching for related bugs elsewhere may be a reasonable follow-up task, but it isn't necessary for making this specific, already-diagnosed fix.",
+      },
+      {
+        id: 'D',
+        text: 'Neither — Claude Code should not be used for bug fixes identified from stack traces.',
+        rationale: 'Wrong — this is exactly the kind of well-scoped task Claude Code handles directly and reliably.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Direct execution is appropriate for simple, well-scoped changes with a clear fix location, such as a single-file bug fix with a clear stack trace.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0008',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: "You've been asked to migrate your application's HTTP client library to a new one with a different API surface, affecting roughly 50 files across the codebase, with several call sites needing different adaptation strategies depending on how they currently use the old library. What's the best approach?",
+    options: [
+      {
+        id: 'A',
+        text: 'Use plan mode to explore how the current library is used across the codebase and design a migration approach, then execute the planned changes.',
+        rationale:
+          "Correct — this is a large-scale, multi-file change with several different adaptation strategies needed, exactly the profile plan mode's safe exploration-before-committing is designed for.",
+      },
+      {
+        id: 'B',
+        text: 'Use direct execution and fix files one at a time as errors are discovered after each change.',
+        rationale:
+          'Wrong — reactive, error-driven fixing across 50 files with varying usage patterns risks costly rework compared to understanding the scope upfront.',
+      },
+      {
+        id: 'C',
+        text: 'Use plan mode only to write documentation about the migration; perform all actual file changes through direct execution without further exploration.',
+        rationale:
+          'Wrong — this separates the exploration from the implementation it should inform, undermining the point of planning before executing.',
+      },
+      {
+        id: 'D',
+        text: 'Skip investigation entirely and write a single find-and-replace script to update all 50 files identically.',
+        rationale:
+          'Wrong — a single uniform find-and-replace ignores that different call sites need different adaptation strategies, as explicitly stated in the scenario.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Plan mode is designed for complex, multi-file changes with architectural implications, like library migrations affecting many files with varying adaptation needs — combining investigation with subsequent direct-execution implementation.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0009',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.5'],
+    selectCount: 1,
+    stem: "You ask Claude Code to \"normalize phone numbers to a standard format\" across a dataset. The results are inconsistent — some outputs use (555) 123-4567, others use 555-123-4567, and some retain a leading +1 while others strip it. What is the most effective way to get consistent output?",
+    options: [
+      {
+        id: 'A',
+        text: 'Provide 2-3 concrete input/output examples showing exactly the transformation you want, including how edge cases like country codes should be handled.',
+        rationale:
+          'Correct — concrete input/output examples are the most effective way to communicate an exact expected transformation when a prose description alone is being interpreted inconsistently.',
+      },
+      {
+        id: 'B',
+        text: 'Repeat the instruction "normalize phone numbers to a standard format" multiple times in the prompt for emphasis.',
+        rationale: 'Wrong — repeating the same ambiguous instruction does not add any new information about which specific format is wanted.',
+      },
+      {
+        id: 'C',
+        text: 'Break the task into smaller batches so Claude processes fewer phone numbers per request.',
+        rationale: "Wrong — smaller batches don't address the actual issue, which is that the target format itself hasn't been specified precisely.",
+      },
+      {
+        id: 'D',
+        text: 'Increase max_tokens so Claude has more room to reason about the correct format.',
+        rationale: "Wrong — the issue isn't insufficient output length; it's ambiguity about the target format, which more tokens don't resolve.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Concrete input/output examples are the most effective technique for communicating an exact expected transformation when prose descriptions alone produce inconsistent results.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s2-0010',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.5'],
+    selectCount: 1,
+    stem: "You ask Claude Code to implement a caching layer for an internal API, but you haven't yet decided on cache invalidation strategy, TTL values, or how to handle concurrent writes. What's an effective way to surface these considerations before implementation begins?",
+    options: [
+      {
+        id: 'A',
+        text: 'Ask Claude to first interview you with clarifying questions about invalidation strategy, TTL, and concurrency handling before writing any code.',
+        rationale:
+          'Correct — the interview pattern, where Claude asks clarifying questions before implementing, is effective for surfacing design considerations you may not have fully anticipated.',
+      },
+      {
+        id: 'B',
+        text: 'Ask Claude to implement a reasonable default immediately, and treat any issues as bugs to fix later.',
+        rationale:
+          'Wrong — implementing a default immediately risks committing to caching behavior that is costly to unwind later, when the considerations could have been surfaced upfront cheaply.',
+      },
+      {
+        id: 'C',
+        text: 'Write the entire specification yourself in exhaustive detail before involving Claude Code at all.',
+        rationale:
+          "Wrong — this defeats the purpose of using Claude to help surface considerations you haven't already thought through yourself.",
+      },
+      {
+        id: 'D',
+        text: 'Ask Claude Code to implement three completely different caching implementations in parallel and pick one afterward.',
+        rationale:
+          'Wrong — building three full implementations is far more effort than a short upfront clarifying conversation about the actual open questions.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'The interview pattern — having Claude ask clarifying questions before implementing — surfaces design considerations the developer may not have anticipated, in domains like cache invalidation and concurrency.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+]

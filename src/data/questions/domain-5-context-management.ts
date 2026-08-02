@@ -236,4 +236,184 @@ export const domain5Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q5-s2-0001',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.4'],
+    selectCount: 1,
+    stem: "You've been using Claude Code in a single long session to explore an unfamiliar 200,000-line codebase, asking dozens of questions over several hours. You notice Claude has started giving inconsistent answers, and referring to \"typical patterns you'd expect\" rather than the specific classes it examined earlier in the session. What is the most effective way to address this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Have Claude maintain a scratchpad file recording key findings as it explores, and reference that file for subsequent questions rather than relying purely on in-context memory of a long session.',
+        rationale:
+          'Correct — scratchpad files persist key findings across context boundaries, directly counteracting the context degradation that shows up in extended sessions as increasingly generic, unspecific answers.',
+      },
+      {
+        id: 'B',
+        text: 'Increase max_tokens so Claude can generate longer, more detailed answers.',
+        rationale: "Wrong — max_tokens controls response length, not the model's ability to accurately recall earlier findings from a degraded context.",
+      },
+      {
+        id: 'C',
+        text: 'Repeat your original question at the start of every new message for the rest of the session.',
+        rationale: "Wrong — repeating the original question doesn't restore earlier findings that have degraded in the model's effective context.",
+      },
+      {
+        id: 'D',
+        text: 'Switch to a different, unrelated task to give the model a mental break before returning to the codebase questions.',
+        rationale:
+          'Wrong — Claude has no persistent "mental state" between unrelated tasks in the way this implies; switching tasks does not repair context degradation.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Scratchpad files persist key findings across context boundaries, which is the recommended mitigation for the context degradation that appears in extended exploration sessions.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s2-0002',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.4'],
+    selectCount: 1,
+    stem: "You want Claude Code to investigate \"how does authentication currently work across this codebase\" as part of a larger task, but you're worried the verbose file-by-file exploration needed to answer that question will consume most of your context budget before you even get to the actual implementation work. What's the best approach?",
+    options: [
+      {
+        id: 'A',
+        text: 'Spawn a subagent to investigate the authentication question, and have it return a concise summary of findings rather than the full exploration transcript to the main conversation.',
+        rationale:
+          'Correct — subagent delegation isolates verbose exploration output from the main conversation; the main session receives only the distilled findings it needs, preserving context for the implementation work still to come.',
+      },
+      {
+        id: 'B',
+        text: "Ask the question directly in the main conversation and accept that some context budget will be consumed by the exploration.",
+        rationale: 'Wrong — this is exactly the outcome the developer is trying to avoid; accepting the cost does not solve the stated problem.',
+      },
+      {
+        id: 'C',
+        text: 'Use /compact immediately before asking the question so there is more room for the exploration that follows.',
+        rationale:
+          '/compact reduces existing context usage but does not prevent the upcoming exploration from still consuming a large amount of context in the main conversation once it happens.',
+      },
+      {
+        id: 'D',
+        text: 'Break the authentication question into 10 much smaller questions asked one at a time in the main conversation.',
+        rationale:
+          'Wrong — splitting into many smaller questions asked directly in the main conversation still runs all the exploration in the same context, adding overhead rather than reducing it.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Subagent delegation isolates verbose exploration output while the main agent coordinates high-level understanding, preserving the main context budget for subsequent work.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s2-0003',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.4'],
+    selectCount: 1,
+    stem: 'During a multi-hour Claude Code session doing a large-scale refactor across many subagents, your machine crashes partway through. You want to resume without redoing all the completed work. What design would best support this kind of recovery?',
+    options: [
+      {
+        id: 'A',
+        text: "Have each subagent export its completed state to a known location as it finishes, and have the coordinator load a manifest of completed work on resume, injecting it into the resumed session.",
+        rationale:
+          'Correct — structured state persistence, where each agent exports progress to a known location and a manifest is loaded on resume, allows a coordinator to pick up where a crashed session left off rather than starting over.',
+      },
+      {
+        id: 'B',
+        text: 'Rely on Claude Code automatically remembering all prior context the next time you launch it, with no explicit state export needed.',
+        rationale:
+          "Wrong — there's no such automatic cross-session memory; without an explicit export mechanism, completed work state isn't preserved through a crash.",
+      },
+      {
+        id: 'C',
+        text: 'Start the entire refactor over from the beginning to guarantee consistency.',
+        rationale: 'Wrong — restarting from scratch discards all the completed work, which is exactly what a good recovery design should avoid needing.',
+      },
+      {
+        id: 'D',
+        text: 'Ask Claude to reconstruct what it had likely completed based on the current state of the files alone, without any structured record.',
+        rationale:
+          'Wrong — inferring progress purely from file state without a structured record is unreliable and could miss in-progress or partially-completed work.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Structured state persistence — each agent exporting state to a known location, with the coordinator loading a manifest on resume — is the designed pattern for crash recovery in extended multi-agent sessions.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s2-0004',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: 'You ask Claude Code to review a single, very long generated migration file (several thousand lines) for correctness. It correctly flags issues near the beginning and end of the file but misses an obvious bug in the middle section. What does this best illustrate, and what is a reasonable mitigation?',
+    options: [
+      {
+        id: 'A',
+        text: 'The "lost in the middle" effect, where models reliably process information at the start and end of long inputs but may under-attend to middle sections; splitting the file into smaller sections for focused review can mitigate this.',
+        rationale:
+          'Correct — this is a textbook description of the lost-in-the-middle effect, and splitting a long input into smaller, focused passes is a standard mitigation for exactly this kind of position-dependent miss.',
+      },
+      {
+        id: 'B',
+        text: 'A fundamental inability of Claude to review generated code at all, meaning code review tasks should always be done by a human instead.',
+        rationale:
+          'Wrong — this overgeneralizes a specific, well-understood positional effect into a sweeping claim not supported by the scenario.',
+      },
+      {
+        id: 'C',
+        text: 'A one-off random error unrelated to file length or position, with no systematic mitigation available.',
+        rationale:
+          'Wrong — this is a known, systematic effect tied to position within long inputs, not an unrelated random occurrence with no mitigation.',
+      },
+      {
+        id: 'D',
+        text: 'An indication that migration files always require manual review regardless of tooling.',
+        rationale:
+          'Wrong — the scenario is asking about what caused the specific miss and how tooling could address it, not making a blanket claim about migration files.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Models reliably process information at the beginning and end of long inputs but may omit findings from middle sections. Splitting large reviews into smaller, focused passes mitigates this position effect.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
