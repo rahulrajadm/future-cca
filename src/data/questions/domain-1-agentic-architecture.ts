@@ -550,4 +550,228 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q1-s4-0001',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: "You ask Claude Code to \"modernize error handling across this legacy Express application.\" The codebase has inconsistent error handling patterns spread across dozens of route handlers, with no single obvious starting point. What is the most effective way for Claude Code to approach this?",
+    options: [
+      {
+        id: 'A',
+        text: 'First map the codebase structure and identify the highest-impact route handlers, then create a prioritized plan that adapts as dependencies and patterns are discovered along the way.',
+        rationale:
+          'Correct — decomposing open-ended tasks by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered is the recommended approach.',
+      },
+      {
+        id: 'B',
+        text: 'Immediately begin rewriting the first route handler file alphabetically, then proceed to the next file in sequence.',
+        rationale:
+          "Wrong — alphabetical, sequential processing ignores which handlers actually matter most and doesn't adapt to what's discovered along the way.",
+      },
+      {
+        id: 'C',
+        text: 'Generate a single find-and-replace pattern intended to fix all inconsistent error handling in one pass.',
+        rationale:
+          'Wrong — a single uniform find-and-replace is unlikely to correctly handle "inconsistent" patterns that, by definition, vary across the codebase.',
+      },
+      {
+        id: 'D',
+        text: 'Ask the developer to first write a complete specification of every error handling pattern currently in use before starting.',
+        rationale:
+          'Wrong — this defeats the purpose of using Claude Code to help map and understand the inconsistency in the first place.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Open-ended tasks are best decomposed by first mapping structure and identifying high-impact areas, then building an adaptive, prioritized plan — not fixed sequential or uniform automated approaches.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s4-0002',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: "You're building a developer productivity agent that autonomously runs a multi-step refactor: it reads a file, makes an edit, runs the test suite, and repeats until tests pass. Your orchestration code currently stops the loop as soon as the agent's response contains the words \"tests pass.\" What risk does this introduce?",
+    options: [
+      {
+        id: 'A',
+        text: 'The agent will be unable to read any files after the first iteration.',
+        rationale: 'Wrong — nothing about text-based termination checking prevents subsequent file reads; the two are unrelated.',
+      },
+      {
+        id: 'B',
+        text: 'The loop will never terminate under any circumstances.',
+        rationale: 'Wrong — the described behavior would actually cause premature (not absent) termination, the opposite problem.',
+      },
+      {
+        id: 'C',
+        text: 'The test suite will run twice as often as necessary.',
+        rationale: 'Wrong — this describes a frequency issue, not the actual risk of stopping based on unreliable text matching.',
+      },
+      {
+        id: 'D',
+        text: "The agent could mention \"tests pass\" as an expected future outcome or in passing, causing the loop to stop before verification has actually happened via a real tool result — the loop should instead check stop_reason and the actual tool results, not the text content.",
+        rationale:
+          'Correct — this is the anti-pattern of checking text content as a completion indicator instead of the structured stop_reason and actual tool results; the model could reference the phrase without it reflecting a verified outcome.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Checking assistant text content for completion phrases is an anti-pattern; loop control should be based on stop_reason and the actual results of tool execution, not on narrated text.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s4-0003',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: "Your developer productivity agent has Write and Bash access and is generally reliable, but your team wants an absolute guarantee that it can never modify files under /db/migrations/ without a human explicitly approving each change first, given how costly a mistaken migration edit could be. Prompt instructions already tell the agent to ask for approval before touching migration files. Is this sufficient?",
+    options: [
+      {
+        id: 'A',
+        text: 'Yes, because a clear prompt instruction is always followed reliably by the model.',
+        rationale:
+          "Wrong — this is exactly the assumption that doesn't hold; prompt-based compliance is probabilistic, not guaranteed.",
+      },
+      {
+        id: 'B',
+        text: 'No — prompt instructions have a non-zero failure rate, so a programmatic gate that blocks Write/Bash operations targeting that path unless explicit approval has been recorded is needed for an absolute guarantee.',
+        rationale:
+          'Correct — when deterministic compliance is required for a costly, hard-to-reverse action, only a programmatic gate can provide the guarantee being asked for, not prompt wording alone.',
+      },
+      {
+        id: 'C',
+        text: "Yes, because Write and Bash tools automatically request human approval for any path containing the word 'migrations'.",
+        rationale: 'Wrong — there is no such automatic built-in approval behavior tied to path names; this is not a real mechanism.',
+      },
+      {
+        id: 'D',
+        text: 'No — the only way to prevent this is to remove Write and Bash access from the agent entirely for the rest of the session.',
+        rationale:
+          'Wrong — removing all Write/Bash access entirely is a much bigger restriction than necessary; a targeted gate on the specific risky path preserves the agent\'s usefulness elsewhere.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'When deterministic compliance is required for a costly, hard-to-reverse action, a programmatic prerequisite gate is needed — prompt instructions alone retain a non-zero failure rate.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s4-0004',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: 'You want Claude Code to add a standard-format docstring to every public function in a well-organized, consistently-structured library, one file at a time, following the same steps for each file. Is this task better suited to a fixed, prompt-chained pipeline or dynamic, adaptive decomposition?',
+    options: [
+      {
+        id: 'A',
+        text: 'Dynamic, adaptive decomposition, because every codebase task benefits most from letting the model decide its own steps.',
+        rationale:
+          'Wrong — this overgeneralizes; predictable, uniform, multi-aspect work is exactly where fixed pipelines are the better fit, not dynamic decomposition.',
+      },
+      {
+        id: 'B',
+        text: 'Neither — this task should not be automated at all.',
+        rationale: "Wrong — nothing about this task makes it unsuitable for Claude Code; it's a well-scoped, repetitive documentation task.",
+      },
+      {
+        id: 'C',
+        text: 'A fixed, prompt-chained pipeline, because the work is predictable and uniform across files, unlike open-ended investigation where the next step depends heavily on unpredictable findings.',
+        rationale:
+          'Correct — prompt chaining suits predictable, uniform work like applying the same docstring process file-by-file, in contrast to dynamic decomposition\'s better fit for open-ended, unpredictable investigation.',
+      },
+      {
+        id: 'D',
+        text: 'Dynamic, adaptive decomposition, because docstring content varies function to function.',
+        rationale:
+          'Wrong — variation in docstring content per function doesn\'t change the fact that the overall process taken for each file is uniform and predictable, which is what determines the right decomposition pattern.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Fixed, prompt-chained pipelines suit predictable, uniform multi-aspect work; dynamic decomposition suits open-ended investigation where the next step depends on unpredictable findings.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s4-0005',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: "You're using Claude Code across two separate work sessions to gradually understand a codebase's data layer. Between sessions, another engineer merges changes that significantly alter two of the files you previously analyzed together. When you resume your named investigation session, what should you do to keep it accurate?",
+    options: [
+      {
+        id: 'A',
+        text: "Inform the resumed session specifically about which files changed, so Claude can re-analyze just those files rather than assuming its prior analysis of them is still valid.",
+        rationale:
+          'Correct — informing a resumed session about specific file changes enables targeted re-analysis of just those files, rather than requiring full re-exploration or risking reliance on now-stale conclusions.',
+      },
+      {
+        id: 'B',
+        text: 'Resume the session and trust that Claude will automatically detect any file changes made since the last session without being told.',
+        rationale: 'Wrong — Claude does not automatically detect out-of-band file changes made between sessions; this must be communicated explicitly.',
+      },
+      {
+        id: 'C',
+        text: 'Start a completely new session and re-explore the entire codebase from scratch, discarding all prior analysis.',
+        rationale:
+          'Wrong — discarding all prior analysis when only two files actually changed wastes the substantial valid understanding already built up elsewhere in the codebase.',
+      },
+      {
+        id: 'D',
+        text: 'Resume the session but avoid mentioning the changes, since bringing them up might confuse the model.',
+        rationale:
+          'Wrong — withholding relevant information risks the model confidently relying on stale conclusions about files that have since changed.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Informing a resumed session about specific file changes enables targeted re-analysis, rather than requiring full re-exploration or risking reliance on stale conclusions.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

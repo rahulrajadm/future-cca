@@ -460,4 +460,271 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q2-s4-0001',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: "You need to find every file in the repository named following the pattern *.controller.ts, regardless of which directory it's in, without caring about the file's contents. Which built-in tool is the right choice?",
+    options: [
+      {
+        id: 'A',
+        text: 'Grep, since it searches file contents for patterns.',
+        rationale:
+          "Wrong — Grep searches file contents for patterns like function names or error messages; the task here doesn't involve searching content, only file names.",
+      },
+      {
+        id: 'B',
+        text: 'Glob, since it matches file paths by name/extension pattern rather than searching file contents.',
+        rationale:
+          'Correct — Glob is specifically for file path pattern matching such as finding files by name or extension pattern, which is exactly this need.',
+      },
+      {
+        id: 'C',
+        text: 'Bash, by running a shell command to list directory contents recursively.',
+        rationale:
+          "Wrong — while technically possible via a shell command, this duplicates functionality Glob already provides directly and idiomatically.",
+      },
+      {
+        id: 'D',
+        text: "Read, applied to every file in the repository to check its name.",
+        rationale: 'Wrong — Read loads file contents; using it just to check file names is a wasteful, indirect way to do file discovery.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Glob is for file path pattern matching (finding files by name or extension patterns), distinct from Grep, which searches file contents.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s4-0002',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: "Claude Code attempts to use the Edit tool to change a specific line in a configuration file, but the anchor text it's trying to match appears in six different places in the file, and Edit reports it cannot find a unique match. What's the recommended way to proceed?",
+    options: [
+      {
+        id: 'A',
+        text: 'Retry the exact same Edit call repeatedly until it succeeds by chance.',
+        rationale: "Wrong — retrying the identical call won't change the outcome; the anchor text is still non-unique regardless of how many times it's attempted.",
+      },
+      {
+        id: 'B',
+        text: 'Delete the entire file and recreate it from scratch with Write.',
+        rationale:
+          'Wrong — recreating the whole file from scratch is unnecessary and risks losing unrelated content when only one occurrence needs to change.',
+      },
+      {
+        id: 'C',
+        text: 'Use Read to load the full file contents, then use Write to save the modified version with the specific occurrence changed.',
+        rationale:
+          'Correct — when Edit fails due to non-unique text matches, using Read to load full contents followed by Write is the documented fallback for reliable file modification.',
+      },
+      {
+        id: 'D',
+        text: 'Switch to using Bash with a sed command instead of any built-in file tool.',
+        rationale:
+          'Wrong — while technically possible, this bypasses the built-in file-editing tools in favor of a shell workaround when a direct, reliable built-in fallback already exists.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'When Edit fails due to non-unique text matches, using Read followed by Write is the reliable fallback for making the intended file modification.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s4-0003',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: 'You ask Claude Code to understand how a large, unfamiliar codebase handles user authentication before making a change. What is the most effective way for it to build this understanding?',
+    options: [
+      {
+        id: 'A',
+        text: 'Read every file in the repository from the first file to the last, in alphabetical order.',
+        rationale: 'Wrong — reading every file upfront, regardless of relevance, is inefficient and wastes context budget on unrelated code.',
+      },
+      {
+        id: 'B',
+        text: 'Ask the developer to explain the authentication flow verbally instead of exploring the code.',
+        rationale: "Wrong — this bypasses the actual investigative capability being tested and isn't a scalable approach for arbitrary codebases.",
+      },
+      {
+        id: 'C',
+        text: "Use Bash to print the entire repository's file tree and stop there without reading any file contents.",
+        rationale:
+          'Wrong — a file tree alone shows structure but not how authentication logic actually works; some content reading is still necessary.',
+      },
+      {
+        id: 'D',
+        text: 'Start with Grep to find authentication-related entry points, then use Read to follow imports and trace the flow from there, rather than reading all files upfront.',
+        rationale:
+          'Correct — building codebase understanding incrementally, starting with Grep to find entry points and then Read to follow imports and trace flows, is the recommended approach.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Building codebase understanding incrementally — Grep to find entry points, then Read to follow imports — is more effective than reading all files upfront.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s4-0004',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: "A utility function is re-exported through two different wrapper/barrel modules under different local names before it's finally used in application code, making a single search for the original function name insufficient to find all usages. What is the most effective way to trace all its usages across the codebase?",
+    options: [
+      {
+        id: 'A',
+        text: 'First identify all the exported names the function is re-exported as, then search for each of those names separately across the codebase.',
+        rationale:
+          'Correct — tracing function usage across wrapper modules by first identifying all exported names, then searching for each name across the codebase, is exactly the approach needed here.',
+      },
+      {
+        id: 'B',
+        text: 'Search only for the original function\'s definition and assume nothing else needs to be checked.',
+        rationale:
+          'Wrong — searching only for the original name misses every usage that goes through a re-exported alias, which is precisely the situation described.',
+      },
+      {
+        id: 'C',
+        text: 'Rename the function first, then see which files fail to compile.',
+        rationale:
+          "Wrong — renaming before understanding full usage is risky and would only reveal compile-time-checked errors, not necessarily all dynamic or type-loose usages.",
+      },
+      {
+        id: 'D',
+        text: 'Manually open every file in the project one at a time to visually scan for usage.',
+        rationale: 'Wrong — manually scanning every file is far slower and more error-prone than a systematic search-based approach.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Tracing function usage across wrapper modules requires first identifying all exported names, then searching for each name separately across the codebase.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s4-0005',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: "A user reports seeing the exact error message \"Session expired, please log in again\" but doesn't know which part of the application produced it. What is the most effective way to locate where this message originates in the codebase?",
+    options: [
+      {
+        id: 'A',
+        text: "Use Glob to find all files with 'session' in their file name.",
+        rationale: "Wrong — Glob matches file names/paths, not file contents; the exact error string could appear in a file with an unrelated name.",
+      },
+      {
+        id: 'B',
+        text: 'Use Grep to search file contents for the literal error message text.',
+        rationale:
+          'Correct — Grep is for searching file contents for patterns like specific error messages, which is exactly this need — a direct content search for the literal string.',
+      },
+      {
+        id: 'C',
+        text: 'Use Read to open the main entry point file and scan it manually for the message.',
+        rationale:
+          "Wrong — the main entry point is unlikely to directly contain a specific, deep application error message, and manual scanning doesn't scale.",
+      },
+      {
+        id: 'D',
+        text: 'Use Bash to restart the application and reproduce the error while watching logs.',
+        rationale:
+          'Wrong — reproducing the error might confirm behavior but does not directly locate the source line producing the message the way a targeted content search would.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Grep is the tool for searching file contents for specific patterns like literal error message strings, directly locating their source.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s4-0006',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: "You want Claude Code to run the project's existing test suite to check whether a change broke anything. Which built-in tool is appropriate for this, and why?",
+    options: [
+      {
+        id: 'A',
+        text: "Grep, because it can search for test file names containing the word 'test'.",
+        rationale: 'Wrong — Grep searches file contents for patterns; it cannot execute a test suite.',
+      },
+      {
+        id: 'B',
+        text: 'Glob, because it can match all files ending in .test.ts.',
+        rationale: 'Wrong — Glob can find test files by name pattern, but finding files is not the same as running them.',
+      },
+      {
+        id: 'C',
+        text: 'Bash, because running a test suite means executing a command (e.g., npm test), which is what Bash is for.',
+        rationale:
+          'Correct — actually executing a command like a test suite is a Bash operation; Grep and Glob are for finding content and files, not for running processes.',
+      },
+      {
+        id: 'D',
+        text: 'Edit, because running tests requires modifying a configuration file first.',
+        rationale: "Wrong — running a test suite doesn't require modifying a configuration file first; this introduces an unnecessary and unrelated step.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Bash is for executing commands, such as running a test suite, distinct from Grep/Glob which are for finding content and files rather than running processes.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

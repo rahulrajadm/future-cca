@@ -455,4 +455,226 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q3-s4-0001',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.1'],
+    selectCount: 1,
+    stem: "Your monorepo has a root CLAUDE.md with universal conventions, plus separate standards files for frontend (frontend-standards.md) and backend (backend-standards.md) conventions that only make sense within their respective packages. You want each package's own CLAUDE.md to selectively include just the standards file relevant to it, without duplicating content. What mechanism supports this?",
+    options: [
+      {
+        id: 'A',
+        text: "Copy and paste the relevant standards file's full content into each package's CLAUDE.md manually.",
+        rationale:
+          'Wrong — manual duplication creates a maintenance burden where updates must be repeated in multiple places, which @import exists to avoid.',
+      },
+      {
+        id: 'B',
+        text: 'Store all standards in a single file and rely on Claude to infer which parts apply to which package.',
+        rationale: 'Wrong — relying on inference rather than explicit inclusion is unreliable compared to directly importing the relevant file.',
+      },
+      {
+        id: 'C',
+        text: "Create a .claude/rules/ file with a glob pattern matching each package's directory.",
+        rationale:
+          "Wrong — while path-scoped rules are useful for file-type-based conventions, the scenario describes package-level standards documents meant to be selectively included in CLAUDE.md, which is what @import is for.",
+      },
+      {
+        id: 'D',
+        text: "Use the @import syntax within each package's CLAUDE.md to reference the specific standards file relevant to that package.",
+        rationale:
+          "Correct — @import lets each package's CLAUDE.md selectively include the specific external standards file relevant to it, keeping CLAUDE.md modular without duplicating content.",
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      '@import syntax lets a CLAUDE.md selectively reference external standards files relevant to its own package, avoiding duplication while keeping configuration modular.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s4-0002',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.1'],
+    selectCount: 1,
+    stem: "A developer reports that Claude Code seems to be following outdated conventions that were removed from CLAUDE.md weeks ago. You suspect a stale or unexpected configuration file is still being loaded. What's an effective first step to diagnose this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Delete all CLAUDE.md files in the project and start over from an empty configuration.',
+        rationale: 'Wrong — deleting all configuration is a drastic, disruptive step to take before even diagnosing what is actually being loaded.',
+      },
+      {
+        id: 'B',
+        text: 'Run the /memory command to see exactly which memory files are currently being loaded for that session.',
+        rationale:
+          'Correct — /memory is the diagnostic command for verifying which memory files are loaded, which directly answers whether an unexpected or stale file is in play.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the developer to reinstall Claude Code entirely.',
+        rationale: 'Wrong — reinstalling the tool does not address a configuration-loading question and is a disproportionate response.',
+      },
+      {
+        id: 'D',
+        text: 'Assume the report is inaccurate, since CLAUDE.md changes always take effect immediately with no possible staleness.',
+        rationale:
+          'Wrong — dismissing the report without investigating contradicts the premise that unexpected configuration sources can plausibly explain the behavior.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'The /memory command verifies which memory files are currently loaded, making it the direct diagnostic tool for suspected stale or unexpected configuration.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s4-0003',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.2'],
+    selectCount: 1,
+    stem: "You want to add guidance for Claude Code that should apply automatically to every single session on this project, regardless of what task is being worked on (e.g., \"always use the project's internal logging library instead of console.log\"). Should this go in a skill or in CLAUDE.md?",
+    options: [
+      {
+        id: 'A',
+        text: 'A skill, because skills are more powerful than CLAUDE.md for any kind of instruction.',
+        rationale:
+          'Wrong — "more powerful" is not the relevant distinction; the two mechanisms serve different purposes based on whether guidance should always apply or only apply on demand.',
+      },
+      {
+        id: 'B',
+        text: 'A skill, because skill invocation is required for any instruction to take effect at all.',
+        rationale: 'Wrong — CLAUDE.md content takes effect without any explicit invocation; this is exactly backwards.',
+      },
+      {
+        id: 'C',
+        text: 'CLAUDE.md, because it is always-loaded universal guidance, whereas skills are for on-demand, task-specific workflows that must be explicitly invoked.',
+        rationale:
+          'Correct — CLAUDE.md is for always-loaded universal standards, while skills are for on-demand invocation of task-specific workflows.',
+      },
+      {
+        id: 'D',
+        text: 'Neither — this kind of guidance cannot be reliably communicated to Claude Code at all.',
+        rationale: 'Wrong — this is exactly the kind of always-applicable convention CLAUDE.md is designed to communicate reliably.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'CLAUDE.md is always-loaded universal guidance, while skills are for on-demand, task-specific invocation — the choice depends on whether guidance should always apply.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s4-0004',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: 'As part of a larger task, Claude Code needs to survey a large codebase to find every place a particular deprecated API is used before planning its replacement. This discovery phase alone is expected to involve many file reads and searches. How can this be done without consuming most of the main conversation\'s context budget?',
+    options: [
+      {
+        id: 'A',
+        text: 'Use the Explore subagent to perform the verbose discovery phase, returning a concise summary of findings to the main conversation rather than the full search transcript.',
+        rationale:
+          "Correct — the Explore subagent exists specifically to isolate verbose discovery output and return summaries, preserving the main conversation's context for the work that follows.",
+      },
+      {
+        id: 'B',
+        text: "Perform the discovery directly in the main conversation, since context budget concerns don't apply during investigation phases.",
+        rationale:
+          'Wrong — context budget concerns apply throughout a session, including investigation phases; this is exactly the scenario the Explore subagent is meant to help with.',
+      },
+      {
+        id: 'C',
+        text: 'Skip the discovery phase entirely and guess which files likely use the deprecated API.',
+        rationale: "Wrong — guessing risks missing real usages of the deprecated API, undermining the reliability of the subsequent replacement plan.",
+      },
+      {
+        id: 'D',
+        text: 'Increase max_tokens on every response during the discovery phase so more content fits.',
+        rationale: "Wrong — max_tokens affects response length, not how much of the context window a verbose discovery phase consumes.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'The Explore subagent isolates verbose discovery output, returning summaries to preserve the main conversation\'s context window for subsequent work.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q3-s4-0005',
+    domain: 3,
+    scenarioId: 4,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: "You need to migrate a set of internal libraries to a new build tool. The migration approach itself is uncertain and needs investigation, but once the approach is decided, the actual file changes are expected to be mechanical and repetitive. What's an effective way to use plan mode and direct execution together here?",
+    options: [
+      {
+        id: 'A',
+        text: 'Use direct execution for the entire task, including the investigation, since plan mode is unnecessary once you already know a migration is needed.',
+        rationale:
+          'Wrong — "knowing a migration is needed" is not the same as knowing the right approach; the approach itself is described as uncertain and needing investigation.',
+      },
+      {
+        id: 'B',
+        text: 'Use plan mode for the entire task, including the mechanical file changes, since plan mode is always safer regardless of a task\'s nature.',
+        rationale:
+          'Wrong — once the mechanical, repetitive implementation phase begins, continuing to use plan mode adds unnecessary overhead for well-understood, repetitive work.',
+      },
+      {
+        id: 'C',
+        text: 'Alternate randomly between plan mode and direct execution throughout the task.',
+        rationale: 'Wrong — this describes no coherent strategy tied to the actual nature of the work at each stage.',
+      },
+      {
+        id: 'D',
+        text: 'Use plan mode to investigate the codebase and decide on a migration approach, then switch to direct execution to carry out the resulting mechanical, repetitive changes.',
+        rationale:
+          'Correct — combining plan mode for investigation with direct execution for implementation matches the described task, which has an uncertain-approach phase followed by a mechanical-execution phase.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Combining plan mode for investigation with direct execution for implementation suits tasks with an uncertain-approach phase followed by mechanical, well-understood execution.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
