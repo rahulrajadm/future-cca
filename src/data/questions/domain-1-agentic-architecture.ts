@@ -1353,4 +1353,184 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q1-s1-0008',
+    domain: 1,
+    scenarioId: 1,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: "In a single API response, Claude requests two tool calls simultaneously (two tool_use content blocks) with stop_reason \"tool_use\". What should your orchestration code do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Execute only the first tool call and ignore the second, since only one tool result is needed per turn.',
+        rationale:
+          'Wrong — ignoring a requested tool call discards work Claude explicitly asked for, and leaves it with no result to reason from for that call.',
+      },
+      {
+        id: 'B',
+        text: "Execute both tool calls, and include both of their results in the next request back to Claude before continuing the loop.",
+        rationale:
+          'Correct — when a single response contains multiple tool_use blocks, all requested tools should be executed and all their results included together in the next request.',
+      },
+      {
+        id: 'C',
+        text: 'Reject the response as invalid, since Claude should only ever request one tool per turn.',
+        rationale: 'Wrong — multiple tool_use blocks in one response is normal, valid behavior, not an error condition.',
+      },
+      {
+        id: 'D',
+        text: 'Execute the two tool calls in two separate follow-up API requests, one at a time.',
+        rationale:
+          'Wrong — splitting into separate follow-up requests one at a time is unnecessary; both results can be gathered and returned together in a single next request.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'When a response contains multiple tool_use blocks, all requested tools should be executed and all results returned together in the next request, preserving the single request/response cycle.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s1-0009',
+    domain: 1,
+    scenarioId: 1,
+    taskStatements: ['1.4'],
+    selectCount: 2,
+    stem: 'For a customer support agent handling refunds, which TWO of the following requirements are best enforced with a programmatic gate rather than a prompt instruction alone? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Blocking process_refund until get_customer has returned a verified customer ID.',
+        rationale:
+          'Correct — identity verification before a financial operation needs a deterministic guarantee, since prompt instructions retain a non-zero failure rate.',
+      },
+      {
+        id: 'B',
+        text: 'Using a friendly, empathetic tone when apologizing to frustrated customers.',
+        rationale:
+          "Wrong — tone preference is a stylistic, low-stakes guideline well suited to prompt-based guidance; it doesn't need deterministic enforcement.",
+      },
+      {
+        id: 'C',
+        text: 'Blocking any single refund above $500 without secondary approval.',
+        rationale:
+          'Correct — a dollar-threshold approval requirement for financial actions needs guaranteed compliance via a hook/gate, not just a prompt instruction.',
+      },
+      {
+        id: 'D',
+        text: 'Preferring concise responses over long, verbose ones.',
+        rationale:
+          'Wrong — response length/verbosity preference is a stylistic guideline, not a compliance-critical rule requiring deterministic enforcement.',
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Deterministic, programmatic enforcement is for compliance-critical rules with financial or identity-verification consequences — not for stylistic preferences like tone or length, which are well suited to prompt-based guidance.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s1-0010',
+    domain: 1,
+    scenarioId: 1,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: "You're designing how the agent handles two different support workflows: (1) processing routine password-reset requests, which always follow the same three steps, and (2) investigating why a specific customer's account shows conflicting subscription statuses across three different backend systems, where the cause is unknown. Which decomposition approach fits each?",
+    options: [
+      {
+        id: 'A',
+        text: 'Both should use a fixed, prompt-chained pipeline, since password resets and status investigations are both customer-facing tasks.',
+        rationale:
+          "Wrong — treating the investigation the same as the routine reset ignores that its cause and needed steps are unknown upfront, unlike the reset's fixed procedure.",
+      },
+      {
+        id: 'B',
+        text: 'Both should use dynamic, adaptive decomposition, since customer support inherently requires flexibility.',
+        rationale:
+          'Wrong — the password reset is uniform and predictable every time, which is exactly what a fixed pipeline handles efficiently without added complexity.',
+      },
+      {
+        id: 'C',
+        text: 'Password resets should use a fixed, prompt-chained pipeline (same three steps every time); the status investigation should use dynamic, adaptive decomposition, since the cause and required checks are not known in advance.',
+        rationale:
+          'Correct — fixed pipelines suit uniform, predictable work like password resets; dynamic decomposition suits investigations where the cause and needed steps are unknown in advance.',
+      },
+      {
+        id: 'D',
+        text: 'Password resets should use dynamic decomposition since customers vary; the status investigation should use a fixed pipeline since it only involves three systems.',
+        rationale:
+          'Wrong — this reverses the correct mapping; password resets are the predictable case, and the investigation is the unpredictable one, not the other way around.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Fixed pipelines suit uniform, predictable work; dynamic decomposition suits investigations where the cause and required steps are unknown in advance.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s1-0011',
+    domain: 1,
+    scenarioId: 1,
+    taskStatements: ['1.5'],
+    selectCount: 1,
+    stem: "You want every refund amount the agent proposes to be automatically rounded to two decimal places before process_refund is called, regardless of any floating-point rounding artifacts in intermediate calculations, without relying on the agent to remember to do this. What's the best mechanism?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add a system prompt instruction reminding the agent to round refund amounts to two decimals.',
+        rationale: 'Wrong — a prompt reminder is probabilistic guidance; the agent could still occasionally pass an unrounded value.',
+      },
+      {
+        id: 'B',
+        text: 'Implement a hook that intercepts the outgoing process_refund call and normalizes the amount argument to two decimal places before it is executed.',
+        rationale:
+          'Correct — a hook intercepting the outgoing tool call can deterministically normalize the argument before execution, guaranteeing the rounding regardless of what the model produces.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the customer to confirm the exact rounded amount before every refund.',
+        rationale: 'Wrong — this pushes a data-normalization concern onto the customer instead of handling it systematically.',
+      },
+      {
+        id: 'D',
+        text: 'Add a few-shot example showing a refund amount rounded correctly.',
+        rationale: "Wrong — a few-shot example influences typical-case behavior but doesn't guarantee normalization on every call.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A hook intercepting the outgoing tool call can deterministically normalize arguments before execution, guaranteeing correctness regardless of what the model produces — unlike prompt-based reminders.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

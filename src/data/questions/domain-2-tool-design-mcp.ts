@@ -993,4 +993,181 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q2-s1-0006',
+    domain: 2,
+    scenarioId: 1,
+    taskStatements: ['2.1'],
+    selectCount: 1,
+    stem: "Your escalate_to_human tool is described simply as \"Escalates the case to a human agent.\" The agent sometimes escalates cases that are well within its own resolution capability, and other times fails to escalate cases it clearly cannot handle. What would most improve this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Remove the escalate_to_human tool entirely so the agent must always resolve cases itself.',
+        rationale:
+          'Wrong — removing escalation entirely eliminates a necessary safety valve for cases the agent genuinely cannot or should not resolve alone.',
+      },
+      {
+        id: 'B',
+        text: 'Rename the tool to human_escalation to make its purpose clearer.',
+        rationale: "Wrong — a name change alone doesn't add the missing decision criteria driving inconsistent escalation behavior.",
+      },
+      {
+        id: 'C',
+        text: 'Restrict the tool so only supervisors can trigger it.',
+        rationale: "Wrong — restricting who can trigger the tool doesn't address the agent's own inconsistent judgment about when escalation is appropriate.",
+      },
+      {
+        id: 'D',
+        text: "Expand the tool's description with explicit boundary conditions — e.g., customer explicitly requests a human, policy gaps, or inability to make progress — so the agent has clear criteria for when to use it.",
+        rationale:
+          "Correct — the inconsistency stems from the tool's description lacking explicit boundary conditions for when to use it; tool descriptions are the primary mechanism for reliable tool selection.",
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Ambiguous tool descriptions without explicit boundary conditions cause inconsistent selection. Expanding the description with clear criteria for when to use the tool directly addresses this.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s1-0007',
+    domain: 2,
+    scenarioId: 1,
+    taskStatements: ['2.2'],
+    selectCount: 2,
+    stem: "Which TWO of the following are distinct error categories a well-designed MCP tool's error response should be able to distinguish? (Select 2.)",
+    options: [
+      {
+        id: 'A',
+        text: 'A transient error (e.g., a timeout talking to a backend service).',
+        rationale:
+          'Correct — transient errors are one of the documented distinct error categories structured error responses should communicate.',
+      },
+      {
+        id: 'B',
+        text: "The customer's preferred language.",
+        rationale: "Wrong — a customer's preferred language is unrelated to the tool call's error classification.",
+      },
+      {
+        id: 'C',
+        text: 'A business/policy violation error (e.g., a refund exceeding a threshold).',
+        rationale:
+          'Correct — business/policy violation errors are another distinct, documented error category requiring different handling than transient or validation errors.',
+      },
+      {
+        id: 'D',
+        text: "The agent's current conversation turn number.",
+        rationale: 'Wrong — a conversation turn counter is unrelated to what kind of failure occurred in the tool call.',
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Structured MCP tool error responses should distinguish categories like transient, validation, business/policy, and permission errors — not unrelated conversational metadata.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s1-0008',
+    domain: 2,
+    scenarioId: 1,
+    taskStatements: ['2.4'],
+    selectCount: 1,
+    stem: 'Your support agent frequently makes several exploratory tool calls just to figure out which policy document applies to a given situation (return policy, price-match policy, warranty policy, etc.) before it can act. What MCP mechanism would reduce this overhead?',
+    options: [
+      {
+        id: 'A',
+        text: 'Add a new MCP tool called search_everything that performs a full-text search across all policy documents on every turn.',
+        rationale:
+          'Wrong — a full-text search tool still requires making an exploratory call on every turn rather than giving the agent upfront visibility into what is available.',
+      },
+      {
+        id: 'B',
+        text: "Remove the agent's access to policy documents entirely to eliminate the exploratory calls.",
+        rationale: "Wrong — removing access to policy documents prevents the agent from doing its job at all.",
+      },
+      {
+        id: 'C',
+        text: 'Expose a catalog of available policy documents and their topics as an MCP resource, so the agent has visibility into what is available without needing exploratory tool calls to discover it.',
+        rationale:
+          'Correct — MCP resources are designed to expose content catalogs like available document topics, reducing exploratory tool calls needed just to discover what is available.',
+      },
+      {
+        id: 'D',
+        text: "Merge all policy documents into a single massive document that's always included in the system prompt.",
+        rationale:
+          'Wrong — permanently including every policy document in the system prompt wastes context on documents irrelevant to most conversations.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'MCP resources expose content catalogs (like available document topics) to give agents visibility into what data exists without requiring exploratory tool calls to discover it.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q2-s1-0009',
+    domain: 2,
+    scenarioId: 1,
+    taskStatements: ['2.3'],
+    selectCount: 1,
+    stem: "You've forced tool_choice to always call get_customer via {\"type\": \"tool\", \"name\": \"get_customer\"} for every single turn throughout an entire conversation, not just the first turn. What problem does this cause?",
+    options: [
+      {
+        id: 'A',
+        text: 'The agent is prevented from calling any other tool or responding conversationally on later turns, even when get_customer has already been called and a different tool (or a text reply) is what is actually needed next.',
+        rationale:
+          'Correct — a forced tool_choice restricts the model to that one specific tool on that request; applying it to every turn prevents the agent from ever calling other tools or replying conversationally afterward.',
+      },
+      {
+        id: 'B',
+        text: 'No problem — forcing the same tool for every turn is the recommended way to guarantee reliability throughout a conversation.',
+        rationale:
+          'Wrong — forced tool_choice should be scoped narrowly (e.g., just the first turn) to where the guarantee is actually needed, not applied for an entire conversation.',
+      },
+      {
+        id: 'C',
+        text: 'The conversation will terminate immediately after the first turn.',
+        rationale: "Wrong — forcing a tool doesn't inherently terminate the conversation; the agent would just keep being forced to call get_customer repeatedly.",
+      },
+      {
+        id: 'D',
+        text: 'get_customer will return different results each time it is called with a forced tool_choice.',
+        rationale: 'Wrong — tool_choice configuration does not affect what data a tool call returns; it only affects which tool the model must call.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Forced tool_choice should be scoped narrowly to where a guarantee is genuinely needed (e.g., the first turn) — applying it across an entire conversation breaks normal tool selection and conversational replies.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

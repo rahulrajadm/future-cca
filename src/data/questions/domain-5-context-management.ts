@@ -946,4 +946,181 @@ export const domain5Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q5-s1-0006',
+    domain: 5,
+    scenarioId: 1,
+    taskStatements: ['5.2'],
+    selectCount: 1,
+    stem: 'An engineer proposes automatically escalating any conversation where sentiment analysis detects the customer used negative or frustrated language, regardless of the actual issue\'s complexity. What is the main problem with this approach?',
+    options: [
+      {
+        id: 'A',
+        text: 'Sentiment analysis is technically impossible to implement in a support agent.',
+        rationale: 'Wrong — sentiment analysis is technically feasible; the problem is what it is being used for, not whether it can be implemented.',
+      },
+      {
+        id: 'B',
+        text: 'This would escalate too few cases, since most customers are naturally positive.',
+        rationale:
+          "Wrong — the concern isn't under-escalation; it's that sentiment doesn't track the thing that should actually drive the decision.",
+      },
+      {
+        id: 'C',
+        text: 'This approach requires the agent to have access to a lookup_order tool.',
+        rationale: "Wrong — this option isn't related to the actual problem the scenario describes.",
+      },
+      {
+        id: 'D',
+        text: "Sentiment doesn't reliably correlate with actual case complexity — a frustrated customer might have a trivially simple issue, while a calm customer might have a genuinely complex one — so sentiment is an unreliable proxy for whether escalation is actually warranted.",
+        rationale:
+          'Correct — sentiment-based escalation is documented as an unreliable proxy for actual case complexity, since frustration and complexity are independent dimensions of a case.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Sentiment does not reliably correlate with actual case complexity, making sentiment-based escalation an unreliable proxy for whether escalation is genuinely warranted.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s1-0007',
+    domain: 5,
+    scenarioId: 1,
+    taskStatements: ['5.3'],
+    selectCount: 1,
+    stem: "Your process_refund tool call fails, and your support agent's error-handling code currently logs only \"refund failed\" to your monitoring dashboard with no further detail, for every kind of failure. A support engineer reviewing the dashboard the next morning cannot tell which failures were simple retry-needed timeouts versus genuine policy violations needing a process change. What's the fix?",
+    options: [
+      {
+        id: 'A',
+        text: "Stop logging refund failures to the dashboard entirely, since the log isn't useful.",
+        rationale: 'Wrong — removing the log entirely eliminates visibility altogether, which is worse than a generic-but-present one.',
+      },
+      {
+        id: 'B',
+        text: 'Log the structured error category (transient, validation, business/policy) and relevant details for each failure, not just a generic "refund failed" message.',
+        rationale:
+          'Correct — logging the structured error category and details is what lets a human reviewer distinguish transient issues from ones needing an actual process or policy change.',
+      },
+      {
+        id: 'C',
+        text: 'Only log failures that happened more than once in a single day.',
+        rationale: 'Wrong — filtering to only repeated failures could hide a single but serious policy-violation event worth reviewing on its own.',
+      },
+      {
+        id: 'D',
+        text: 'Replace the dashboard with a system that emails the engineer for every single successful refund instead.',
+        rationale: 'Wrong — emailing about every success provides no information about failures at all, the opposite of what is needed.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Structured error context (failure category and details) is what enables a human reviewer to distinguish transient issues from genuine policy violations, rather than a generic failure message.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s1-0008',
+    domain: 5,
+    scenarioId: 1,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: "A customer's conversation touches on three different past orders over the course of the chat, each with its own status and amount. Later in the conversation, the agent needs to reference all three accurately when summarizing next steps, but by then the specific details from earlier in the conversation have started blending together in its response. What's the most effective fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'Ask the customer to repeat all three order numbers again right before the summary is generated.',
+        rationale: 'Wrong — this offloads a context-management problem onto the customer instead of fixing how the system tracks details it already received.',
+      },
+      {
+        id: 'B',
+        text: 'Limit the conversation to discussing only one order at a time, rejecting any message that mentions multiple orders.',
+        rationale:
+          'Wrong — this restricts a legitimate multi-issue conversation instead of handling it properly, unnecessarily limiting what the agent can help with.',
+      },
+      {
+        id: 'C',
+        text: 'Extract and persist structured issue data (order ID, amount, status) for each of the three orders into a separate context layer as they come up, rather than relying on the model to recall them accurately from earlier prose.',
+        rationale:
+          'Correct — extracting and persisting structured issue data into a separate context layer is exactly the pattern for keeping multi-issue session details accurate.',
+      },
+      {
+        id: 'D',
+        text: "Shorten the conversation by summarizing the customer's messages more aggressively as the conversation proceeds.",
+        rationale:
+          "Wrong — more aggressive summarization of the customer's own messages doesn't address the actual problem, and risks losing detail rather than preserving it.",
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Extracting and persisting structured issue data into a separate context layer, for each distinct issue, keeps multi-issue session details accurate rather than relying on recall from prose.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s1-0009',
+    domain: 5,
+    scenarioId: 1,
+    taskStatements: ['5.2'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are valid reasons to escalate a case to a human agent? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'The customer explicitly asks to speak with a human.',
+        rationale: 'Correct — an explicit customer request for a human is a documented, clear escalation trigger that should be honored immediately.',
+      },
+      {
+        id: 'B',
+        text: 'The agent has been in the conversation for more than five minutes.',
+        rationale:
+          "Wrong — conversation duration alone isn't a documented escalation trigger; a long conversation might still be within the agent's capability to resolve.",
+      },
+      {
+        id: 'C',
+        text: "The customer's request falls into a genuine policy gap that existing guidance doesn't address.",
+        rationale:
+          'Correct — a genuine policy gap, where existing guidance does not address the specific situation, is a documented escalation trigger distinct from mere case complexity.',
+      },
+      {
+        id: 'D',
+        text: 'The customer used a slightly informal tone in their message.',
+        rationale:
+          "Wrong — informal tone alone doesn't indicate frustration, complexity, or an explicit request for a human, and isn't a documented escalation trigger.",
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Documented escalation triggers include explicit customer requests for a human and genuine policy gaps — not conversation duration or informal tone alone.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
