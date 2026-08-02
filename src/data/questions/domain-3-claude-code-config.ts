@@ -1076,4 +1076,182 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q3-s2-0011',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.2'],
+    selectCount: 2,
+    stem: 'Which TWO of the following statements about custom slash commands in Claude Code are correct? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Commands placed in .claude/commands/ are shared with the team via version control.',
+        rationale: 'Correct — project-scoped commands in .claude/commands/ are version-controlled and shared with the team.',
+      },
+      {
+        id: 'B',
+        text: 'Commands placed in ~/.claude/commands/ are automatically shared with every teammate the next time they pull the repo.',
+        rationale: 'Wrong — user-scoped commands are personal, stored outside the repo, and never automatically reach teammates.',
+      },
+      {
+        id: 'C',
+        text: 'Commands placed in ~/.claude/commands/ are personal and apply only to the individual who created them.',
+        rationale:
+          'Correct — user-level commands apply only to that individual, mirroring the personal-vs-shared distinction used by CLAUDE.md scoping.',
+      },
+      {
+        id: 'D',
+        text: 'A command must be placed in both .claude/commands/ and ~/.claude/commands/ to work at all.',
+        rationale:
+          "Wrong — a command only needs to exist in one of the two locations depending on whether it's meant to be personal or team-shared.",
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Project-scoped commands (.claude/commands/) are version-controlled and team-shared; user-scoped commands (~/.claude/commands/) are personal to that individual — the same scoping pattern as CLAUDE.md.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s2-0012',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.3'],
+    selectCount: 1,
+    stem: "Your monorepo has Python files spread across packages/api/src, packages/worker/src, and packages/cli/src, and you want a Python-specific convention (e.g., type hints required on all public functions) applied consistently to every Python file regardless of which package it's in. What's the most maintainable configuration?",
+    options: [
+      {
+        id: 'A',
+        text: "Create three separate directory-level CLAUDE.md files, one inside each package's src directory, each repeating the same convention.",
+        rationale: 'Wrong — repeating the same convention in three separate CLAUDE.md files is exactly the duplication path-specific rules exist to avoid.',
+      },
+      {
+        id: 'B',
+        text: "Add the convention only to packages/api/src/CLAUDE.md, since that's the most actively developed package.",
+        rationale:
+          'Wrong — limiting the convention to one package leaves the other two without it, when the requirement is for it to apply consistently everywhere.',
+      },
+      {
+        id: 'C',
+        text: 'Create a single .claude/rules/ file with a glob pattern like paths: ["packages/*/src/**/*.py"] so the convention applies to every matching Python file across all packages from one place.',
+        rationale: 'Correct — a single glob-pattern rule matching the file type across all packages applies the convention everywhere from one maintained location.',
+      },
+      {
+        id: 'D',
+        text: 'Write the convention into a comment at the top of every individual Python file.',
+        rationale:
+          'Wrong — per-file comments would need to be added to every individual file and maintained manually, which does not scale.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'A single glob-pattern rule in .claude/rules/ applies a convention to a file type across every directory it appears in, avoiding duplication across per-directory CLAUDE.md files.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s2-0013',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.4'],
+    selectCount: 1,
+    stem: 'You need to add a new required field to an existing, well-understood internal API endpoint, update its three call sites, and add a database migration — a pattern your team has done many times before with a clear, established playbook. Should this use plan mode?',
+    options: [
+      {
+        id: 'A',
+        text: 'Yes, because any change involving a database migration always requires plan mode.',
+        rationale:
+          "Wrong — the presence of a migration alone doesn't determine plan-mode necessity; a well-established, previously-done pattern doesn't carry the same uncertainty plan mode addresses.",
+      },
+      {
+        id: 'B',
+        text: 'No — despite touching multiple files, this is a well-understood, previously-established pattern with a clear playbook, which is closer to a well-scoped change than an architecturally uncertain one; direct execution is appropriate.',
+        rationale:
+          'Correct — plan mode is for uncertain, architecturally significant decisions; a well-understood, previously-established pattern with a clear playbook is closer to a well-scoped change even though it touches a few files.',
+      },
+      {
+        id: 'C',
+        text: 'Yes, because more than one file is being changed.',
+        rationale:
+          "Wrong — file count alone isn't the deciding factor; a small number of files following an established pattern doesn't need the same exploration as a genuinely uncertain change.",
+      },
+      {
+        id: 'D',
+        text: 'No — plan mode should never be used for anything involving APIs.',
+        rationale:
+          "Wrong — this is an overly broad, unsupported blanket rule; plan mode's applicability depends on task complexity and uncertainty, not the subject matter alone.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A well-understood, previously-established pattern with a clear playbook is closer to a well-scoped change than an architecturally uncertain one, even when it touches a few files — direct execution is appropriate.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s2-0014',
+    domain: 3,
+    scenarioId: 2,
+    taskStatements: ['3.5'],
+    selectCount: 1,
+    stem: "Claude Code's generated implementation has three separate problems: (1) a variable name that doesn't match your naming convention, (2) a logic error where a boundary condition uses '<' instead of '<=', and (3) the logic error also causes a related off-by-one bug in a second function that calls the first. How should you report these to Claude Code?",
+    options: [
+      {
+        id: 'A',
+        text: "Report the logic error and the related off-by-one bug together in a single detailed message, since they're interacting problems, and address the naming convention issue separately since it's independent.",
+        rationale:
+          'Correct — addressing multiple interacting issues together in one detailed message is appropriate since they interact, while the independent naming issue can be handled separately.',
+      },
+      {
+        id: 'B',
+        text: 'Report all three problems in three completely separate messages, one at a time, regardless of whether they interact.',
+        rationale:
+          'Wrong — splitting genuinely interacting problems into separate sequential messages risks Claude fixing one without properly accounting for the other.',
+      },
+      {
+        id: 'C',
+        text: 'Report only the most severe problem and ignore the other two entirely.',
+        rationale: 'Wrong — ignoring real, identified problems leaves known bugs in place unnecessarily.',
+      },
+      {
+        id: 'D',
+        text: 'Rewrite the entire implementation yourself instead of reporting any of the three problems.',
+        rationale: "Wrong — this discards the value of using Claude Code to iterate on its own output when a targeted correction would work.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Interacting problems should be reported together in a single detailed message; independent problems can be addressed separately — matching issues to the right grouping improves fix quality.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

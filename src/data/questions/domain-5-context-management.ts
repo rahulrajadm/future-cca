@@ -1123,4 +1123,183 @@ export const domain5Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q5-s2-0005',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.4'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are effective mitigations for context degradation during a long codebase exploration session? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Maintaining a scratchpad file recording key findings.',
+        rationale: 'Correct — scratchpad files persisting key findings are a documented mitigation for context degradation in extended sessions.',
+      },
+      {
+        id: 'B',
+        text: 'Increasing the temperature setting so answers are more varied.',
+        rationale:
+          "Wrong — temperature affects output randomness/variety, not the model's ability to recall earlier findings accurately.",
+      },
+      {
+        id: 'C',
+        text: 'Spawning subagents to isolate verbose exploration output while the main session tracks high-level findings.',
+        rationale:
+          'Correct — subagent delegation isolates verbose exploration output, helping the main session preserve high-level coordination and avoid context overload.',
+      },
+      {
+        id: 'D',
+        text: 'Avoiding the use of /compact, since it might remove useful information.',
+        rationale:
+          'Wrong — /compact is specifically useful for reducing context usage during extended sessions; avoiding it removes a helpful tool rather than mitigating degradation.',
+      },
+    ],
+    correctOptionIds: ['A', 'C'],
+    explanationSummary:
+      'Scratchpad files and subagent delegation are documented mitigations for context degradation in extended exploration sessions — unlike temperature settings, which are unrelated.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s2-0006',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: "You're aggregating findings from five different file-analysis passes into a single input for a final synthesis step. Some of the most important findings are naturally going to end up in the middle of this aggregated input due to the order the files were processed. What's an effective way to reduce the risk that the synthesis step under-weights those middle findings?",
+    options: [
+      {
+        id: 'A',
+        text: 'Reduce the number of file-analysis passes to avoid having a middle section at all.',
+        rationale:
+          "Wrong — arbitrarily reducing the number of passes doesn't scale and comes at the cost of thoroughness, rather than addressing how position affects attention.",
+      },
+      {
+        id: 'B',
+        text: 'Place a concise summary of the key findings at the very beginning of the aggregated input, and organize the detailed results with explicit section headers, rather than relying on original processing order alone.',
+        rationale:
+          'Correct — placing key findings summaries at the beginning of aggregated inputs and using explicit section headers is the documented mitigation for position effects on longer inputs.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the synthesis step to re-read the aggregated input three times before responding.',
+        rationale: "Wrong — re-reading the same input multiple times doesn't change the model's positional attention pattern over a single pass.",
+      },
+      {
+        id: 'D',
+        text: 'Randomly shuffle the order of the five findings before aggregating them.',
+        rationale:
+          'Wrong — shuffling does not address the underlying positional effect; it just relocates which specific finding ends up disadvantaged in the middle, at random.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Placing key findings summaries at the beginning of aggregated inputs and using explicit section headers mitigates position effects that would otherwise under-weight middle content.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s2-0007',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.4'],
+    selectCount: 1,
+    stem: "During a long Claude Code session refactoring across 30 files using several subagents, you want to be able to recover cleanly if the session is interrupted (e.g., laptop sleeps, network drops) without losing track of which files were already successfully refactored. What design supports this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Rely on Claude to remember which files it already changed the next time you start a new session, without any explicit record.',
+        rationale:
+          "Wrong — there's no such automatic cross-session memory; without an explicit record, resumed sessions have no reliable way to know what's already done.",
+      },
+      {
+        id: 'B',
+        text: 'Avoid using subagents entirely, since only single-session work can be resumed reliably.',
+        rationale: 'Wrong — avoiding subagents does not solve the interruption-recovery problem and discards their genuine benefits for large-scale refactors.',
+      },
+      {
+        id: 'C',
+        text: "Have each subagent record its completed work to a known location (e.g., a manifest file) as it finishes, so a resumed session can load that manifest and know exactly what's already done.",
+        rationale:
+          "Correct — structured state persistence, where each agent's completed work is recorded and loaded via a manifest on resume, is the documented pattern for crash recovery.",
+      },
+      {
+        id: 'D',
+        text: 'Restart the refactor from file 1 every time the session is interrupted, regardless of how much progress was already made.',
+        rationale: 'Wrong — restarting from scratch every time discards all completed progress, which is exactly what a good recovery design should avoid.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Structured state persistence — each agent recording completed work to a known location, loaded via a manifest on resume — is the documented pattern for crash recovery in extended multi-agent sessions.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q5-s2-0008',
+    domain: 5,
+    scenarioId: 2,
+    taskStatements: ['5.1'],
+    selectCount: 1,
+    stem: 'To save on token costs, an engineer proposes only sending Claude the most recent 2 messages of a long conversation on every request, discarding everything earlier, rather than passing the complete conversation history. What problem is this likely to cause?',
+    options: [
+      {
+        id: 'A',
+        text: 'No problem — Claude does not need any information from earlier in the conversation to respond coherently.',
+        rationale:
+          'Wrong — this is exactly backwards; passing complete conversation history is important for maintaining conversational coherence.',
+      },
+      {
+        id: 'B',
+        text: 'This will cause every subsequent API request to fail with an error.',
+        rationale: "Wrong — sending fewer messages doesn't cause API errors; it's a valid (if problematic) way to structure a request.",
+      },
+      {
+        id: 'C',
+        text: 'This will make responses generate faster with no other effects.',
+        rationale:
+          'Wrong — while it might reduce token usage, "no other effects" ignores the real risk of losing coherence with earlier established context.',
+      },
+      {
+        id: 'D',
+        text: 'Claude will lose the ability to maintain conversational coherence with earlier context — for example, referencing decisions, facts, or constraints established earlier in the conversation that are no longer included in what is sent.',
+        rationale:
+          'Correct — passing complete conversation history in subsequent requests is important for maintaining conversational coherence; discarding earlier messages risks losing track of facts, decisions, or constraints.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Passing complete conversation history in subsequent requests is important for maintaining conversational coherence — truncating to only the most recent messages risks losing earlier established context.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
