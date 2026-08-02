@@ -63,30 +63,30 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Escalate to a human agent immediately, honoring the explicit request, without first attempting to resolve the issue itself.',
-        rationale:
-          "Correct — an explicit, upfront customer request for a human is a clear escalation trigger regardless of how simple the underlying issue is; honoring it immediately respects the customer's stated preference rather than second-guessing it.",
-      },
-      {
-        id: 'B',
         text: "Attempt to resolve the address change first, since it's simple, and escalate only if the customer is still unsatisfied afterward.",
         rationale:
           "Wrong — that pattern applies when a customer expresses frustration but hasn't explicitly demanded a human; here the customer already explicitly demanded one upfront.",
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Ask the customer to confirm they still want a human agent even after explaining that the change can be made in under a minute.',
         rationale:
           'Wrong — re-litigating an explicit request the customer already made adds friction and contradicts the instruction to honor such requests immediately.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Resolve the address change autonomously and inform the customer afterward that a human has reviewed the change.',
         rationale:
           'Wrong — this is deceptive (no human actually reviewed the change) and does not honor what the customer asked for, which was to speak with a person.',
       },
+      {
+        id: 'D',
+        text: 'Escalate to a human agent immediately, honoring the explicit request, without first attempting to resolve the issue itself.',
+        rationale:
+          "Correct — an explicit, upfront customer request for a human is a clear escalation trigger regardless of how simple the underlying issue is; honoring it immediately respects the customer's stated preference rather than second-guessing it.",
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Explicit customer requests for a human are an escalation trigger that should be honored immediately, independent of whether the agent could technically resolve the issue itself.',
     difficulty: 'foundational',
@@ -110,29 +110,29 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: "Proceed using whichever account has more order history, since it's more likely the one the customer means.",
+        rationale: 'Wrong — "more order history" is likewise a heuristic guess unconnected to which account is actually theirs.',
+      },
+      {
+        id: 'B',
+        text: 'Merge both accounts automatically so the ambiguity no longer matters.',
+        rationale:
+          'Wrong — merging accounts is a significant, hard-to-reverse action taken on unverified information; the ambiguity should be resolved with the customer first.',
+      },
+      {
+        id: 'C',
         text: 'Ask the customer for an additional identifying detail (such as a recent order number or phone number) to determine which account is theirs.',
         rationale:
           'Correct — when a lookup returns multiple matches, the correct pattern is to ask the customer for a disambiguating identifier rather than guess, since acting on the wrong account risks exposing or modifying someone else\'s data.',
       },
       {
-        id: 'B',
+        id: 'D',
         text: "Proceed using whichever account was created most recently, since it's more likely to be the active one.",
         rationale:
           'Wrong — "most recent" is a heuristic guess, not a verified identifier, and could easily be wrong.',
       },
-      {
-        id: 'C',
-        text: "Proceed using whichever account has more order history, since it's more likely the one the customer means.",
-        rationale: 'Wrong — "more order history" is likewise a heuristic guess unconnected to which account is actually theirs.',
-      },
-      {
-        id: 'D',
-        text: 'Merge both accounts automatically so the ambiguity no longer matters.',
-        rationale:
-          'Wrong — merging accounts is a significant, hard-to-reverse action taken on unverified information; the ambiguity should be resolved with the customer first.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Multiple matches from a lookup require clarification via an additional identifier, not heuristic selection based on recency or record size.',
     difficulty: 'foundational',
@@ -200,30 +200,30 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "Trim the tool's output to only the fields relevant to customer support before it's added to the conversation, rather than passing the full raw response.",
-        rationale:
-          'Correct — this is the direct fix for tool results consuming tokens disproportionately to their relevance; trimming to the fields that matter removes the bulk of the problem at its source.',
-      },
-      {
-        id: 'B',
         text: 'Summarize the entire conversation more frequently to compensate for the large tool outputs.',
         rationale:
           'Wrong — more frequent summarization still has to process the bloated tool outputs first, and risks the progressive-summarization information loss described elsewhere, rather than preventing the bloat.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: "Ask the agent to ignore irrelevant fields in its reasoning without changing what's included in context.",
         rationale:
           "Wrong — telling the agent to \"ignore\" irrelevant fields doesn't remove them from context; the tokens are still consumed regardless of whether the model acts on them.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Reduce max_tokens on each response so replies are generated faster.',
         rationale:
           "Wrong — max_tokens controls the length of Claude's own generated output, not the size of tool results already in context; it doesn't address the actual source of the slowdown.",
       },
+      {
+        id: 'D',
+        text: "Trim the tool's output to only the fields relevant to customer support before it's added to the conversation, rather than passing the full raw response.",
+        rationale:
+          'Correct — this is the direct fix for tool results consuming tokens disproportionately to their relevance; trimming to the fields that matter removes the bulk of the problem at its source.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Tool results accumulate in context and consume tokens disproportionately to their relevance. Trimming verbose tool outputs to only relevant fields before they enter context is the direct fix.',
     difficulty: 'foundational',
@@ -246,28 +246,28 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Repeat your original question at the start of every new message for the rest of the session.',
+        rationale: "Wrong — repeating the original question doesn't restore earlier findings that have degraded in the model's effective context.",
+      },
+      {
+        id: 'B',
+        text: 'Switch to a different, unrelated task to give the model a mental break before returning to the codebase questions.',
+        rationale:
+          'Wrong — Claude has no persistent "mental state" between unrelated tasks in the way this implies; switching tasks does not repair context degradation.',
+      },
+      {
+        id: 'C',
         text: 'Have Claude maintain a scratchpad file recording key findings as it explores, and reference that file for subsequent questions rather than relying purely on in-context memory of a long session.',
         rationale:
           'Correct — scratchpad files persist key findings across context boundaries, directly counteracting the context degradation that shows up in extended sessions as increasingly generic, unspecific answers.',
       },
       {
-        id: 'B',
+        id: 'D',
         text: 'Increase max_tokens so Claude can generate longer, more detailed answers.',
         rationale: "Wrong — max_tokens controls response length, not the model's ability to accurately recall earlier findings from a degraded context.",
       },
-      {
-        id: 'C',
-        text: 'Repeat your original question at the start of every new message for the rest of the session.',
-        rationale: "Wrong — repeating the original question doesn't restore earlier findings that have degraded in the model's effective context.",
-      },
-      {
-        id: 'D',
-        text: 'Switch to a different, unrelated task to give the model a mental break before returning to the codebase questions.',
-        rationale:
-          'Wrong — Claude has no persistent "mental state" between unrelated tasks in the way this implies; switching tasks does not repair context degradation.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Scratchpad files persist key findings across context boundaries, which is the recommended mitigation for the context degradation that appears in extended exploration sessions.',
     difficulty: 'applied',
@@ -290,29 +290,29 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Break the authentication question into 10 much smaller questions asked one at a time in the main conversation.',
+        rationale:
+          'Wrong — splitting into many smaller questions asked directly in the main conversation still runs all the exploration in the same context, adding overhead rather than reducing it.',
+      },
+      {
+        id: 'B',
         text: 'Spawn a subagent to investigate the authentication question, and have it return a concise summary of findings rather than the full exploration transcript to the main conversation.',
         rationale:
           'Correct — subagent delegation isolates verbose exploration output from the main conversation; the main session receives only the distilled findings it needs, preserving context for the implementation work still to come.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: "Ask the question directly in the main conversation and accept that some context budget will be consumed by the exploration.",
         rationale: 'Wrong — this is exactly the outcome the developer is trying to avoid; accepting the cost does not solve the stated problem.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Use /compact immediately before asking the question so there is more room for the exploration that follows.',
         rationale:
           '/compact reduces existing context usage but does not prevent the upcoming exploration from still consuming a large amount of context in the main conversation once it happens.',
       },
-      {
-        id: 'D',
-        text: 'Break the authentication question into 10 much smaller questions asked one at a time in the main conversation.',
-        rationale:
-          'Wrong — splitting into many smaller questions asked directly in the main conversation still runs all the exploration in the same context, adding overhead rather than reducing it.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Subagent delegation isolates verbose exploration output while the main agent coordinates high-level understanding, preserving the main context budget for subsequent work.',
     difficulty: 'applied',
@@ -380,30 +380,30 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'The "lost in the middle" effect, where models reliably process information at the start and end of long inputs but may under-attend to middle sections; splitting the file into smaller sections for focused review can mitigate this.',
-        rationale:
-          'Correct — this is a textbook description of the lost-in-the-middle effect, and splitting a long input into smaller, focused passes is a standard mitigation for exactly this kind of position-dependent miss.',
-      },
-      {
-        id: 'B',
         text: 'A fundamental inability of Claude to review generated code at all, meaning code review tasks should always be done by a human instead.',
         rationale:
           'Wrong — this overgeneralizes a specific, well-understood positional effect into a sweeping claim not supported by the scenario.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'A one-off random error unrelated to file length or position, with no systematic mitigation available.',
         rationale:
           'Wrong — this is a known, systematic effect tied to position within long inputs, not an unrelated random occurrence with no mitigation.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'An indication that migration files always require manual review regardless of tooling.',
         rationale:
           'Wrong — the scenario is asking about what caused the specific miss and how tooling could address it, not making a blanket claim about migration files.',
       },
+      {
+        id: 'D',
+        text: 'The "lost in the middle" effect, where models reliably process information at the start and end of long inputs but may under-attend to middle sections; splitting the file into smaller sections for focused review can mitigate this.',
+        rationale:
+          'Correct — this is a textbook description of the lost-in-the-middle effect, and splitting a long input into smaller, focused passes is a standard mitigation for exactly this kind of position-dependent miss.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Models reliably process information at the beginning and end of long inputs but may omit findings from middle sections. Splitting large reviews into smaller, focused passes mitigates this position effect.',
     difficulty: 'applied',
@@ -426,30 +426,30 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Return structured error context to the coordinator including the failure type (parsing error), the specific document that failed, and any documents that were successfully processed so far.',
-        rationale:
-          'Correct — structured error context (failure type, what was attempted, partial results) is what lets the coordinator make an informed recovery decision, such as proceeding with partial results and noting the gap.',
-      },
-      {
-        id: 'B',
-        text: 'Silently skip the corrupted document and report the analysis as fully successful with no mention of the skipped file.',
-        rationale:
-          'Wrong — silently suppressing the failure and reporting success anyway is a documented anti-pattern; it hides a real gap from the coordinator.',
-      },
-      {
-        id: 'C',
         text: 'Have the subagent immediately terminate the entire research workflow when any single document fails to parse.',
         rationale:
           'Wrong — terminating the entire workflow over a single failed document is disproportionate when other documents processed successfully.',
       },
       {
-        id: 'D',
+        id: 'B',
         text: 'Retry parsing the same corrupted PDF up to 50 times before giving up.',
         rationale:
           'Wrong — 50 retries on a corrupted file that cannot be parsed wastes time on a failure that retrying cannot fix; parsing errors from corruption are not transient.',
       },
+      {
+        id: 'C',
+        text: 'Return structured error context to the coordinator including the failure type (parsing error), the specific document that failed, and any documents that were successfully processed so far.',
+        rationale:
+          'Correct — structured error context (failure type, what was attempted, partial results) is what lets the coordinator make an informed recovery decision, such as proceeding with partial results and noting the gap.',
+      },
+      {
+        id: 'D',
+        text: 'Silently skip the corrupted document and report the analysis as fully successful with no mention of the skipped file.',
+        rationale:
+          'Wrong — silently suppressing the failure and reporting success anyway is a documented anti-pattern; it hides a real gap from the coordinator.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Structured error context — failure type, what was attempted, and partial results — enables the coordinator to make intelligent recovery decisions rather than being left to guess.',
     difficulty: 'applied',
@@ -472,28 +472,28 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'The web-search subagent will stop functioning for the remainder of the session.',
+        rationale: 'Wrong — nothing about a single zero-result report incapacitates the subagent for the rest of the session.',
+      },
+      {
+        id: 'B',
         text: 'The coordinator cannot tell whether a genuinely-covered topic has no supporting sources or whether a retry (or alternative query) might succeed after a transient failure, potentially leading it to under-report coverage gaps or waste effort in the wrong way.',
         rationale:
           'Correct — this is the access-failure-vs-valid-empty-result distinction; collapsing them into one generic report removes the information the coordinator needs to decide between retrying, an alternative approach, or accurately noting a genuine gap.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'The coordinator will automatically escalate every zero-result query to a human researcher.',
         rationale:
           'Wrong — nothing in the scenario describes an escalation-to-human mechanism being triggered by this.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'The synthesis subagent will crash whenever it receives a report containing zero results.',
         rationale: "Wrong — a report of zero results wouldn't cause a crash; it's data the coordinator has to interpret, correctly or not.",
       },
-      {
-        id: 'D',
-        text: 'The web-search subagent will stop functioning for the remainder of the session.',
-        rationale: 'Wrong — nothing about a single zero-result report incapacitates the subagent for the rest of the session.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Distinguishing access failures (which may warrant a retry) from valid empty results (a genuine absence of sources) is essential information a generic "no results" report destroys.',
     difficulty: 'applied',
@@ -560,27 +560,27 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Require the document-analysis subagent to output structured claim-source mappings — the specific claim, an evidence excerpt, and the source URL or document name — that the synthesis subagent preserves and merges when combining findings.',
-        rationale:
-          'Correct — structured claim-source mappings preserve attribution through the pipeline; requiring them from the start prevents the loss of source information that happens when findings are compressed into unattributed prose.',
-      },
-      {
-        id: 'B',
         text: "Instruct the synthesis subagent to guess a plausible-sounding source if the original isn't clear.",
         rationale: 'Wrong — fabricating a plausible-sounding source is a serious accuracy problem, arguably worse than having no citation at all.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Remove all statistics from the final report to avoid any citation issues.',
         rationale: 'Wrong — removing statistics discards genuinely useful findings instead of fixing the actual problem, which is a lack of preserved attribution.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Have the synthesis subagent write in a more formal tone so citations seem more credible.',
         rationale: 'Wrong — tone has no bearing on whether a citation is actually correct or traceable to its source.',
       },
+      {
+        id: 'D',
+        text: 'Require the document-analysis subagent to output structured claim-source mappings — the specific claim, an evidence excerpt, and the source URL or document name — that the synthesis subagent preserves and merges when combining findings.',
+        rationale:
+          'Correct — structured claim-source mappings preserve attribution through the pipeline; requiring them from the start prevents the loss of source information that happens when findings are compressed into unattributed prose.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Structured claim-source mappings — preserved and merged through synthesis — are what prevent source attribution from being lost during summarization.',
     difficulty: 'applied',
@@ -603,28 +603,28 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Present only the higher figure, since it is more likely to be the one currently accurate.',
+        rationale: "Wrong — there's no stated basis for assuming the higher figure is more accurate; picking one arbitrarily hides real uncertainty.",
+      },
+      {
+        id: 'B',
+        text: 'Omit the statistic entirely from the report since the sources disagree.',
+        rationale: 'Wrong — omitting the statistic entirely discards genuinely relevant information rather than presenting it transparently with its conflict noted.',
+      },
+      {
+        id: 'C',
         text: 'Include both values with clear source attribution for each, annotating the conflict, rather than arbitrarily selecting one figure to present as the answer.',
         rationale:
           'Correct — conflicting statistics from credible sources should be annotated with source attribution rather than arbitrarily resolved, preserving the reader\'s ability to see and judge the disagreement.',
       },
       {
-        id: 'B',
+        id: 'D',
         text: 'Average the two figures (26.5%) and present that as the definitive number.',
         rationale:
           'Wrong — averaging fabricates a number that no source actually reported and misrepresents both original claims as if they agreed on a midpoint.',
       },
-      {
-        id: 'C',
-        text: 'Present only the higher figure, since it is more likely to be the one currently accurate.',
-        rationale: "Wrong — there's no stated basis for assuming the higher figure is more accurate; picking one arbitrarily hides real uncertainty.",
-      },
-      {
-        id: 'D',
-        text: 'Omit the statistic entirely from the report since the sources disagree.',
-        rationale: 'Wrong — omitting the statistic entirely discards genuinely relevant information rather than presenting it transparently with its conflict noted.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Conflicting statistics from credible sources should be annotated with source attribution rather than arbitrarily resolved to a single value.',
     difficulty: 'applied',
@@ -647,28 +647,28 @@ export const domain5Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Rounding both percentages to the nearest ten to make them appear more consistent with each other.',
+        rationale: 'Wrong — rounding to force apparent consistency actively obscures the real, meaningful difference between the two data points.',
+      },
+      {
+        id: 'B',
         text: "Requiring each source's publication or data-collection date to be included in the structured output, so the two figures are correctly understood as showing change over time rather than a contradiction.",
         rationale:
           'Correct — requiring publication or data-collection dates in structured outputs is exactly what prevents legitimate temporal differences from being misread as contradictions.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Removing the older 2019 figure entirely since more recent data is always more relevant.',
         rationale:
           "Wrong — the older figure isn't wrong or irrelevant — it shows a meaningful trend when paired with the date; removing it discards useful context.",
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Instructing the synthesis subagent to never cite statistics from more than one time period in the same report.',
         rationale: 'Wrong — citing multiple time periods is often exactly what a report should do to show trends; the fix is dating the data, not banning multi-period citations.',
       },
-      {
-        id: 'D',
-        text: 'Rounding both percentages to the nearest ten to make them appear more consistent with each other.',
-        rationale: 'Wrong — rounding to force apparent consistency actively obscures the real, meaningful difference between the two data points.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Requiring publication or data-collection dates in structured outputs prevents temporal differences between sources from being misinterpreted as contradictions.',
     difficulty: 'applied',

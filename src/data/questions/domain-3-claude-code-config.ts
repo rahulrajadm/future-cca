@@ -63,29 +63,29 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Split the content into focused, topic-specific files under .claude/rules/ (e.g., testing.md, api-conventions.md, deployment.md), rather than keeping one monolithic CLAUDE.md.',
-        rationale:
-          '.claude/rules/ exists specifically as an alternative to a monolithic CLAUDE.md, letting topic-specific guidance live in its own focused file.',
-      },
-      {
-        id: 'B',
         text: 'Delete the least frequently referenced sections to reduce the file\'s overall length.',
         rationale: 'Wrong — deleting content loses guidance the team still needs; the problem is organization, not volume that must be reduced.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Convert the entire file into a single custom slash command that developers can invoke on demand.',
         rationale:
           'Wrong — a slash command is for on-demand, task-specific invocation, not for always-relevant standards that should be present automatically.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Split the content across multiple root-level files named CLAUDE.md, CLAUDE2.md, and CLAUDE3.md.',
         rationale:
           "Wrong — there's no mechanism that recognizes numbered CLAUDE2.md/CLAUDE3.md files as part of the configuration hierarchy.",
       },
+      {
+        id: 'D',
+        text: 'Split the content into focused, topic-specific files under .claude/rules/ (e.g., testing.md, api-conventions.md, deployment.md), rather than keeping one monolithic CLAUDE.md.',
+        rationale:
+          'Correct — .claude/rules/ exists specifically as an alternative to a monolithic CLAUDE.md, letting topic-specific guidance live in its own focused file.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       '.claude/rules/ is the designed alternative to a monolithic CLAUDE.md for organizing topic-specific guidance into focused files, especially when combined with path-scoping to reduce irrelevant context.',
     difficulty: 'foundational',
@@ -108,29 +108,29 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Move the skill from .claude/skills/ to .claude/commands/ so it runs as a slash command instead.',
+        rationale:
+          'Wrong — commands and skills are different mechanisms, and relocating the file does not provide context isolation; only context: fork does that.',
+      },
+      {
+        id: 'B',
         text: 'Set context: fork in the skill\'s frontmatter so the exploratory work runs in an isolated sub-agent context, and only the final summary returns to the main conversation.',
         rationale:
           'Correct — context: fork runs a skill in an isolated sub-agent context specifically so verbose intermediate output does not pollute the main conversation.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Set allowed-tools to an empty list in the skill\'s frontmatter to prevent the skill from producing any output.',
         rationale:
           'Wrong — restricting to no tools would prevent the skill from doing any exploration at all, not just from polluting context.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Add an argument-hint to the skill\'s frontmatter so developers know what parameters to pass.',
         rationale: 'Wrong — argument-hint is about prompting for required parameters, unrelated to isolating verbose output.',
       },
-      {
-        id: 'D',
-        text: 'Move the skill from .claude/skills/ to .claude/commands/ so it runs as a slash command instead.',
-        rationale:
-          'Wrong — commands and skills are different mechanisms, and relocating the file does not provide context isolation; only context: fork does that.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'The context: fork frontmatter option runs a skill in an isolated sub-agent context, preventing verbose skill output from polluting the main conversation.',
     difficulty: 'applied',
@@ -196,30 +196,30 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Create a file in .claude/rules/ with YAML frontmatter specifying a glob pattern like paths: ["**/*.resolver.ts"], so the rule loads only when a matching file is being edited.',
-        rationale:
-          'Correct — path-specific rules with glob patterns apply based on file type/name regardless of directory location, exactly suited to conventions for a file type spread across many directories.',
-      },
-      {
-        id: 'B',
         text: 'Create a CLAUDE.md file in each feature directory that contains a resolver file, duplicating the same convention in each one.',
         rationale:
           'Wrong — duplicating the same content across many directory-level CLAUDE.md files is exactly the maintenance burden path-specific rules exist to avoid.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: "Add the convention to the root CLAUDE.md so it's always loaded regardless of which files are being edited.",
         rationale:
           'Wrong — the root CLAUDE.md is always loaded, defeating the goal of only loading the convention when relevant.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Rename all resolver files to live in a single top-level /resolvers directory, then add a CLAUDE.md there.',
         rationale:
           'Wrong — this requires a significant, disruptive codebase restructuring just to work around a configuration limitation, when a much simpler configuration-only solution exists.',
       },
+      {
+        id: 'D',
+        text: 'Create a file in .claude/rules/ with YAML frontmatter specifying a glob pattern like paths: ["**/*.resolver.ts"], so the rule loads only when a matching file is being edited.',
+        rationale:
+          'Correct — path-specific rules with glob patterns apply based on file type/name regardless of directory location, exactly suited to conventions for a file type spread across many directories.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Glob-pattern rules in .claude/rules/ apply conventions to files by type regardless of directory location, which is the advantage over directory-level CLAUDE.md files for conventions spanning many directories.',
     difficulty: 'applied',
@@ -242,28 +242,28 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Only once, the first time the project is opened, and then it remains cached for the rest of the session regardless of files touched.',
+        rationale: 'Wrong — activation is tied to which files are currently relevant, not to a one-time, session-start check.',
+      },
+      {
+        id: 'B',
+        text: 'Only when a developer manually runs a slash command referencing api-conventions.md.',
+        rationale: 'Wrong — rule files activate automatically based on file path matching; they are not invoked manually like slash commands.',
+      },
+      {
+        id: 'C',
         text: 'Only when Claude is working with a file whose path matches the glob pattern, such as src/api/handlers/users.ts.',
         rationale:
           "Correct — the paths frontmatter is what makes a rule file's activation conditional on the files currently being worked with, matching the glob pattern.",
       },
       {
-        id: 'B',
+        id: 'D',
         text: 'On every session, regardless of which files are being edited, because rule files are always loaded like CLAUDE.md.',
         rationale:
           "Wrong — this describes always-loaded CLAUDE.md behavior, not path-scoped rules; the entire benefit of path-scoped rules is that they don't always load.",
       },
-      {
-        id: 'C',
-        text: 'Only once, the first time the project is opened, and then it remains cached for the rest of the session regardless of files touched.',
-        rationale: 'Wrong — activation is tied to which files are currently relevant, not to a one-time, session-start check.',
-      },
-      {
-        id: 'D',
-        text: 'Only when a developer manually runs a slash command referencing api-conventions.md.',
-        rationale: 'Wrong — rule files activate automatically based on file path matching; they are not invoked manually like slash commands.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Path-scoped rules load only when editing matching files, based on the glob patterns in their paths frontmatter, reducing irrelevant context and token usage.',
     difficulty: 'foundational',
@@ -286,28 +286,28 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Neither — Claude Code should not be used for bug fixes identified from stack traces.',
+        rationale: 'Wrong — this is exactly the kind of well-scoped task Claude Code handles directly and reliably.',
+      },
+      {
+        id: 'B',
         text: 'Direct execution — this is a simple, well-scoped change with a clear location and fix, not a case requiring architectural exploration.',
         rationale:
           'Correct — plan mode is intended for complex, multi-file, or architecturally ambiguous work; a single-line fix with a clear stack trace is exactly the well-scoped case direct execution is meant for.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Plan mode — any production bug fix should go through a planning phase first.',
         rationale: 'Wrong — treating every bug fix as requiring a planning phase adds unnecessary overhead to changes that are already unambiguous.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Plan mode — the Explore subagent should be used to search the entire codebase for similar bugs before making any change.',
         rationale:
           "Wrong — searching for related bugs elsewhere may be a reasonable follow-up task, but it isn't necessary for making this specific, already-diagnosed fix.",
       },
-      {
-        id: 'D',
-        text: 'Neither — Claude Code should not be used for bug fixes identified from stack traces.',
-        rationale: 'Wrong — this is exactly the kind of well-scoped task Claude Code handles directly and reliably.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Direct execution is appropriate for simple, well-scoped changes with a clear fix location, such as a single-file bug fix with a clear stack trace.',
     difficulty: 'foundational',
@@ -376,27 +376,27 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Provide 2-3 concrete input/output examples showing exactly the transformation you want, including how edge cases like country codes should be handled.',
-        rationale:
-          'Correct — concrete input/output examples are the most effective way to communicate an exact expected transformation when a prose description alone is being interpreted inconsistently.',
-      },
-      {
-        id: 'B',
         text: 'Repeat the instruction "normalize phone numbers to a standard format" multiple times in the prompt for emphasis.',
         rationale: 'Wrong — repeating the same ambiguous instruction does not add any new information about which specific format is wanted.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Break the task into smaller batches so Claude processes fewer phone numbers per request.',
         rationale: "Wrong — smaller batches don't address the actual issue, which is that the target format itself hasn't been specified precisely.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Increase max_tokens so Claude has more room to reason about the correct format.',
         rationale: "Wrong — the issue isn't insufficient output length; it's ambiguity about the target format, which more tokens don't resolve.",
       },
+      {
+        id: 'D',
+        text: 'Provide 2-3 concrete input/output examples showing exactly the transformation you want, including how edge cases like country codes should be handled.',
+        rationale:
+          'Correct — concrete input/output examples are the most effective way to communicate an exact expected transformation when a prose description alone is being interpreted inconsistently.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Concrete input/output examples are the most effective technique for communicating an exact expected transformation when prose descriptions alone produce inconsistent results.',
     difficulty: 'foundational',
@@ -419,30 +419,30 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Ask Claude to first interview you with clarifying questions about invalidation strategy, TTL, and concurrency handling before writing any code.',
-        rationale:
-          'Correct — the interview pattern, where Claude asks clarifying questions before implementing, is effective for surfacing design considerations you may not have fully anticipated.',
-      },
-      {
-        id: 'B',
-        text: 'Ask Claude to implement a reasonable default immediately, and treat any issues as bugs to fix later.',
-        rationale:
-          'Wrong — implementing a default immediately risks committing to caching behavior that is costly to unwind later, when the considerations could have been surfaced upfront cheaply.',
-      },
-      {
-        id: 'C',
         text: 'Write the entire specification yourself in exhaustive detail before involving Claude Code at all.',
         rationale:
           "Wrong — this defeats the purpose of using Claude to help surface considerations you haven't already thought through yourself.",
       },
       {
-        id: 'D',
+        id: 'B',
         text: 'Ask Claude Code to implement three completely different caching implementations in parallel and pick one afterward.',
         rationale:
           'Wrong — building three full implementations is far more effort than a short upfront clarifying conversation about the actual open questions.',
       },
+      {
+        id: 'C',
+        text: 'Ask Claude to first interview you with clarifying questions about invalidation strategy, TTL, and concurrency handling before writing any code.',
+        rationale:
+          'Correct — the interview pattern, where Claude asks clarifying questions before implementing, is effective for surfacing design considerations you may not have fully anticipated.',
+      },
+      {
+        id: 'D',
+        text: 'Ask Claude to implement a reasonable default immediately, and treat any issues as bugs to fix later.',
+        rationale:
+          'Wrong — implementing a default immediately risks committing to caching behavior that is costly to unwind later, when the considerations could have been surfaced upfront cheaply.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'The interview pattern — having Claude ask clarifying questions before implementing — surfaces design considerations the developer may not have anticipated, in domains like cache invalidation and concurrency.',
     difficulty: 'applied',
@@ -465,29 +465,29 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "Copy and paste the relevant standards file's full content into each package's CLAUDE.md manually.",
-        rationale:
-          'Wrong — manual duplication creates a maintenance burden where updates must be repeated in multiple places, which @import exists to avoid.',
-      },
-      {
-        id: 'B',
-        text: 'Store all standards in a single file and rely on Claude to infer which parts apply to which package.',
-        rationale: 'Wrong — relying on inference rather than explicit inclusion is unreliable compared to directly importing the relevant file.',
-      },
-      {
-        id: 'C',
         text: "Create a .claude/rules/ file with a glob pattern matching each package's directory.",
         rationale:
           "Wrong — while path-scoped rules are useful for file-type-based conventions, the scenario describes package-level standards documents meant to be selectively included in CLAUDE.md, which is what @import is for.",
       },
       {
-        id: 'D',
+        id: 'B',
         text: "Use the @import syntax within each package's CLAUDE.md to reference the specific standards file relevant to that package.",
         rationale:
           "Correct — @import lets each package's CLAUDE.md selectively include the specific external standards file relevant to it, keeping CLAUDE.md modular without duplicating content.",
       },
+      {
+        id: 'C',
+        text: "Copy and paste the relevant standards file's full content into each package's CLAUDE.md manually.",
+        rationale:
+          'Wrong — manual duplication creates a maintenance burden where updates must be repeated in multiple places, which @import exists to avoid.',
+      },
+      {
+        id: 'D',
+        text: 'Store all standards in a single file and rely on Claude to infer which parts apply to which package.',
+        rationale: 'Wrong — relying on inference rather than explicit inclusion is unreliable compared to directly importing the relevant file.',
+      },
     ],
-    correctOptionIds: ['D'],
+    correctOptionIds: ['B'],
     explanationSummary:
       '@import syntax lets a CLAUDE.md selectively reference external standards files relevant to its own package, avoiding duplication while keeping configuration modular.',
     difficulty: 'foundational',
@@ -953,29 +953,29 @@ export const domain3Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Write a test suite covering expected behavior and edge cases first, then have Claude implement against it, sharing any test failures for it to address.',
-        rationale:
-          'Correct — test-driven iteration, writing test suites first, then iterating by sharing test failures, is the documented technique for guiding progressive improvement toward a correct implementation.',
-      },
-      {
-        id: 'B',
         text: 'Ask Claude to implement the function with no tests at all, and only write tests afterward if problems come up later.',
         rationale: 'Wrong — deferring tests until after problems arise in production is the reactive approach this technique is meant to improve upon.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Ask Claude to implement five different versions of the function and pick the one that looks best by inspection.',
         rationale:
           "Wrong — generating multiple versions to pick by visual inspection doesn't provide the systematic verification a test suite gives, and is far less efficient.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Provide only a one-sentence description of the function\'s purpose with no further detail or examples.',
         rationale:
           'Wrong — a one-sentence description with no tests or examples is unlikely to yield a correct first attempt for a "moderately complex" function.',
       },
+      {
+        id: 'D',
+        text: 'Write a test suite covering expected behavior and edge cases first, then have Claude implement against it, sharing any test failures for it to address.',
+        rationale:
+          'Correct — test-driven iteration, writing test suites first, then iterating by sharing test failures, is the documented technique for guiding progressive improvement toward a correct implementation.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Test-driven iteration — writing test suites first, then iterating by sharing test failures — is the documented technique for guiding progressive improvement toward a correct implementation.',
     difficulty: 'applied',
@@ -1060,7 +1060,7 @@ export const domain3Questions: Question[] = [
         id: 'D',
         text: 'Every package ends up loading a large amount of irrelevant content into context, undermining the modularity benefit @import is meant to provide, when smaller, more targeted standards files per package would be more appropriate.',
         rationale:
-          '@import syntax exists to selectively include relevant standards; importing an overly broad file into every package undermines that modularity.',
+          'Correct — @import syntax exists to selectively include relevant standards; importing an overly broad file into every package undermines that modularity.',
       },
     ],
     correctOptionIds: ['D'],

@@ -63,30 +63,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "Add a programmatic prerequisite that blocks process_refund unless the most recent lookup_order result for that order has a status of 'delivered' or 'failed'.",
-        rationale:
-          'Correct — this is a business rule where errors have direct financial consequences, so a programmatic gate that deterministically blocks the tool call gives a guarantee that prompt wording never can.',
-      },
-      {
-        id: 'B',
         text: 'Reword the system prompt to more strongly emphasize that refunds require a completed or failed delivery status.',
         rationale:
           'Wrong — the instruction already exists in the prompt; making it stronger in wording still leaves compliance probabilistic rather than guaranteed.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Add few-shot examples showing the agent checking delivery status before issuing refunds.',
         rationale:
           "Wrong — few-shot examples can improve typical-case behavior but don't eliminate the non-zero failure rate that matters when refund errors are financially costly.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: "Move the delivery-status instruction to the very top of the system prompt for higher priority.",
         rationale:
           'Wrong — reordering the prompt may modestly improve adherence but, like B, remains a probabilistic fix to a problem that needs a deterministic one.',
       },
+      {
+        id: 'D',
+        text: "Add a programmatic prerequisite that blocks process_refund unless the most recent lookup_order result for that order has a status of 'delivered' or 'failed'.",
+        rationale:
+          'Correct — this is a business rule where errors have direct financial consequences, so a programmatic gate that deterministically blocks the tool call gives a guarantee that prompt wording never can.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'When deterministic compliance is required for a financially consequential action, only programmatic enforcement (a prerequisite gate blocking the tool call) provides a real guarantee — prompt-based instructions, however well worded, retain a non-zero failure rate.',
     difficulty: 'applied',
@@ -109,30 +109,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Add a PostToolUse hook that normalizes date fields from both tools into a single consistent format before the results are added to the conversation.',
-        rationale:
-          "Correct — a PostToolUse hook can deterministically transform tool results into a consistent format before the model has to reason about them, removing the root cause rather than asking the model to compensate for it.",
-      },
-      {
-        id: 'B',
-        text: "Update the system prompt to remind the agent that get_customer dates are Unix timestamps and lookup_order dates are ISO 8601.",
-        rationale:
-          'Wrong — this asks the model to correctly remember and apply a format-conversion rule on every relevant turn, exactly the kind of probabilistic compliance a hook exists to avoid needing.',
-      },
-      {
-        id: 'C',
         text: "Ask the customer to confirm their account age whenever it becomes relevant to the conversation.",
         rationale:
           'Wrong — this offloads a data-quality problem onto the customer and adds unnecessary friction to routine interactions.',
       },
       {
-        id: 'D',
+        id: 'B',
         text: "Add an instruction telling the agent to double-check its date calculations before stating them.",
         rationale:
           '"Double-checking" is not a mechanism — it is a hope that the model will catch its own formatting error, which is unreliable at scale.',
       },
+      {
+        id: 'C',
+        text: 'Add a PostToolUse hook that normalizes date fields from both tools into a single consistent format before the results are added to the conversation.',
+        rationale:
+          "Correct — a PostToolUse hook can deterministically transform tool results into a consistent format before the model has to reason about them, removing the root cause rather than asking the model to compensate for it.",
+      },
+      {
+        id: 'D',
+        text: "Update the system prompt to remind the agent that get_customer dates are Unix timestamps and lookup_order dates are ISO 8601.",
+        rationale:
+          'Wrong — this asks the model to correctly remember and apply a format-conversion rule on every relevant turn, exactly the kind of probabilistic compliance a hook exists to avoid needing.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'PostToolUse hooks are the correct place to normalize heterogeneous data formats returned by different tools, so the model always reasons over consistent data rather than being asked to remember and apply conversion rules itself.',
     difficulty: 'applied',
@@ -155,30 +155,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'The adaptive approach, but only if the number of available tools is reduced to exactly two.',
+        rationale:
+          "Wrong — the number of tools available doesn't determine whether adaptive decomposition is appropriate; that's a tool-distribution concern, not a task-decomposition one.",
+      },
+      {
+        id: 'B',
         text: "The adaptive, model-driven approach, because billing disputes have widely varying investigation needs and a fixed sequence would force irrelevant steps on some cases or skip steps that unusual cases require.",
         rationale:
           'Correct — fixed sequential pipelines suit predictable, uniform multi-aspect work, while dynamic, model-driven decomposition suits open-ended, variable investigation — and the scenario described is explicitly variable.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: "The fixed pipeline, because it guarantees identical behavior across all billing dispute cases and is easier to audit.",
         rationale:
           "Wrong — uniform behavior is a benefit for predictable workflows, but here it actively works against the case since it can't skip irrelevant steps or add needed ones; auditability doesn't outweigh the workflow mismatch.",
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'The fixed pipeline, because model-driven tool selection cannot be trusted to call get_customer when customer identity is relevant.',
         rationale:
           'Wrong — this conflates a different concern (identity verification before financial actions, properly solved with a programmatic prerequisite gate) with the general question of investigation ordering.',
       },
-      {
-        id: 'D',
-        text: 'The adaptive approach, but only if the number of available tools is reduced to exactly two.',
-        rationale:
-          "Wrong — the number of tools available doesn't determine whether adaptive decomposition is appropriate; that's a tool-distribution concern, not a task-decomposition one.",
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Task decomposition strategy should match the predictability of the workflow: fixed prompt-chained pipelines fit uniform, predictable work, while dynamic model-driven decomposition fits variable, open-ended investigation like billing disputes.',
     difficulty: 'applied',
@@ -247,29 +247,29 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "Checking whether the assistant's response contains any text content, and treating that as a sign the task is complete.",
-        rationale:
-          'Correct (anti-pattern) — treating the presence of any text content as a completion signal is unreliable because Claude may narrate an intermediate step in text while still intending to call a tool next.',
-      },
-      {
-        id: 'B',
         text: 'Inspecting stop_reason and continuing the loop while it is "tool_use", stopping when it is "end_turn".',
         rationale: 'Wrong — this is the recommended, correct implementation, not an anti-pattern.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Setting an arbitrary maximum iteration count as the primary mechanism for deciding when to stop, regardless of stop_reason.',
         rationale:
           'Correct (anti-pattern) — an arbitrary cap used as the primary stopping mechanism substitutes a guess for the model\'s own structured signal, and can cut off legitimate multi-step work or fail to bound genuinely unbounded loops.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Appending each tool result to the conversation history before sending the next request to Claude.',
         rationale:
           'Wrong — this step is required for the loop to function correctly; omitting it, not doing it, would be the actual problem.',
       },
+      {
+        id: 'D',
+        text: "Checking whether the assistant's response contains any text content, and treating that as a sign the task is complete.",
+        rationale:
+          'Correct (anti-pattern) — treating the presence of any text content as a completion signal is unreliable because Claude may narrate an intermediate step in text while still intending to call a tool next.',
+      },
     ],
-    correctOptionIds: ['A', 'C'],
+    correctOptionIds: ['B', 'D'],
     explanationSummary:
       'The documented anti-patterns for loop termination are: parsing natural-language signals, using an arbitrary iteration cap as the primary stopping mechanism, and checking for assistant text content as a completion indicator. Options B and D describe the correct implementation, not anti-patterns.',
     difficulty: 'foundational',
@@ -292,30 +292,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'It breaks the hub-and-spoke pattern where the coordinator manages all inter-subagent communication, error handling, and information routing, reducing observability and making consistent error handling harder to maintain.',
-        rationale:
-          'Correct — the hub-and-spoke pattern exists precisely so the coordinator has visibility into and control over all inter-subagent communication; bypassing it for a shortcut sacrifices observability and consistent error handling for a modest latency gain.',
-      },
-      {
-        id: 'B',
-        text: 'Direct subagent-to-subagent communication is technically impossible with the Agent SDK, so this design cannot be implemented at all.',
-        rationale:
-          "Wrong — the concern here is architectural/design quality, not a technical impossibility; the point being tested is why this design is discouraged, not whether it's possible.",
-      },
-      {
-        id: 'C',
         text: "It would cause the web-search subagent to inherit the synthesis subagent's full conversation history automatically.",
         rationale:
           "Wrong — subagents don't automatically inherit context regardless of whether communication is direct or coordinator-routed; that's a separate, unrelated property.",
       },
       {
-        id: 'D',
+        id: 'B',
         text: 'It eliminates the need for structured data formats when passing information between agents.',
         rationale:
           'Wrong — bypassing the coordinator does not eliminate the need for structured data formats; direct communication would still need clear content/metadata separation.',
       },
+      {
+        id: 'C',
+        text: 'It breaks the hub-and-spoke pattern where the coordinator manages all inter-subagent communication, error handling, and information routing, reducing observability and making consistent error handling harder to maintain.',
+        rationale:
+          'Correct — the hub-and-spoke pattern exists precisely so the coordinator has visibility into and control over all inter-subagent communication; bypassing it for a shortcut sacrifices observability and consistent error handling for a modest latency gain.',
+      },
+      {
+        id: 'D',
+        text: 'Direct subagent-to-subagent communication is technically impossible with the Agent SDK, so this design cannot be implemented at all.',
+        rationale:
+          "Wrong — the concern here is architectural/design quality, not a technical impossibility; the point being tested is why this design is discouraged, not whether it's possible.",
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Hub-and-spoke architecture routes all subagent communication through the coordinator for observability, consistent error handling, and controlled information flow — bypassing it undermines those properties.',
     difficulty: 'applied',
@@ -382,28 +382,28 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'The coordinator\'s allowedTools configuration does not include "Task", which is required for a coordinator to invoke subagents.',
-        rationale:
-          'Correct — the Task tool is the mechanism for spawning subagents, and allowedTools must explicitly include "Task" for a coordinator to be able to invoke them; describing delegation in the prompt doesn\'t grant that capability.',
-      },
-      {
-        id: 'B',
         text: 'The subagents have not been given individual AgentDefinition system prompts.',
         rationale: 'Wrong — missing AgentDefinition details would affect subagent behavior once invoked, not whether invocation itself is possible.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'The coordinator is using fork_session instead of spawning subagents directly.',
         rationale: 'Wrong — fork_session is a session-branching mechanism, unrelated to whether subagents can be spawned via the Task tool.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'The research topic is too broad for any subagent to be invoked.',
         rationale:
           'Wrong — topic breadth might affect what the coordinator decides to delegate, but would not cause a complete inability to invoke any subagent.',
       },
+      {
+        id: 'D',
+        text: 'The coordinator\'s allowedTools configuration does not include "Task", which is required for a coordinator to invoke subagents.',
+        rationale:
+          'Correct — the Task tool is the mechanism for spawning subagents, and allowedTools must explicitly include "Task" for a coordinator to be able to invoke them; describing delegation in the prompt doesn\'t grant that capability.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'The Task tool is the mechanism for spawning subagents, and a coordinator\'s allowedTools must include "Task" for delegation to function at all.',
     difficulty: 'foundational',
@@ -426,28 +426,28 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'The web-search and document-analysis subagents were invoked sequentially instead of in parallel.',
+        rationale: "Wrong — sequential vs. parallel invocation affects latency, not whether the synthesis subagent receives the actual findings in its prompt.",
+      },
+      {
+        id: 'B',
+        text: 'The synthesis subagent needs a larger max_tokens value to produce more specific output.',
+        rationale: 'Wrong — max_tokens affects output length, not whether the model has specific source material to draw from.',
+      },
+      {
+        id: 'C',
         text: "The subagent's prompt does not include the actual findings from the prior subagents — subagents do not automatically inherit the coordinator's conversation history, so without explicit context, there's nothing specific for it to synthesize.",
         rationale:
           "Correct — subagent context must be explicitly provided in the prompt; without the prior agents' actual findings included, the synthesis subagent has no specific material to work from and falls back to generic output.",
       },
       {
-        id: 'B',
+        id: 'D',
         text: "The synthesis subagent's AgentDefinition is missing a description field.",
         rationale:
           'Wrong — a missing description affects how the coordinator decides when to invoke the subagent, not what specific content the subagent has to work with once invoked.',
       },
-      {
-        id: 'C',
-        text: 'The web-search and document-analysis subagents were invoked sequentially instead of in parallel.',
-        rationale: "Wrong — sequential vs. parallel invocation affects latency, not whether the synthesis subagent receives the actual findings in its prompt.",
-      },
-      {
-        id: 'D',
-        text: 'The synthesis subagent needs a larger max_tokens value to produce more specific output.',
-        rationale: 'Wrong — max_tokens affects output length, not whether the model has specific source material to draw from.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Subagents do not automatically inherit the coordinator\'s conversation history — complete findings from prior agents must be explicitly included in the subagent\'s prompt.',
     difficulty: 'foundational',
@@ -470,29 +470,29 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Have the document-analysis subagent begin before the coordinator has finished formulating its request.',
+        rationale:
+          'Wrong — this does not describe an actual, implementable mechanism; a subagent cannot begin before it has been invoked with a request.',
+      },
+      {
+        id: 'B',
         text: 'Emit both Task tool calls in a single coordinator response so the two independent subagents run in parallel, rather than issuing them across separate turns.',
         rationale:
           'Correct — spawning parallel subagents by emitting multiple Task tool calls in a single response, rather than across separate turns, is exactly the mechanism for running independent subagents concurrently.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Merge the web-search and document-analysis subagents into a single subagent that does both jobs.',
         rationale:
           "Wrong — merging removes the specialization (and tool-scoping) benefits of separate subagents; it's a much bigger architectural change than necessary to fix a sequencing problem.",
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Increase the timeout configured for each subagent so they have more time to respond.',
         rationale: 'Wrong — increasing timeouts does not change whether the calls run sequentially or in parallel; it only affects how long each is allowed to take.',
       },
-      {
-        id: 'D',
-        text: 'Have the document-analysis subagent begin before the coordinator has finished formulating its request.',
-        rationale:
-          'Wrong — this does not describe an actual, implementable mechanism; a subagent cannot begin before it has been invoked with a request.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Emitting multiple Task tool calls in a single coordinator response is the mechanism for running independent subagents in parallel, rather than sequentially across separate turns.',
     difficulty: 'applied',
@@ -560,30 +560,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'First map the codebase structure and identify the highest-impact route handlers, then create a prioritized plan that adapts as dependencies and patterns are discovered along the way.',
-        rationale:
-          'Correct — decomposing open-ended tasks by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered is the recommended approach.',
-      },
-      {
-        id: 'B',
         text: 'Immediately begin rewriting the first route handler file alphabetically, then proceed to the next file in sequence.',
         rationale:
           "Wrong — alphabetical, sequential processing ignores which handlers actually matter most and doesn't adapt to what's discovered along the way.",
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Generate a single find-and-replace pattern intended to fix all inconsistent error handling in one pass.',
         rationale:
           'Wrong — a single uniform find-and-replace is unlikely to correctly handle "inconsistent" patterns that, by definition, vary across the codebase.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Ask the developer to first write a complete specification of every error handling pattern currently in use before starting.',
         rationale:
           'Wrong — this defeats the purpose of using Claude Code to help map and understand the inconsistency in the first place.',
       },
+      {
+        id: 'D',
+        text: 'First map the codebase structure and identify the highest-impact route handlers, then create a prioritized plan that adapts as dependencies and patterns are discovered along the way.',
+        rationale:
+          'Correct — decomposing open-ended tasks by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered is the recommended approach.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Open-ended tasks are best decomposed by first mapping structure and identifying high-impact areas, then building an adaptive, prioritized plan — not fixed sequential or uniform automated approaches.',
     difficulty: 'applied',
@@ -606,27 +606,27 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'The agent will be unable to read any files after the first iteration.',
-        rationale: 'Wrong — nothing about text-based termination checking prevents subsequent file reads; the two are unrelated.',
-      },
-      {
-        id: 'B',
         text: 'The loop will never terminate under any circumstances.',
         rationale: 'Wrong — the described behavior would actually cause premature (not absent) termination, the opposite problem.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'The test suite will run twice as often as necessary.',
         rationale: 'Wrong — this describes a frequency issue, not the actual risk of stopping based on unreliable text matching.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: "The agent could mention \"tests pass\" as an expected future outcome or in passing, causing the loop to stop before verification has actually happened via a real tool result — the loop should instead check stop_reason and the actual tool results, not the text content.",
         rationale:
           'Correct — this is the anti-pattern of checking text content as a completion indicator instead of the structured stop_reason and actual tool results; the model could reference the phrase without it reflecting a verified outcome.',
       },
+      {
+        id: 'D',
+        text: 'The agent will be unable to read any files after the first iteration.',
+        rationale: 'Wrong — nothing about text-based termination checking prevents subsequent file reads; the two are unrelated.',
+      },
     ],
-    correctOptionIds: ['D'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Checking assistant text content for completion phrases is an anti-pattern; loop control should be based on stop_reason and the actual results of tool execution, not on narrated text.',
     difficulty: 'applied',
@@ -828,30 +828,30 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Have the two subagents communicate directly with each other to sort out the overlap on their own.',
+        rationale:
+          "Wrong — direct subagent-to-subagent coordination bypasses the coordinator's role in routing and observability, undermining the hub-and-spoke pattern.",
+      },
+      {
+        id: 'B',
         text: 'Continue delegating the same undivided topic to both subagents, since redundancy improves reliability.',
         rationale:
           'Wrong — redundancy without a specific reason wastes effort and produces overlapping findings, as already observed, rather than adding reliability.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Delegate the topic to only one subagent going forward and eliminate the second entirely.',
         rationale:
           "Wrong — this may lose useful parallel capacity where genuine partitioning would preserve it, and doesn't fix the underlying delegation design.",
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Partition the topic into distinct, non-overlapping subtopics or source types before delegating, assigning each subagent a clearly different piece of the work.',
         rationale:
           "Correct — partitioning research scope across subagents to minimize duplication, assigning distinct subtopics or source types to each, is exactly the coordinator's role in task decomposition.",
       },
-      {
-        id: 'D',
-        text: 'Have the two subagents communicate directly with each other to sort out the overlap on their own.',
-        rationale:
-          "Wrong — direct subagent-to-subagent coordination bypasses the coordinator's role in routing and observability, undermining the hub-and-spoke pattern.",
-      },
     ],
-    correctOptionIds: ['C'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Partitioning research scope across subagents into distinct subtopics or source types is the coordinator\'s role in task decomposition, minimizing duplicated effort.',
     difficulty: 'applied',
@@ -964,28 +964,28 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Add a system prompt instruction telling the agent never to call delete_record with a wildcard argument.',
-        rationale:
-          'Wrong — a prompt instruction is probabilistic compliance, not a guarantee, for a destructive action that needs deterministic prevention.',
-      },
-      {
-        id: 'B',
         text: 'Implement a hook that intercepts outgoing tool calls to delete_record and blocks any call whose argument matches a wildcard/all-records pattern, redirecting to an error or escalation.',
         rationale:
           'Correct — a hook that intercepts outgoing tool calls and blocks policy-violating arguments provides a deterministic guarantee, appropriate when compliance must be guaranteed.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: "Rename the delete_record tool to make its danger more obvious in its name.",
         rationale: "Wrong — a more alarming tool name doesn't prevent the call from being made; it's not an enforcement mechanism.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Add a few-shot example showing the agent declining to use a wildcard argument.',
         rationale: 'Wrong — a few-shot example, like the system prompt instruction, remains probabilistic guidance rather than a guaranteed block.',
       },
+      {
+        id: 'D',
+        text: 'Add a system prompt instruction telling the agent never to call delete_record with a wildcard argument.',
+        rationale:
+          'Wrong — a prompt instruction is probabilistic compliance, not a guarantee, for a destructive action that needs deterministic prevention.',
+      },
     ],
-    correctOptionIds: ['B'],
+    correctOptionIds: ['A'],
     explanationSummary:
       'Hooks that intercept outgoing tool calls and block policy-violating arguments provide a deterministic guarantee, appropriate for destructive actions requiring guaranteed compliance.',
     difficulty: 'applied',
@@ -1008,29 +1008,29 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Both tasks are better suited to a fixed, prompt-chained pipeline, since fixed pipelines are always safer.',
-        rationale:
-          "Wrong — a fixed pipeline poorly fits the incident investigation, where the right next step depends entirely on what's discovered, which can't be predicted in advance.",
-      },
-      {
-        id: 'B',
         text: 'Both tasks are better suited to dynamic, adaptive decomposition, since letting the model decide is always more powerful.',
         rationale:
           'Wrong — dynamic decomposition adds unnecessary variability to the checklist task, which benefits from uniform, repeatable steps every time.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'The pre-release checklist should use dynamic decomposition, and the incident investigation should use a fixed pipeline.',
         rationale: 'Wrong — this is exactly backwards from the task characteristics described.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'The pre-release checklist should use a fixed, prompt-chained pipeline (predictable, uniform steps), and the incident investigation should use dynamic, adaptive decomposition (unpredictable, evolving findings).',
         rationale:
           'Correct — fixed pipelines suit predictable, uniform work like a standard checklist, while dynamic decomposition suits open-ended investigation where next steps depend on unpredictable findings.',
       },
+      {
+        id: 'D',
+        text: 'Both tasks are better suited to a fixed, prompt-chained pipeline, since fixed pipelines are always safer.',
+        rationale:
+          "Wrong — a fixed pipeline poorly fits the incident investigation, where the right next step depends entirely on what's discovered, which can't be predicted in advance.",
+      },
     ],
-    correctOptionIds: ['D'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Task decomposition strategy should match the workflow: fixed pipelines for predictable, uniform work; dynamic decomposition for open-ended investigation with unpredictable findings.',
     difficulty: 'foundational',
@@ -1142,28 +1142,28 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "A structured summary containing the essential details a human would need — such as relevant identifiers, root cause analysis, and recommended next steps — rather than just a note saying 'this case is too complex.'",
-        rationale:
-          'Correct — a structured handoff summary with the essential details a human needs, since they lack access to the conversation transcript, is exactly the documented pattern for mid-process escalation.',
-      },
-      {
-        id: 'B',
         text: "Just the words 'escalated' with no further detail, since the human can ask the customer for details directly.",
         rationale: 'Wrong — providing no substantive detail forces the human to reconstruct context from scratch, defeating the purpose of a handoff.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'The full raw conversation transcript with no summarization, on the assumption that more detail is always better.',
         rationale:
           'Wrong — dumping the full raw transcript without any structuring or summarization pushes the burden of extracting what matters onto the human.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Only the timestamp of when the escalation occurred.',
         rationale: 'Wrong — a bare timestamp provides no substantive information for the human to act on.',
       },
+      {
+        id: 'D',
+        text: "A structured summary containing the essential details a human would need — such as relevant identifiers, root cause analysis, and recommended next steps — rather than just a note saying 'this case is too complex.'",
+        rationale:
+          'Correct — a structured handoff summary with the essential details a human needs, since they lack access to the conversation transcript, is exactly the documented pattern for mid-process escalation.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Structured handoff summaries with essential details (identifiers, root cause, recommended action) are the documented pattern for escalating to humans who lack conversation transcript access.',
     difficulty: 'foundational',
@@ -1186,28 +1186,28 @@ export const domain1Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'It should randomly select a subset of subagents to invoke for variety.',
+        rationale: 'Wrong — random selection ignores the actual requirements of the query, which is precisely what should drive the routing decision.',
+      },
+      {
+        id: 'B',
+        text: "It should analyze the query's actual requirements and dynamically select which subagents to invoke, rather than always routing through the full pipeline, when a simpler query doesn't need every stage.",
+        rationale:
+          'Correct — coordinators should analyze query requirements and dynamically select which subagents to invoke based on complexity, rather than uniformly routing everything through the full pipeline.',
+      },
+      {
+        id: 'C',
         text: 'It should always route through the full pipeline for every query, regardless of complexity, to maintain consistency.',
         rationale:
           "Wrong — always routing every query through the full pipeline adds unnecessary latency and cost for simple queries that don't need every stage.",
       },
       {
-        id: 'B',
+        id: 'D',
         text: 'It should never use subagents at all, and should always answer directly without delegation.',
         rationale: 'Wrong — this goes too far in the other direction, discarding legitimate delegation entirely, including for queries that genuinely need it.',
       },
-      {
-        id: 'C',
-        text: 'It should randomly select a subset of subagents to invoke for variety.',
-        rationale: 'Wrong — random selection ignores the actual requirements of the query, which is precisely what should drive the routing decision.',
-      },
-      {
-        id: 'D',
-        text: "It should analyze the query's actual requirements and dynamically select which subagents to invoke, rather than always routing through the full pipeline, when a simpler query doesn't need every stage.",
-        rationale:
-          'Correct — coordinators should analyze query requirements and dynamically select which subagents to invoke based on complexity, rather than uniformly routing everything through the full pipeline.',
-      },
     ],
-    correctOptionIds: ['D'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Coordinators should dynamically select which subagents to invoke based on query complexity, rather than always routing through the full pipeline regardless of need.',
     difficulty: 'applied',

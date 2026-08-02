@@ -109,30 +109,30 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Set tool_choice to force selection of get_customer specifically ({"type": "tool", "name": "get_customer"}) on the first request of the conversation, then switch to normal tool_choice for subsequent turns.',
-        rationale:
-          "Correct — forced tool selection guarantees the model calls that specific tool on that request, exactly the deterministic guarantee needed for a \"must always be this exact tool, first\" requirement.",
-      },
-      {
-        id: 'B',
         text: 'Set tool_choice to "any" for the entire conversation so the agent is always required to call some tool.',
         rationale:
           "Wrong — \"any\" guarantees a tool call is made but not which one, so the agent could still call a different tool first.",
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Add a system prompt instruction stating that get_customer must always be called first.',
         rationale:
           'Wrong — a prompt instruction is probabilistic compliance, not a guarantee, for a requirement stated as needing to always hold.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Reorder the tools list so get_customer appears first, since Claude selects tools in the order they are listed.',
         rationale:
           'Wrong — tool selection is not determined by list order; Claude chooses based on descriptions and context, not position.',
       },
+      {
+        id: 'D',
+        text: 'Set tool_choice to force selection of get_customer specifically ({"type": "tool", "name": "get_customer"}) on the first request of the conversation, then switch to normal tool_choice for subsequent turns.',
+        rationale:
+          "Correct — forced tool selection guarantees the model calls that specific tool on that request, exactly the deterministic guarantee needed for a \"must always be this exact tool, first\" requirement.",
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Forced tool selection ({"type": "tool", "name": "..."}) is the only tool_choice option that guarantees a specific named tool is called, which is what an always-first requirement needs.',
     difficulty: 'applied',
@@ -155,30 +155,30 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: "In their personal ~/.claude.json, so it's available only to them and isn't shared with the team via version control.",
-        rationale:
-          'Correct — user-level configuration is exactly for personal or experimental servers that should not be pushed onto teammates via version control, while shared, production-relevant servers belong in the project-scoped .mcp.json.',
-      },
-      {
-        id: 'B',
-        text: 'In the project\'s .mcp.json, since all MCP servers should be centrally managed in one file.',
-        rationale:
-          'Wrong — putting an unreleased, personal tool in the shared project config would expose draft tools to the whole team the moment they pull the branch.',
-      },
-      {
-        id: 'C',
         text: 'In a second .mcp.json file committed to a personal feature branch.',
         rationale:
           '.mcp.json is still version-controlled project configuration regardless of which branch it\'s committed on; a feature branch doesn\'t make it personal-only.',
       },
       {
-        id: 'D',
+        id: 'B',
         text: 'As a duplicate entry in .mcp.json guarded by a comment noting it is experimental.',
         rationale:
           "Wrong — comments don't change how the file is loaded or shared; anyone with the project config gets the \"experimental\" entry too.",
       },
+      {
+        id: 'C',
+        text: "In their personal ~/.claude.json, so it's available only to them and isn't shared with the team via version control.",
+        rationale:
+          'Correct — user-level configuration is exactly for personal or experimental servers that should not be pushed onto teammates via version control, while shared, production-relevant servers belong in the project-scoped .mcp.json.',
+      },
+      {
+        id: 'D',
+        text: 'In the project\'s .mcp.json, since all MCP servers should be centrally managed in one file.',
+        rationale:
+          'Wrong — putting an unreleased, personal tool in the shared project config would expose draft tools to the whole team the moment they pull the branch.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'MCP server scoping separates project-level (.mcp.json, shared team tooling) from user-level (~/.claude.json, personal/experimental servers) configuration precisely for cases like this.',
     difficulty: 'foundational',
@@ -201,30 +201,30 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'The agent will escalate every "no order found" case to a human agent by default.',
+        rationale:
+          'Wrong — nothing in the scenario indicates an escalation policy is triggered by this result; the problem is about what the agent concludes and says next, not about routing to a human.',
+      },
+      {
+        id: 'B',
         text: 'The agent cannot distinguish a legitimate empty result (no such order exists) from an access failure (the lookup could not be completed), so it may tell a customer no such order exists when the real issue is a temporary backend outage a retry could resolve.',
         rationale:
           'Correct — collapsing "not found" and "temporarily inaccessible" into one generic result removes exactly the distinction the agent needs to decide whether to ask the customer to double check the number or retry.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'The agent will always retry both cases the same number of times regardless of which is more appropriate.',
         rationale:
           "Wrong — the scenario describes a lack of information to inform retry behavior, not a claim about what retry behavior currently exists.",
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'The customer will be unable to provide a corrected order number in either case.',
         rationale:
           "Wrong — nothing about this error-reporting problem prevents the customer from providing a different order number if asked.",
       },
-      {
-        id: 'D',
-        text: 'The agent will escalate every "no order found" case to a human agent by default.',
-        rationale:
-          'Wrong — nothing in the scenario indicates an escalation policy is triggered by this result; the problem is about what the agent concludes and says next, not about routing to a human.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Distinguishing access failures (which may warrant a retry) from valid empty results (a genuinely nonexistent record) is essential structured-error information that a generic "not found" response destroys.',
     difficulty: 'applied',
@@ -292,28 +292,28 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'The larger tool set degrades tool-selection reliability by increasing decision complexity, and can lead the synthesis agent to misuse tools outside its specialization (e.g., attempting web searches itself); the fix is scoping it back down to the tools its role actually needs.',
-        rationale:
-          'Correct — giving an agent access to many more tools than its role needs degrades selection reliability, and agents with tools outside their specialization tend to misuse them.',
-      },
-      {
-        id: 'B',
         text: "There is no meaningful effect, since Claude can always ignore tools it doesn't need regardless of how many are available.",
         rationale:
           'Wrong — this contradicts the documented principle that excess tool access measurably degrades selection reliability.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'The additional tools will make responses slower to generate but will not affect which tools get selected.',
         rationale: "Wrong — the issue isn't only response latency; it's specifically about selection reliability and misuse of out-of-scope tools.",
       },
       {
-        id: 'D',
+        id: 'C',
         text: "The additional tools should be left in place, since having more capabilities available is always an improvement to a subagent's design.",
         rationale: 'Wrong — this is the opposite of recommended practice; scoped access to what a role actually needs is preferred over unconditionally more tools.',
       },
+      {
+        id: 'D',
+        text: 'The larger tool set degrades tool-selection reliability by increasing decision complexity, and can lead the synthesis agent to misuse tools outside its specialization (e.g., attempting web searches itself); the fix is scoping it back down to the tools its role actually needs.',
+        rationale:
+          'Correct — giving an agent access to many more tools than its role needs degrades selection reliability, and agents with tools outside their specialization tend to misuse them.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Giving an agent access to too many tools degrades tool-selection reliability and leads to cross-specialization misuse. Scoped tool access — only what a role needs — is the recommended design.',
     difficulty: 'applied',
@@ -336,29 +336,29 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Have the synthesis subagent skip verification entirely and trust the findings it already received without confirming them.',
+        rationale: 'Wrong — skipping verification entirely sacrifices the accuracy checks the process exists for, rather than making them more efficient.',
+      },
+      {
+        id: 'B',
+        text: "Increase the priority of the coordinator's message queue so verification round-trips complete faster.",
+        rationale:
+          'Wrong — this addresses queue latency, not the structural cost of routing every simple lookup through the full coordinator round trip.',
+      },
+      {
+        id: 'C',
         text: 'Give the synthesis subagent a narrowly scoped fact-lookup tool for simple verifications, while still routing more complex verification needs through the coordinator to the web-search subagent.',
         rationale:
           'Correct — this is the principle of least privilege applied to cross-role needs: a narrowly scoped tool for the common, simple case reduces overhead while preserving the coordinator-routed pattern for genuinely complex verification.',
       },
       {
-        id: 'B',
+        id: 'D',
         text: "Give the synthesis subagent full access to all of the web-search subagent's tools so it never needs to route through the coordinator again.",
         rationale:
           'Wrong — granting full web-search access over-provisions the synthesis agent, reintroducing the cross-specialization misuse risk scoped tool access is meant to prevent.',
       },
-      {
-        id: 'C',
-        text: 'Have the synthesis subagent skip verification entirely and trust the findings it already received without confirming them.',
-        rationale: 'Wrong — skipping verification entirely sacrifices the accuracy checks the process exists for, rather than making them more efficient.',
-      },
-      {
-        id: 'D',
-        text: "Increase the priority of the coordinator's message queue so verification round-trips complete faster.",
-        rationale:
-          'Wrong — this addresses queue latency, not the structural cost of routing every simple lookup through the full coordinator round trip.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Providing scoped cross-role tools for high-frequency, simple needs — while routing complex cases through the coordinator — balances efficiency with the principle of least privilege.',
     difficulty: 'advanced',
@@ -381,29 +381,29 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Custom MCP servers are required whenever more than one external system needs to be integrated.',
+        rationale:
+          'Wrong — the number of external systems being integrated has no bearing on whether custom development is required; the deciding factor is whether the integration is standard or team-specific.',
+      },
+      {
+        id: 'B',
         text: 'Prefer existing, well-supported community MCP servers for standard integrations like Jira and Confluence, reserving custom server development for genuinely team-specific workflows those integrations don\'t cover.',
         rationale:
           'Correct — choosing existing community MCP servers over custom implementations for standard integrations is the recommended practice.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: 'Always build custom MCP servers in-house, since community servers cannot be trusted for production use.',
         rationale: 'Wrong — this is an unsupported blanket claim; the guidance is to prefer existing servers for standard cases, not distrust them categorically.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'MCP servers should never be used for anything beyond web search, so this integration should use a different mechanism entirely.',
         rationale:
           'Wrong — MCP servers are a general integration mechanism; Jira and Confluence integrations are exactly the kind of standard use case they are suited for.',
       },
-      {
-        id: 'D',
-        text: 'Custom MCP servers are required whenever more than one external system needs to be integrated.',
-        rationale:
-          'Wrong — the number of external systems being integrated has no bearing on whether custom development is required; the deciding factor is whether the integration is standard or team-specific.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'Best practice is to choose existing community MCP servers over custom implementations for standard integrations, reserving custom servers for team-specific workflows.',
     difficulty: 'foundational',
@@ -737,29 +737,29 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Update the tool description to explicitly state that an empty array is a valid, successful result meaning no matches were found, distinguishing it from an error.',
-        rationale:
-          'Correct — including edge case behavior in the tool description directly addresses the ambiguity causing the agent to misinterpret a valid empty result as an error.',
-      },
-      {
-        id: 'B',
         text: 'Change the tool to always return at least one placeholder result, even when nothing matches.',
         rationale:
           "Wrong — fabricating a placeholder result when there's genuinely no match would misrepresent the data, creating a worse and more confusing problem.",
       },
       {
-        id: 'C',
+        id: 'B',
         text: "Remove the tool from the agent's available tools entirely.",
         rationale: 'Wrong — removing the tool eliminates its function entirely instead of fixing a documentation gap.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: "Add a separate tool whose only purpose is to check whether the first tool's result was empty.",
         rationale:
           'Wrong — adding an entirely separate tool for this purpose is an over-engineered workaround compared to simply clarifying the description of the existing tool.',
       },
+      {
+        id: 'D',
+        text: 'Update the tool description to explicitly state that an empty array is a valid, successful result meaning no matches were found, distinguishing it from an error.',
+        rationale:
+          'Correct — including edge case behavior in the tool description directly addresses the ambiguity causing the agent to misinterpret a valid empty result as an error.',
+      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['D'],
     explanationSummary:
       'Tool descriptions should document edge case behavior, such as what an empty result means, to prevent the agent from misinterpreting valid results as errors.',
     difficulty: 'foundational',
@@ -915,29 +915,29 @@ export const domain2Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Use Read to open every file in the repository one at a time and manually check each for both conditions.',
-        rationale: 'Wrong — manually reading every file to check two conditions is far slower and more error-prone than using purpose-built search tools.',
-      },
-      {
-        id: 'B',
         text: 'Use Glob to find all files matching **/*.test.ts, then use Grep scoped to that result set (or with a matching path filter) to search for the specific function name.',
         rationale:
           'Correct — combining Glob (file pattern matching) with Grep (content search), appropriately scoped, directly addresses both the file-name and content-search aspects of the request.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: 'Use Bash to search for the function name across the entire repository, then manually filter the results to those with .test.ts in the name by eye.',
         rationale:
           'Wrong — while technically workable, manually eyeballing results to apply the file-name filter is less reliable and efficient than using the tools designed for pattern matching directly.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Use Edit to search and replace the function name, then check which files reported a change.',
         rationale:
           "Wrong — using Edit's search-and-replace mechanism to detect matches is a misuse of a file-modification tool for a read-only search task, and risks unintended changes.",
       },
+      {
+        id: 'D',
+        text: 'Use Read to open every file in the repository one at a time and manually check each for both conditions.',
+        rationale: 'Wrong — manually reading every file to check two conditions is far slower and more error-prone than using purpose-built search tools.',
+      },
     ],
-    correctOptionIds: ['B'],
+    correctOptionIds: ['A'],
     explanationSummary:
       'Combining Glob (file pattern matching) with Grep (content search) directly addresses a request with both a file-name pattern and a content-search condition.',
     difficulty: 'applied',

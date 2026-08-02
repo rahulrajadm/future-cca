@@ -62,27 +62,27 @@ export const domain4Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: '"Check that comments are accurate and well-written."',
-        rationale: 'Wrong — adding "well-written" is still vague and subjective, and does not clarify the actual accuracy criterion needed.',
-      },
-      {
-        id: 'B',
         text: '"Check that all code has comments."',
         rationale: 'Wrong — this instruction is about comment presence, not accuracy, and does not address the inconsistency described.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: '"Only check comments in files larger than 100 lines."',
         rationale: 'Wrong — a file-size threshold is an arbitrary, unrelated filter that has nothing to do with what makes a comment inaccurate.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: '"Flag comments only when the claimed behavior directly contradicts the actual code behavior; do not flag comments that are merely incomplete or slightly outdated."',
         rationale:
           'Correct — explicit criteria over vague instructions is the key principle; defining precisely what counts as a reportable inaccuracy produces consistent classification.',
       },
+      {
+        id: 'D',
+        text: '"Check that comments are accurate and well-written."',
+        rationale: 'Wrong — adding "well-written" is still vague and subjective, and does not clarify the actual accuracy criterion needed.',
+      },
     ],
-    correctOptionIds: ['D'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Explicit criteria (e.g., "flag only when claimed behavior contradicts actual behavior") over vague instructions like "check accuracy" produces consistent, precise classification.',
     difficulty: 'applied',
@@ -464,29 +464,29 @@ export const domain4Questions: Question[] = [
     options: [
       {
         id: 'A',
-        text: 'Add a post-processing regex step that attempts to fix common JSON syntax mistakes after generation.',
-        rationale:
-          'Wrong — a regex patch treats symptoms of the underlying approach rather than eliminating the class of error at its source, and can itself introduce new mistakes.',
-      },
-      {
-        id: 'B',
         text: 'Define an extraction tool with a JSON schema as its input parameters, and require Claude to call that tool (tool_use) rather than asking it to write raw JSON as free text.',
         rationale:
           'Correct — tool use with JSON schemas is the most reliable approach for guaranteed schema-compliant structured output, eliminating JSON syntax errors that free-text generation is prone to.',
       },
       {
-        id: 'C',
+        id: 'B',
         text: "Instruct the model more emphatically to \"always produce valid JSON, no exceptions.\"",
         rationale: 'Wrong — stronger wording is still a prompt-based, probabilistic approach to a problem that has a structural solution.',
       },
       {
-        id: 'D',
+        id: 'C',
         text: 'Lower the temperature setting to reduce randomness in the generated text.',
         rationale:
           'Wrong — temperature affects output diversity/randomness in phrasing, not whether generated free-text JSON is syntactically well-formed.',
       },
+      {
+        id: 'D',
+        text: 'Add a post-processing regex step that attempts to fix common JSON syntax mistakes after generation.',
+        rationale:
+          'Wrong — a regex patch treats symptoms of the underlying approach rather than eliminating the class of error at its source, and can itself introduce new mistakes.',
+      },
     ],
-    correctOptionIds: ['B'],
+    correctOptionIds: ['A'],
     explanationSummary:
       'Tool use with JSON schemas is the most reliable approach for guaranteed schema-compliant structured output, eliminating the JSON syntax errors free-text generation is prone to.',
     difficulty: 'foundational',
@@ -642,30 +642,30 @@ export const domain4Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Keep the single "date" field and have a human manually resolve the ambiguity for every single document after the fact.',
+        rationale:
+          'Wrong — manually resolving every single document defeats much of the purpose of automated extraction, when a structural schema fix could resolve it for all documents at once.',
+      },
+      {
+        id: 'B',
         text: 'Replace the single generic "date" field with explicitly named fields — e.g., "signing_date" and "effective_date" — so each captured value has unambiguous meaning regardless of document layout.',
         rationale:
           'Correct — the ambiguity comes from a single generic field trying to represent two semantically distinct concepts; explicitly naming the fields removes the ambiguity structurally.',
       },
       {
-        id: 'B',
+        id: 'C',
         text: "Keep the single \"date\" field, but instruct the model to always prefer whichever date appears in a larger font.",
         rationale:
           'Wrong — font size is an unreliable, document-layout-dependent heuristic with no guaranteed connection to which date matters for downstream use.',
       },
       {
-        id: 'C',
+        id: 'D',
         text: 'Remove date extraction from the schema entirely, since dates are inherently too ambiguous to extract reliably.',
         rationale:
           'Wrong — removing date extraction entirely discards clearly extractable, valuable information instead of fixing the schema design actually causing the inconsistency.',
       },
-      {
-        id: 'D',
-        text: 'Keep the single "date" field and have a human manually resolve the ambiguity for every single document after the fact.',
-        rationale:
-          'Wrong — manually resolving every single document defeats much of the purpose of automated extraction, when a structural schema fix could resolve it for all documents at once.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['B'],
     explanationSummary:
       'A single generic field representing two semantically distinct concepts causes ambiguity; explicitly named schema fields resolve it structurally regardless of document layout.',
     difficulty: 'applied',
@@ -994,28 +994,28 @@ export const domain4Questions: Question[] = [
     options: [
       {
         id: 'A',
+        text: 'Remove security reporting entirely to simplify the instruction, keeping only the style criterion.',
+        rationale: 'Wrong — removing security reporting entirely contradicts the stated requirement that security issues should always be flagged.',
+      },
+      {
+        id: 'B',
+        text: "Replace both categories with a single instruction to \"report anything that looks slightly off.\"",
+        rationale: 'Wrong — "looks slightly off" is far vaguer than even the original instruction, and would likely worsen precision, not improve it.',
+      },
+      {
+        id: 'C',
         text: 'Explicitly state that security issues are always in scope, while style issues should only be reported when they violate the team\'s specific documented style guide, referencing the criteria in that guide.',
         rationale:
           'Correct — explicit criteria specifying exactly what counts (documented style guide violations, not general subjective preference) alongside an always-in-scope category gives precise, actionable scope.',
       },
       {
-        id: 'B',
+        id: 'D',
         text: "Keep the instruction exactly as it is, since 'all style issues' is already a clear and objective criterion.",
         rationale:
           'Wrong — "all style issues" without reference to a specific standard is exactly the kind of vague criterion likely to produce inconsistent, subjective flagging.',
       },
-      {
-        id: 'C',
-        text: 'Remove security reporting entirely to simplify the instruction, keeping only the style criterion.',
-        rationale: 'Wrong — removing security reporting entirely contradicts the stated requirement that security issues should always be flagged.',
-      },
-      {
-        id: 'D',
-        text: "Replace both categories with a single instruction to \"report anything that looks slightly off.\"",
-        rationale: 'Wrong — "looks slightly off" is far vaguer than even the original instruction, and would likely worsen precision, not improve it.',
-      },
     ],
-    correctOptionIds: ['A'],
+    correctOptionIds: ['C'],
     explanationSummary:
       'Explicit criteria tied to a specific documented standard (not vague, subjective language) produce precise, actionable review scope and consistent classification.',
     difficulty: 'applied',
