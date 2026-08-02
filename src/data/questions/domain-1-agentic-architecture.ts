@@ -1886,4 +1886,354 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q1-s4-0010',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.5'],
+    selectCount: 1,
+    stem: 'You want to guarantee that any file the agent writes to under /config/ triggers an automatic backup of the previous version before being overwritten, regardless of what the agent\'s reasoning says about whether a backup is needed. What\'s the most reliable mechanism?',
+    options: [
+      {
+        id: 'A',
+        text: 'Add a system prompt instruction telling the agent to back up config files before overwriting them.',
+        rationale: 'Wrong — a prompt instruction is probabilistic; the agent might occasionally skip the backup despite instructions.',
+      },
+      {
+        id: 'B',
+        text: 'Implement a hook that intercepts outgoing Write calls targeting /config/ and automatically creates a backup of the existing file before the write proceeds.',
+        rationale:
+          'Correct — a hook intercepting outgoing Write calls to enforce a backup step provides a deterministic guarantee that a prompt instruction cannot.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the agent to remember to mention when it has created a backup.',
+        rationale:
+          'Wrong — asking the agent to "remember to mention" is even weaker than an instruction to actually perform the backup, and guarantees nothing.',
+      },
+      {
+        id: 'D',
+        text: 'Add a few-shot example showing the agent creating a backup before a config change.',
+        rationale: 'Wrong — a few-shot example remains probabilistic guidance, not a guarantee.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A hook intercepting outgoing Write calls to enforce a backup step provides a deterministic guarantee that prompt-based instructions or examples cannot.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s4-0011',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.5'],
+    selectCount: 1,
+    stem: "Your developer productivity agent uses two different MCP tools for code search — one returns matches as {file, line, snippet}, the other as {path, lineNumber, content} — and the agent sometimes confuses the differently-named fields when reasoning across both tools' results in the same task. What's the most reliable fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'Remove one of the two search tools so only one format needs to be handled.',
+        rationale: 'Wrong — removing a tool discards its distinct search capability rather than fixing the underlying format inconsistency.',
+      },
+      {
+        id: 'B',
+        text: 'Add a system prompt instruction listing both field-naming schemes and asking the agent to keep them straight.',
+        rationale:
+          'Wrong — asking the model to "keep straight" two different schemas is probabilistic compliance for a problem that has a structural fix.',
+      },
+      {
+        id: 'C',
+        text: "Add a PostToolUse hook that normalizes both tools' results into a single consistent field structure before the agent processes them.",
+        rationale:
+          'Correct — a PostToolUse hook normalizing heterogeneous data formats from different tools into a consistent structure is the documented pattern for this kind of inconsistency.',
+      },
+      {
+        id: 'D',
+        text: 'Ask the agent to always double-check which tool produced which result before using the data.',
+        rationale: '"Double-checking" is not a mechanism; it is a hope that the model reliably tracks provenance itself.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'A PostToolUse hook normalizing heterogeneous data formats from different tools into a consistent structure fixes format-inconsistency confusion at its source.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-x-0011',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: "A coordinator agent in a multi-agent system receives a query that it can answer directly from information already in its own context, with no need for any subagent's specialized capability. What should it do?",
+    options: [
+      {
+        id: 'A',
+        text: "Answer directly without invoking any subagents, since delegation should be based on the query's actual needs, not used unconditionally for every request.",
+        rationale:
+          'Correct — dynamically deciding which subagents to invoke based on actual query requirements includes recognizing when no delegation is needed at all.',
+      },
+      {
+        id: 'B',
+        text: 'Always invoke at least one subagent regardless of whether the query needs it, to maintain a consistent delegation pattern.',
+        rationale: 'Wrong — unconditionally invoking a subagent regardless of need contradicts delegating based on actual requirements.',
+      },
+      {
+        id: 'C',
+        text: 'Refuse to answer since coordinators are only permitted to relay subagent output, never generate their own responses.',
+        rationale: "Wrong — coordinators can and do generate direct responses when appropriate; they aren't restricted to only relaying subagent output.",
+      },
+      {
+        id: 'D',
+        text: 'Delegate to a randomly selected subagent to decide whether delegation was necessary.',
+        rationale: 'Wrong — this describes an unnecessary, roundabout delegation for a decision the coordinator can make directly.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Dynamically selecting which subagents to invoke based on actual query requirements includes recognizing when no delegation is needed at all, avoiding unnecessary latency and cost.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-x-0012',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: 'In a simple hub-and-spoke multi-agent system, should individual subagents typically have the Task tool included in their own allowedTools, allowing them to spawn further subagents of their own?',
+    options: [
+      {
+        id: 'A',
+        text: 'Yes, every agent in the system should always have the Task tool so any agent can delegate further at any time.',
+        rationale: 'Wrong — universally giving every agent Task access undermines the centralized coordination hub-and-spoke is meant to provide.',
+      },
+      {
+        id: 'B',
+        text: 'Typically no — in a simple hub-and-spoke design, only the coordinator needs the Task tool to spawn subagents; giving it to subagents as well would allow them to spawn their own nested subagents, complicating the coordinator\'s centralized visibility and control.',
+        rationale:
+          "Correct — restricting Task-tool access to the coordinator preserves centralized visibility and control that subagent-spawned nested subagents would complicate.",
+      },
+      {
+        id: 'C',
+        text: 'Yes, because subagents cannot execute any tools at all without the Task tool.',
+        rationale:
+          'Wrong — the Task tool specifically enables spawning subagents; subagents can still execute their own assigned tools without it.',
+      },
+      {
+        id: 'D',
+        text: "No, because the Task tool doesn't exist in the Agent SDK.",
+        rationale: 'Wrong — the Task tool is a real, documented mechanism in the Agent SDK for spawning subagents.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Restricting Task-tool access to the coordinator in a hub-and-spoke design preserves centralized visibility and control that nested subagent spawning would complicate.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-x-0013',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: "You're building a system that (1) checks a fixed list of 15 required compliance disclosures are present in every generated document, and (2) separately performs an open-ended security review of unfamiliar code where the specific risks present aren't known in advance. Which decomposition pattern fits each?",
+    options: [
+      {
+        id: 'A',
+        text: 'Both tasks should use dynamic, adaptive decomposition, since decomposition should always be dynamic for the most thorough coverage.',
+        rationale:
+          "Wrong — a checklist of 15 fixed, known items doesn't benefit from dynamic decomposition; a predictable pipeline is more efficient and consistent.",
+      },
+      {
+        id: 'B',
+        text: 'Both tasks should use a fixed, prompt-chained pipeline, since a checklist mentality applies to any thorough review.',
+        rationale:
+          'Wrong — forcing an open-ended security review, where the actual risks are unknown in advance, into a fixed pipeline risks missing risks the fixed steps don\'t anticipate.',
+      },
+      {
+        id: 'C',
+        text: 'The compliance check should use dynamic decomposition; the security review should use a fixed pipeline.',
+        rationale: 'Wrong — this reverses the correct mapping.',
+      },
+      {
+        id: 'D',
+        text: 'The compliance check should use a fixed, prompt-chained pipeline (checking the same 15 known items every time); the security review should use dynamic, adaptive decomposition, since the specific risks present aren\'t known in advance.',
+        rationale:
+          'Correct — fixed pipelines suit predictable, uniform checklist work; dynamic decomposition suits open-ended investigation where the specific risks aren\'t known in advance.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Fixed pipelines suit predictable, uniform checklist work; dynamic decomposition suits open-ended investigation where the specific risks are not known in advance.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-x-0014',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: "You've diagnosed the root cause of a bug and now want to explore two different possible fixes independently — one a minimal patch, one a more thorough refactor — starting from the same diagnosis, without either exploration affecting the other. What Agent SDK mechanism directly supports this?",
+    options: [
+      {
+        id: 'A',
+        text: '--resume, used twice in sequence with the same session name.',
+        rationale: 'Wrong — using --resume twice in sequence continues the same linear conversation, not two independent parallel branches.',
+      },
+      {
+        id: 'B',
+        text: 'Starting from scratch with a completely new, unrelated session for each fix approach.',
+        rationale: 'Wrong — starting from scratch discards the valuable shared diagnosis that fork_session is meant to preserve and build on.',
+      },
+      {
+        id: 'C',
+        text: 'fork_session, to create two independent branches from the shared diagnosis baseline, one for each fix approach.',
+        rationale: 'Correct — fork_session is designed exactly for exploring divergent approaches from a shared baseline without either affecting the other.',
+      },
+      {
+        id: 'D',
+        text: 'tool_choice: "any", applied separately to each fix approach.',
+        rationale: 'Wrong — tool_choice controls tool selection behavior on a given turn, unrelated to session branching.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'fork_session creates independent branches from a shared baseline, exactly suited to exploring divergent fix approaches without either affecting the other.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0013',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.1'],
+    selectCount: 1,
+    stem: "Your coordinator agent spawns a web-search subagent via the Task tool. The subagent runs its own internal agentic loop (with its own stop_reason values) before returning a final result to the coordinator. Does the coordinator need to inspect the subagent's internal stop_reason values directly?",
+    options: [
+      {
+        id: 'A',
+        text: "No — the subagent's internal loop and its stop_reason handling are managed within the subagent's own execution; the coordinator only needs the subagent's final returned result, not its internal loop signals.",
+        rationale:
+          "Correct — the subagent manages its own internal agentic loop independently; the coordinator interacts with it at the level of the Task tool call and its final result.",
+      },
+      {
+        id: 'B',
+        text: 'Yes — the coordinator must inspect every stop_reason the subagent produces internally, or the subagent will never terminate.',
+        rationale: "Wrong — the subagent's own internal orchestration handles its own loop termination independently.",
+      },
+      {
+        id: 'C',
+        text: 'No — subagents do not have their own stop_reason values at all; only the coordinator\'s own loop has one.',
+        rationale: 'Wrong — subagents run their own agentic loops and do have their own stop_reason values internally.',
+      },
+      {
+        id: 'D',
+        text: "Yes — without inspecting the subagent's internal stop_reason values, the Task tool call will always fail.",
+        rationale: "Wrong — the Task tool call's success doesn't depend on the coordinator inspecting the subagent's internal stop_reason values.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      "A subagent manages its own internal agentic loop and stop_reason handling independently; the coordinator interacts with it at the level of the Task tool call and its final result.",
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-x-0015',
+    domain: 1,
+    scenarioId: null,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: "A multi-agent code-migration system determines it cannot safely complete a migration step because it discovered a data format inconsistency that requires a human decision. It needs to hand this off to an engineer who has no visibility into the agents' internal reasoning. What should the handoff include?",
+    options: [
+      {
+        id: 'A',
+        text: "Just a message saying 'migration blocked, please investigate' with no further detail.",
+        rationale: "Wrong — a bare message with no detail forces the engineer to reconstruct all context from scratch.",
+      },
+      {
+        id: 'B',
+        text: 'A structured summary containing what was attempted, the specific inconsistency discovered, its location, and the decision needed from the engineer, since they lack access to the agents\' internal reasoning.',
+        rationale:
+          "Correct — a structured handoff summary with the essential details is exactly what a human without visibility into the agents' reasoning needs to act effectively.",
+      },
+      {
+        id: 'C',
+        text: 'The complete raw internal reasoning transcripts of every subagent involved, with no summarization.',
+        rationale:
+          'Wrong — dumping every raw internal reasoning transcript without structuring or summarizing pushes the burden of extracting what matters onto the engineer.',
+      },
+      {
+        id: 'D',
+        text: 'Nothing — the system should silently retry the same step indefinitely until it succeeds.',
+        rationale:
+          'Wrong — silently retrying indefinitely wastes resources on a problem retries cannot fix and never surfaces the actual issue.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'A structured handoff summary with essential details (what was attempted, the specific issue, its location, and the decision needed) is what a human without visibility into agent reasoning needs to act effectively.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
