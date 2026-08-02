@@ -24,6 +24,11 @@ export function questionsNeedingReview(bank: Question[], progress: ProgressState
   })
 }
 
+/** Questions with no attempt recorded in progress yet — never seen by this browser. */
+export function unattemptedQuestions(bank: Question[], progress: ProgressState): Question[] {
+  return bank.filter((q) => progress.attemptsByQuestionId[q.id] === undefined)
+}
+
 function shuffleCopy<T>(items: T[]): T[] {
   const copy = [...items]
   for (let i = copy.length - 1; i > 0; i--) {

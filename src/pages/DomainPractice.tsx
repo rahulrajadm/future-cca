@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DOMAINS } from '../data/domains'
 import { QUESTION_BANK } from '../data/questions'
-import { questionsByDomains, sampleQuestions } from '../engine/selectors'
+import { questionsByDomains, sampleQuestions, unattemptedQuestions } from '../engine/selectors'
+import { useAppState } from '../state/AppState'
 import type { DomainId } from '../types/question'
 import type { SessionConfig } from './Session'
 
@@ -10,8 +11,10 @@ const COUNT_OPTIONS = [10, 25, 50, 'all'] as const
 
 export function DomainPractice() {
   const navigate = useNavigate()
+  const { progress } = useAppState()
   const [selectedDomains, setSelectedDomains] = useState<Set<DomainId>>(new Set())
   const [count, setCount] = useState<(typeof COUNT_OPTIONS)[number]>(25)
+  const [onlyUnseen, setOnlyUnseen] = useState(true)
 
   const toggleDomain = (id: DomainId) => {
     setSelectedDomains((prev) => {
@@ -22,7 +25,9 @@ export function DomainPractice() {
     })
   }
 
-  const pool = questionsByDomains(QUESTION_BANK, [...selectedDomains])
+  const domainPool = questionsByDomains(QUESTION_BANK, [...selectedDomains])
+  const pool = onlyUnseen ? unattemptedQuestions(domainPool, progress) : domainPool
+  const seenCount = domainPool.length - pool.length
 
   const start = () => {
     const questions = count === 'all' ? pool : sampleQuestions(pool, count)
@@ -55,6 +60,11 @@ export function DomainPractice() {
         ))}
       </ul>
 
+      <label className="domain-practice__unseen-toggle">
+        <input type="checkbox" checked={onlyUnseen} onChange={(e) => setOnlyUnseen(e.target.checked)} />
+        Only show questions I haven't attempted yet
+      </label>
+
       <div className="domain-practice__count">
         <span>Question count:</span>
         {COUNT_OPTIONS.map((opt) => (
@@ -69,7 +79,10 @@ export function DomainPractice() {
         ))}
       </div>
 
-      <p className="domain-practice__pool-size">{pool.length} questions available with current selection</p>
+      <p className="domain-practice__pool-size">
+        {pool.length} questions available with current selection
+        {onlyUnseen && seenCount > 0 ? ` (${seenCount} already attempted, excluded)` : ''}
+      </p>
 
       <button type="button" disabled={pool.length === 0} onClick={start}>
         Start Practice

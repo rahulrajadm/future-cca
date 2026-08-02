@@ -49,9 +49,16 @@ export interface BuiltExam {
   shortfalls: { domain: DomainId; target: number; actual: number }[]
 }
 
+/**
+ * @param attemptedIds Question ids already attempted (e.g. from progress state).
+ *   When provided, each domain's pool is filled from never-attempted questions
+ *   first, falling back to already-attempted ones only if there aren't enough
+ *   unseen questions to reach the domain's target count.
+ */
 export function buildExam(
   questionBank: Question[],
   random: RandomFn = Math.random,
+  attemptedIds?: Set<string>,
 ): BuiltExam {
   const scenarioIds = pickScenarios(random)
   const scenarioSet = new Set<ScenarioId>(scenarioIds)
@@ -64,7 +71,16 @@ export function buildExam(
       (q) => q.domain === domain.id && (q.scenarioId === null || scenarioSet.has(q.scenarioId)),
     )
     const target = targets[domain.id]
-    const chosen = shuffle(pool, random).slice(0, target)
+
+    let chosen: Question[]
+    if (attemptedIds) {
+      const unseen = shuffle(pool.filter((q) => !attemptedIds.has(q.id)), random)
+      const seen = shuffle(pool.filter((q) => attemptedIds.has(q.id)), random)
+      chosen = [...unseen, ...seen].slice(0, target)
+    } else {
+      chosen = shuffle(pool, random).slice(0, target)
+    }
+
     if (chosen.length < target) {
       shortfalls.push({ domain: domain.id, target, actual: chosen.length })
     }

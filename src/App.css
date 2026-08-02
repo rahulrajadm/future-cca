@@ -90,6 +90,14 @@
   margin: 0.25em 0 0;
 }
 
+.domain-practice__unseen-toggle,
+.scenario-practice__unseen-toggle {
+  display: block;
+  margin: 0.75rem 0;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
 .domain-practice__count {
   display: flex;
   align-items: center;

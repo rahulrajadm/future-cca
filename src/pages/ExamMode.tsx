@@ -3,15 +3,19 @@ import { useNavigate } from 'react-router-dom'
 import { SCENARIO_MAP } from '../data/scenarios'
 import { QUESTION_BANK } from '../data/questions'
 import { EXAM_TIME_LIMIT_SECONDS, buildExam } from '../engine/examBuilder'
+import { useAppState } from '../state/AppState'
 import { loadSettings, saveSettings } from '../state/settingsStore'
 import type { SessionConfig } from './Session'
 
 export function ExamMode() {
   const navigate = useNavigate()
+  const { progress } = useAppState()
   const [timed, setTimed] = useState(() => loadSettings().timedExam)
+  const [preferUnseen, setPreferUnseen] = useState(true)
 
   const start = () => {
-    const built = buildExam(QUESTION_BANK)
+    const attemptedIds = new Set(Object.keys(progress.attemptsByQuestionId))
+    const built = buildExam(QUESTION_BANK, Math.random, preferUnseen ? attemptedIds : undefined)
     saveSettings({ ...loadSettings(), timedExam: timed })
     const questions = built.questionIds
       .map((id) => QUESTION_BANK.find((q) => q.id === id))
@@ -37,6 +41,10 @@ export function ExamMode() {
       <label className="exam-mode__timer-toggle">
         <input type="checkbox" checked={timed} onChange={(e) => setTimed(e.target.checked)} />
         120-minute timer (auto-submits on expiry)
+      </label>
+      <label className="exam-mode__timer-toggle">
+        <input type="checkbox" checked={preferUnseen} onChange={(e) => setPreferUnseen(e.target.checked)} />
+        Prefer questions I haven't attempted yet (falls back to attempted ones only if a domain runs short)
       </label>
       <button type="button" className="exam-mode__start" onClick={start}>
         Start Exam
