@@ -1339,4 +1339,353 @@ export const domain4Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q4-s6-0010',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "Your extraction schema strictly validates that a \"discount_percentage\" field is a number, and the tool_use call succeeds without any syntax errors. However, for one document, the extracted value is 150 (a semantically impossible discount percentage). What does this illustrate?",
+    options: [
+      {
+        id: 'A',
+        text: 'The JSON schema validation failed, which is why an invalid value was extracted.',
+        rationale:
+          'Wrong — the number "150" is a syntactically valid number; the schema is satisfied even though the value is logically nonsensical for a percentage.',
+      },
+      {
+        id: 'B',
+        text: 'Strict JSON schemas via tool use eliminate syntax errors but do not prevent semantic errors, like a numerically valid but logically impossible value; a range constraint or a separate semantic validation step is still needed.',
+        rationale:
+          'Correct — this is exactly the documented limitation of schema-only validation, illustrated here; a numeric range constraint or separate semantic check is needed to catch this class of issue.',
+      },
+      {
+        id: 'C',
+        text: 'This is impossible — tool_use with a JSON schema guarantees semantically correct values.',
+        rationale: 'Wrong — this directly contradicts the documented limitation of schema-only validation.',
+      },
+      {
+        id: 'D',
+        text: 'The document itself must be corrupted for this to happen.',
+        rationale:
+          "Wrong — the document being corrupted isn't implied; the model simply extracted (or hallucinated) a value that happens to be numerically valid but semantically wrong.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Strict JSON schemas via tool use eliminate syntax errors but do not prevent semantic errors — a numerically valid but logically impossible value needs a separate range constraint or semantic validation step.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0011',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: "Your extraction schema for a document's \"contract_type\" field uses an enum with three fixed values: \"employment\", \"vendor\", \"nda\". You start encountering ambiguous documents that don't clearly fit any of the three (e.g., a hybrid agreement). What addition would let the model handle this gracefully rather than forcing an incorrect guess?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add an "unclear" enum value to the schema, so the model can honestly indicate ambiguity rather than being forced to pick one of the three specific types when none clearly fits.',
+        rationale:
+          'Correct — adding an enum value like "unclear" for ambiguous cases lets the model honestly represent uncertainty rather than being forced into an incorrect specific classification.',
+      },
+      {
+        id: 'B',
+        text: 'Remove the enum constraint and require the model to always pick exactly one of the original three values regardless of ambiguity.',
+        rationale:
+          'Wrong — this is the current problematic state; forcing a choice among only the original three values is exactly what causes incorrect guesses on ambiguous documents.',
+      },
+      {
+        id: 'C',
+        text: 'Add a fourth specific contract type covering every possible hybrid combination in advance.',
+        rationale: 'Wrong — trying to anticipate every possible hybrid combination in advance is unbounded and impractical.',
+      },
+      {
+        id: 'D',
+        text: "Reject any document that doesn't clearly match one of the three original types without extracting any data from it.",
+        rationale: 'Wrong — rejecting the entire document discards other extractable data from it, when only the classification field itself is ambiguous.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Adding an "unclear" enum value is the documented pattern for letting the model honestly represent ambiguity rather than being forced into an incorrect specific classification.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0012',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: 'A single invoice states the total is $500 in one place and $550 in another (likely a typo in the source document itself). Your extraction should surface this inconsistency for review rather than silently picking one value or averaging them. What schema design supports this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Extract only the first value encountered ($500) and ignore the second entirely.',
+        rationale: 'Wrong — silently picking the first value discards a genuine inconsistency the downstream system or a human might need to know about.',
+      },
+      {
+        id: 'B',
+        text: 'Automatically average the two values ($525) and report that as the extracted total.',
+        rationale: "Wrong — averaging fabricates a number that doesn't correspond to anything actually stated in the document.",
+      },
+      {
+        id: 'C',
+        text: 'Extract both values along with a "conflict_detected" boolean field set to true, flagging the discrepancy for human review rather than silently resolving it.',
+        rationale:
+          'Correct — adding a "conflict_detected" boolean for inconsistent source data is the documented self-correction validation pattern, surfacing the discrepancy for review.',
+      },
+      {
+        id: 'D',
+        text: 'Fail the entire extraction for this document with no data returned.',
+        rationale: 'Wrong — failing the entire extraction discards all the other, unambiguous fields the document likely contains.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'A "conflict_detected" boolean field, alongside both extracted conflicting values, surfaces genuine source-document inconsistencies for review rather than silently resolving them.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0013',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.6'],
+    selectCount: 1,
+    stem: "You're extracting all named parties and their roles from a 300-page legal filing. A single-pass extraction over the entire document misses several parties mentioned only in the middle sections. What's an effective restructuring?",
+    options: [
+      {
+        id: 'A',
+        text: 'Reduce the extraction to only look at the first and last 20 pages, since those are most likely to contain complete information.',
+        rationale:
+          'Wrong — arbitrarily limiting to the first/last sections would deliberately skip the middle content, discarding exactly the parties known to be missed there.',
+      },
+      {
+        id: 'B',
+        text: 'Split the document into smaller, overlapping sections, run extraction on each section separately, and merge the results (de-duplicating parties that appear in multiple sections).',
+        rationale:
+          'Correct — splitting a long document into smaller, focused sections for separate extraction passes, then merging and de-duplicating results, is the standard mitigation for the lost-in-the-middle effect.',
+      },
+      {
+        id: 'C',
+        text: 'Increase the temperature setting so the model considers a wider range of possible parties.',
+        rationale: "Wrong — temperature affects output randomness, not the model's positional attention across a long input.",
+      },
+      {
+        id: 'D',
+        text: 'Ask the model to guess which parties are likely to be mentioned based on the case type, without re-reading the document.',
+        rationale: "Wrong — guessing without reading the actual document risks fabricating parties who aren't genuinely present.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Splitting a long document into smaller sections for separate extraction passes, then merging and de-duplicating results, is the standard mitigation for the lost-in-the-middle effect.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0014',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.1'],
+    selectCount: 1,
+    stem: "Your extraction pipeline's confidence-scoring prompt just says \"rate your confidence from 1-10.\" Reviewers find the scores don't meaningfully predict which extractions actually have errors — many \"high confidence\" extractions are wrong, and many \"low confidence\" ones are correct. What would improve this?",
+    options: [
+      {
+        id: 'A',
+        text: "Remove confidence scoring entirely, since it's not currently useful.",
+        rationale: "Wrong — removing scoring entirely discards a potentially useful signal instead of fixing why the current one isn't well calibrated.",
+      },
+      {
+        id: 'B',
+        text: 'Always default to a confidence score of 5 for every extraction to avoid extreme, unreliable scores.',
+        rationale: 'Wrong — a constant default score provides no actual signal at all, which is worse than an uncalibrated but at least varying score.',
+      },
+      {
+        id: 'C',
+        text: 'Ask reviewers to ignore the confidence scores and review every single extraction manually regardless of score.',
+        rationale: 'Wrong — reviewing everything manually defeats the purpose of having confidence-based routing at all.',
+      },
+      {
+        id: 'D',
+        text: "Replace the vague \"1-10\" instruction with specific, calibrated criteria for what should count as low vs. high confidence (e.g., low confidence when required information is inferred rather than explicitly stated in the source), and validate the resulting thresholds against a labeled dataset.",
+        rationale:
+          'Correct — replacing vague confidence instructions with specific criteria, and validating resulting thresholds against a labeled dataset, is the documented approach to achieving a meaningful, calibrated confidence signal.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Specific, calibrated confidence criteria — validated against a labeled dataset — produce a meaningful confidence signal, unlike a vague numeric-scale instruction.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0015',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.2'],
+    selectCount: 1,
+    stem: "Your extraction pipeline handles scientific papers that report results either as narrative prose (\"the treatment group showed a 23% improvement\") or as data tables. It reliably extracts narrative-form results but frequently misses results that only appear in tables. What would help it handle both formats reliably?",
+    options: [
+      {
+        id: 'A',
+        text: 'Add few-shot examples demonstrating correct extraction from both narrative-prose results and table-formatted results, showing the same fields extracted correctly from each format.',
+        rationale:
+          'Correct — few-shot examples demonstrating correct handling of varied document structures (narrative vs. tabular) are the documented technique for handling structural variety reliably.',
+      },
+      {
+        id: 'B',
+        text: 'Convert every table in every source document to prose manually before extraction, as a preprocessing step done by a human.',
+        rationale: "Wrong — manually converting every table to prose before extraction is labor-intensive and doesn't scale.",
+      },
+      {
+        id: 'C',
+        text: "Remove all documents containing tables from the pipeline's scope entirely.",
+        rationale: 'Wrong — excluding documents with tables discards a large amount of legitimately extractable data.',
+      },
+      {
+        id: 'D',
+        text: 'Only extract results reported in prose, and document tables as permanently out of scope.',
+        rationale: 'Wrong — permanently excluding table-formatted results discards real, valuable data instead of fixing the extraction approach.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Few-shot examples demonstrating correct handling of varied document structures (narrative vs. tabular) are the documented technique for reliably handling structural variety.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0016',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: "Reviewers frequently dismiss a specific class of \"missing required field\" findings as false alarms — the field is present, just formatted in a way the extraction didn't recognize. You want to systematically identify which specific formatting patterns are causing these dismissed findings so you can fix the prompt for those patterns. What would help?",
+    options: [
+      {
+        id: 'A',
+        text: "Stop tracking dismissed findings altogether, since they're 'false alarms' anyway.",
+        rationale: 'Wrong — this discards the exact data needed to systematically identify and fix the problematic patterns.',
+      },
+      {
+        id: 'B',
+        text: "Ask reviewers to stop dismissing findings, and instead accept the extraction's output as-is.",
+        rationale: "Wrong — accepting extraction output as-is regardless of reviewer judgment doesn't fix the underlying recognition gap.",
+      },
+      {
+        id: 'C',
+        text: 'Add a detected_pattern field to each finding recording what specifically triggered it, enabling systematic analysis of which formatting patterns are frequently dismissed as false alarms.',
+        rationale:
+          'Correct — a detected_pattern field enables systematic analysis of which patterns are frequently dismissed, directly supporting targeted prompt improvements.',
+      },
+      {
+        id: 'D',
+        text: 'Increase the required-field threshold so fewer fields are marked as required overall.',
+        rationale: 'Wrong — reducing which fields are marked required sidesteps the actual problem rather than fixing the recognition gap.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'A detected_pattern field on structured findings enables systematic analysis of dismissal patterns, supporting targeted prompt improvements for specific under-recognized formats.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0017',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.6'],
+    selectCount: 2,
+    stem: 'Which TWO of the following are true about multi-pass extraction and review for long documents? (Select 2.)',
+    options: [
+      {
+        id: 'A',
+        text: 'Splitting a long document into sections for separate extraction passes helps counteract the lost-in-the-middle effect.',
+        rationale: 'Correct — splitting into sections for separate passes is the standard mitigation for the lost-in-the-middle effect on long inputs.',
+      },
+      {
+        id: 'B',
+        text: 'A single independent review pass, using a fresh instance with no extraction reasoning context, can catch errors the original extraction missed.',
+        rationale:
+          'Correct — independent review instances without prior reasoning context are documented as more effective at catching subtle issues than self-review.',
+      },
+      {
+        id: 'C',
+        text: 'Multi-pass review always doubles the cost with no benefit to accuracy.',
+        rationale: 'Wrong — the value of multi-pass review is catching real errors a single pass misses, a genuine accuracy benefit.',
+      },
+      {
+        id: 'D',
+        text: 'Extended thinking by the same instance that performed the original extraction is equally effective as an independent second pass.',
+        rationale:
+          'Wrong — the same instance retains reasoning context that makes it less likely to question its own decisions, making it less effective than a true independent pass.',
+      },
+    ],
+    correctOptionIds: ['A', 'B'],
+    explanationSummary:
+      'Splitting long documents into sections mitigates the lost-in-the-middle effect, and independent review instances without prior reasoning context are more effective at catching subtle issues than self-review.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
