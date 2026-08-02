@@ -416,4 +416,269 @@ export const domain5Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q5-s3-0001',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.3'],
+    selectCount: 1,
+    stem: "Your document-analysis subagent fails to parse a specific PDF because it's corrupted. You need to design how this failure is reported back to the coordinator so it can make a good recovery decision. Which approach is most effective?",
+    options: [
+      {
+        id: 'A',
+        text: 'Return structured error context to the coordinator including the failure type (parsing error), the specific document that failed, and any documents that were successfully processed so far.',
+        rationale:
+          'Correct — structured error context (failure type, what was attempted, partial results) is what lets the coordinator make an informed recovery decision, such as proceeding with partial results and noting the gap.',
+      },
+      {
+        id: 'B',
+        text: 'Silently skip the corrupted document and report the analysis as fully successful with no mention of the skipped file.',
+        rationale:
+          'Wrong — silently suppressing the failure and reporting success anyway is a documented anti-pattern; it hides a real gap from the coordinator.',
+      },
+      {
+        id: 'C',
+        text: 'Have the subagent immediately terminate the entire research workflow when any single document fails to parse.',
+        rationale:
+          'Wrong — terminating the entire workflow over a single failed document is disproportionate when other documents processed successfully.',
+      },
+      {
+        id: 'D',
+        text: 'Retry parsing the same corrupted PDF up to 50 times before giving up.',
+        rationale:
+          'Wrong — 50 retries on a corrupted file that cannot be parsed wastes time on a failure that retrying cannot fix; parsing errors from corruption are not transient.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Structured error context — failure type, what was attempted, and partial results — enables the coordinator to make intelligent recovery decisions rather than being left to guess.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s3-0002',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.3'],
+    selectCount: 1,
+    stem: "Your web-search subagent sometimes returns zero results because a query genuinely has no matching sources, and other times returns zero results because the search API itself timed out. If both cases are reported to the coordinator identically as \"no results found,\" what problem does this create?",
+    options: [
+      {
+        id: 'A',
+        text: 'The coordinator cannot tell whether a genuinely-covered topic has no supporting sources or whether a retry (or alternative query) might succeed after a transient failure, potentially leading it to under-report coverage gaps or waste effort in the wrong way.',
+        rationale:
+          'Correct — this is the access-failure-vs-valid-empty-result distinction; collapsing them into one generic report removes the information the coordinator needs to decide between retrying, an alternative approach, or accurately noting a genuine gap.',
+      },
+      {
+        id: 'B',
+        text: 'The coordinator will automatically escalate every zero-result query to a human researcher.',
+        rationale:
+          'Wrong — nothing in the scenario describes an escalation-to-human mechanism being triggered by this.',
+      },
+      {
+        id: 'C',
+        text: 'The synthesis subagent will crash whenever it receives a report containing zero results.',
+        rationale: "Wrong — a report of zero results wouldn't cause a crash; it's data the coordinator has to interpret, correctly or not.",
+      },
+      {
+        id: 'D',
+        text: 'The web-search subagent will stop functioning for the remainder of the session.',
+        rationale: 'Wrong — nothing about a single zero-result report incapacitates the subagent for the rest of the session.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Distinguishing access failures (which may warrant a retry) from valid empty results (a genuine absence of sources) is essential information a generic "no results" report destroys.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s3-0003',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.3'],
+    selectCount: 1,
+    stem: 'Your web-search subagent experiences a transient network error on one of its three queries but succeeds on the other two. What is the best design for how it should handle this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Attempt local recovery (e.g., a retry) for the transient failure within the subagent itself, and only propagate an error to the coordinator — along with the successful partial results — if local recovery does not succeed.',
+        rationale:
+          'Correct — subagents should implement local recovery for transient failures they can resolve themselves, and only propagate to the coordinator errors that cannot be resolved locally, along with whatever partial results are available.',
+      },
+      {
+        id: 'B',
+        text: 'Immediately propagate all three query results, including the failure, to the coordinator without attempting any recovery at the subagent level.',
+        rationale:
+          'Wrong — skipping local recovery entirely for a transient, likely-retryable failure pushes unnecessary work and latency up to the coordinator.',
+      },
+      {
+        id: 'C',
+        text: 'Discard the two successful results since the overall batch of three queries did not fully succeed.',
+        rationale: 'Wrong — discarding valid, successfully retrieved results because of an unrelated failure on a different query wastes real, usable information.',
+      },
+      {
+        id: 'D',
+        text: 'Report only the failure to the coordinator and omit the two successful results entirely.',
+        rationale: 'Wrong — omitting the successful results deprives the coordinator of information it could use even while the failed query is being handled.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Subagents should implement local recovery for transient failures, propagating to the coordinator only errors that cannot be resolved locally, together with partial results and what was attempted.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s3-0004',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.6'],
+    selectCount: 1,
+    stem: "Your document-analysis subagent finds a statistic in a source and passes it along as plain prose: \"Adoption rates have grown significantly according to recent research.\" The synthesis subagent later cannot say which source this came from when a reader asks for the citation. What is the most effective fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'Require the document-analysis subagent to output structured claim-source mappings — the specific claim, an evidence excerpt, and the source URL or document name — that the synthesis subagent preserves and merges when combining findings.',
+        rationale:
+          'Correct — structured claim-source mappings preserve attribution through the pipeline; requiring them from the start prevents the loss of source information that happens when findings are compressed into unattributed prose.',
+      },
+      {
+        id: 'B',
+        text: "Instruct the synthesis subagent to guess a plausible-sounding source if the original isn't clear.",
+        rationale: 'Wrong — fabricating a plausible-sounding source is a serious accuracy problem, arguably worse than having no citation at all.',
+      },
+      {
+        id: 'C',
+        text: 'Remove all statistics from the final report to avoid any citation issues.',
+        rationale: 'Wrong — removing statistics discards genuinely useful findings instead of fixing the actual problem, which is a lack of preserved attribution.',
+      },
+      {
+        id: 'D',
+        text: 'Have the synthesis subagent write in a more formal tone so citations seem more credible.',
+        rationale: 'Wrong — tone has no bearing on whether a citation is actually correct or traceable to its source.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Structured claim-source mappings — preserved and merged through synthesis — are what prevent source attribution from being lost during summarization.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s3-0005',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.6'],
+    selectCount: 1,
+    stem: 'Two credible sources report different figures for the same statistic: one says adoption grew 22% year-over-year, another says 31%. How should this be handled in the final research report?',
+    options: [
+      {
+        id: 'A',
+        text: 'Include both values with clear source attribution for each, annotating the conflict, rather than arbitrarily selecting one figure to present as the answer.',
+        rationale:
+          'Correct — conflicting statistics from credible sources should be annotated with source attribution rather than arbitrarily resolved, preserving the reader\'s ability to see and judge the disagreement.',
+      },
+      {
+        id: 'B',
+        text: 'Average the two figures (26.5%) and present that as the definitive number.',
+        rationale:
+          'Wrong — averaging fabricates a number that no source actually reported and misrepresents both original claims as if they agreed on a midpoint.',
+      },
+      {
+        id: 'C',
+        text: 'Present only the higher figure, since it is more likely to be the one currently accurate.',
+        rationale: "Wrong — there's no stated basis for assuming the higher figure is more accurate; picking one arbitrarily hides real uncertainty.",
+      },
+      {
+        id: 'D',
+        text: 'Omit the statistic entirely from the report since the sources disagree.',
+        rationale: 'Wrong — omitting the statistic entirely discards genuinely relevant information rather than presenting it transparently with its conflict noted.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Conflicting statistics from credible sources should be annotated with source attribution rather than arbitrarily resolved to a single value.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q5-s3-0006',
+    domain: 5,
+    scenarioId: 3,
+    taskStatements: ['5.6'],
+    selectCount: 1,
+    stem: "Your research report cites a 2019 industry survey stating \"only 12% of companies have adopted the technology,\" alongside a 2026 survey stating \"68% of companies have adopted the technology,\" and a reader flags this as \"contradictory data in the same report.\" What would have prevented this confusion?",
+    options: [
+      {
+        id: 'A',
+        text: "Requiring each source's publication or data-collection date to be included in the structured output, so the two figures are correctly understood as showing change over time rather than a contradiction.",
+        rationale:
+          'Correct — requiring publication or data-collection dates in structured outputs is exactly what prevents legitimate temporal differences from being misread as contradictions.',
+      },
+      {
+        id: 'B',
+        text: 'Removing the older 2019 figure entirely since more recent data is always more relevant.',
+        rationale:
+          "Wrong — the older figure isn't wrong or irrelevant — it shows a meaningful trend when paired with the date; removing it discards useful context.",
+      },
+      {
+        id: 'C',
+        text: 'Instructing the synthesis subagent to never cite statistics from more than one time period in the same report.',
+        rationale: 'Wrong — citing multiple time periods is often exactly what a report should do to show trends; the fix is dating the data, not banning multi-period citations.',
+      },
+      {
+        id: 'D',
+        text: 'Rounding both percentages to the nearest ten to make them appear more consistent with each other.',
+        rationale: 'Wrong — rounding to force apparent consistency actively obscures the real, meaningful difference between the two data points.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Requiring publication or data-collection dates in structured outputs prevents temporal differences between sources from being misinterpreted as contradictions.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

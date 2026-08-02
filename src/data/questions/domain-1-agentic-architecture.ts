@@ -282,4 +282,272 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q1-s3-0001',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: "In your multi-agent research system, you're considering letting the web-search subagent communicate directly with the synthesis subagent to hand off results, bypassing the coordinator, in order to save a round trip. What is the main risk of this design?",
+    options: [
+      {
+        id: 'A',
+        text: 'It breaks the hub-and-spoke pattern where the coordinator manages all inter-subagent communication, error handling, and information routing, reducing observability and making consistent error handling harder to maintain.',
+        rationale:
+          'Correct — the hub-and-spoke pattern exists precisely so the coordinator has visibility into and control over all inter-subagent communication; bypassing it for a shortcut sacrifices observability and consistent error handling for a modest latency gain.',
+      },
+      {
+        id: 'B',
+        text: 'Direct subagent-to-subagent communication is technically impossible with the Agent SDK, so this design cannot be implemented at all.',
+        rationale:
+          "Wrong — the concern here is architectural/design quality, not a technical impossibility; the point being tested is why this design is discouraged, not whether it's possible.",
+      },
+      {
+        id: 'C',
+        text: "It would cause the web-search subagent to inherit the synthesis subagent's full conversation history automatically.",
+        rationale:
+          "Wrong — subagents don't automatically inherit context regardless of whether communication is direct or coordinator-routed; that's a separate, unrelated property.",
+      },
+      {
+        id: 'D',
+        text: 'It eliminates the need for structured data formats when passing information between agents.',
+        rationale:
+          'Wrong — bypassing the coordinator does not eliminate the need for structured data formats; direct communication would still need clear content/metadata separation.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Hub-and-spoke architecture routes all subagent communication through the coordinator for observability, consistent error handling, and controlled information flow — bypassing it undermines those properties.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s3-0002',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: "Your research coordinator produces a synthesis report on \"renewable energy adoption trends,\" but the coordinator's own review of the draft notices it only discusses solar and wind, missing geothermal and hydroelectric, which were part of the original request scope. What should the coordinator do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Re-delegate to the search and analysis subagents with targeted queries covering geothermal and hydroelectric, then re-invoke synthesis once the additional findings are available.',
+        rationale:
+          'Correct — this is the iterative refinement loop pattern: the coordinator evaluates synthesis output for gaps, re-delegates targeted queries to close them, and re-invokes synthesis until coverage is sufficient.',
+      },
+      {
+        id: 'B',
+        text: 'Publish the report as-is, since solar and wind are the two most commonly discussed renewable sources.',
+        rationale: 'Wrong — publishing an incomplete report ignores a coverage gap the coordinator itself identified against the original request scope.',
+      },
+      {
+        id: 'C',
+        text: 'Ask the synthesis subagent to simply add a sentence mentioning geothermal and hydroelectric exist, without further research.',
+        rationale:
+          'Wrong — adding an unsupported sentence without actual research produces an unsubstantiated claim rather than genuinely closing the coverage gap.',
+      },
+      {
+        id: 'D',
+        text: 'Restart the entire research process from scratch with a completely new coordinator instance.',
+        rationale: 'Wrong — restarting from scratch discards the good work already completed on solar and wind; targeted re-delegation is far more efficient.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Iterative refinement loops let the coordinator evaluate synthesis output for gaps, re-delegate to search and analysis subagents with targeted queries, and re-invoke synthesis until coverage is sufficient.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s3-0003',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "You've configured your coordinator agent's system prompt to describe delegating work to subagents, but when it attempts to do so, no subagents are ever actually invoked. What is the most likely cause?",
+    options: [
+      {
+        id: 'A',
+        text: 'The coordinator\'s allowedTools configuration does not include "Task", which is required for a coordinator to invoke subagents.',
+        rationale:
+          'Correct — the Task tool is the mechanism for spawning subagents, and allowedTools must explicitly include "Task" for a coordinator to be able to invoke them; describing delegation in the prompt doesn\'t grant that capability.',
+      },
+      {
+        id: 'B',
+        text: 'The subagents have not been given individual AgentDefinition system prompts.',
+        rationale: 'Wrong — missing AgentDefinition details would affect subagent behavior once invoked, not whether invocation itself is possible.',
+      },
+      {
+        id: 'C',
+        text: 'The coordinator is using fork_session instead of spawning subagents directly.',
+        rationale: 'Wrong — fork_session is a session-branching mechanism, unrelated to whether subagents can be spawned via the Task tool.',
+      },
+      {
+        id: 'D',
+        text: 'The research topic is too broad for any subagent to be invoked.',
+        rationale:
+          'Wrong — topic breadth might affect what the coordinator decides to delegate, but would not cause a complete inability to invoke any subagent.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'The Task tool is the mechanism for spawning subagents, and a coordinator\'s allowedTools must include "Task" for delegation to function at all.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s3-0004',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "Your synthesis subagent produces a vague, generic report about \"various AI trends\" instead of using the specific findings your web-search and document-analysis subagents already gathered. Investigating, you find the coordinator's prompt to the synthesis subagent says only: \"Synthesize the research findings into a report.\" What is the most likely cause?",
+    options: [
+      {
+        id: 'A',
+        text: "The subagent's prompt does not include the actual findings from the prior subagents — subagents do not automatically inherit the coordinator's conversation history, so without explicit context, there's nothing specific for it to synthesize.",
+        rationale:
+          "Correct — subagent context must be explicitly provided in the prompt; without the prior agents' actual findings included, the synthesis subagent has no specific material to work from and falls back to generic output.",
+      },
+      {
+        id: 'B',
+        text: "The synthesis subagent's AgentDefinition is missing a description field.",
+        rationale:
+          'Wrong — a missing description affects how the coordinator decides when to invoke the subagent, not what specific content the subagent has to work with once invoked.',
+      },
+      {
+        id: 'C',
+        text: 'The web-search and document-analysis subagents were invoked sequentially instead of in parallel.',
+        rationale: "Wrong — sequential vs. parallel invocation affects latency, not whether the synthesis subagent receives the actual findings in its prompt.",
+      },
+      {
+        id: 'D',
+        text: 'The synthesis subagent needs a larger max_tokens value to produce more specific output.',
+        rationale: 'Wrong — max_tokens affects output length, not whether the model has specific source material to draw from.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Subagents do not automatically inherit the coordinator\'s conversation history — complete findings from prior agents must be explicitly included in the subagent\'s prompt.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s3-0005',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.3'],
+    selectCount: 1,
+    stem: "Your coordinator needs to invoke both a web-search subagent and a document-analysis subagent, which have no dependency on each other's output. Currently, the coordinator calls the web-search subagent, waits for its full response, and only then calls the document-analysis subagent in a separate turn. What change would most directly reduce latency here?",
+    options: [
+      {
+        id: 'A',
+        text: 'Emit both Task tool calls in a single coordinator response so the two independent subagents run in parallel, rather than issuing them across separate turns.',
+        rationale:
+          'Correct — spawning parallel subagents by emitting multiple Task tool calls in a single response, rather than across separate turns, is exactly the mechanism for running independent subagents concurrently.',
+      },
+      {
+        id: 'B',
+        text: 'Merge the web-search and document-analysis subagents into a single subagent that does both jobs.',
+        rationale:
+          "Wrong — merging removes the specialization (and tool-scoping) benefits of separate subagents; it's a much bigger architectural change than necessary to fix a sequencing problem.",
+      },
+      {
+        id: 'C',
+        text: 'Increase the timeout configured for each subagent so they have more time to respond.',
+        rationale: 'Wrong — increasing timeouts does not change whether the calls run sequentially or in parallel; it only affects how long each is allowed to take.',
+      },
+      {
+        id: 'D',
+        text: 'Have the document-analysis subagent begin before the coordinator has finished formulating its request.',
+        rationale:
+          'Wrong — this does not describe an actual, implementable mechanism; a subagent cannot begin before it has been invoked with a request.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Emitting multiple Task tool calls in a single coordinator response is the mechanism for running independent subagents in parallel, rather than sequentially across separate turns.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q1-s3-0006',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.7'],
+    selectCount: 1,
+    stem: "Partway through a research investigation, you've built a solid shared analysis baseline (search results and document summaries already gathered). You now want to explore two different ways of structuring the final report — one organized by theme, one organized by source credibility — without redoing the underlying research for each. What's the best approach?",
+    options: [
+      {
+        id: 'A',
+        text: 'Use fork_session to create two independent branches from the current shared analysis baseline, one for each report-structuring approach.',
+        rationale:
+          'Correct — fork_session is designed exactly for this: creating independent branches from a shared analysis baseline to explore divergent approaches without re-doing the shared underlying work.',
+      },
+      {
+        id: 'B',
+        text: 'Use --resume with the same session name twice, once for each approach, sequentially.',
+        rationale:
+          "Wrong — resuming the same session sequentially with --resume continues one linear conversation; it doesn't create two independent, divergent branches from the same baseline.",
+      },
+      {
+        id: 'C',
+        text: 'Start two entirely new sessions from scratch, one for each approach.',
+        rationale: 'Wrong — starting from scratch discards the valuable shared research baseline that fork_session exists to preserve and reuse.',
+      },
+      {
+        id: 'D',
+        text: 'Ask the synthesis subagent to produce both versions in a single response without forking anything.',
+        rationale:
+          'Wrong — a single subagent producing two report structures in one response does not provide independent, explorable branches, unlike the intended forking pattern.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'fork_session creates independent branches from a shared analysis baseline, letting divergent approaches be explored without repeating the shared underlying research.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]

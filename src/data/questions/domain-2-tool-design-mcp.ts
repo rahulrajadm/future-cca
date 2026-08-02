@@ -237,4 +237,227 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q2-s3-0001',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.1'],
+    selectCount: 1,
+    stem: 'Your document-analysis subagent has two tools: extract_summary, described as "Summarizes a document," and extract_key_findings, described as "Extracts findings from a document." In practice, the subagent calls extract_summary for nearly everything, including requests that specifically need itemized findings with citations. What is the most likely cause, and the best fix?',
+    options: [
+      {
+        id: 'A',
+        text: 'The two descriptions are too similar and don\'t clarify what distinguishes a "summary" from "key findings," or when each should be used — rewriting both with specific input/output expectations and example use cases would fix this.',
+        rationale:
+          "Correct — minimal, near-identical descriptions are the direct cause of this kind of misrouting; the fix is making each tool's distinct purpose and output format explicit.",
+      },
+      {
+        id: 'B',
+        text: 'The subagent needs a third tool that combines both functions to avoid the ambiguity entirely.',
+        rationale:
+          'Wrong — merging removes a meaningful distinction (a summary vs. itemized cited findings serve different downstream needs) rather than fixing the description problem.',
+      },
+      {
+        id: 'C',
+        text: 'The subagent\'s system prompt should instruct it to always prefer extract_key_findings over extract_summary.',
+        rationale:
+          'Wrong — a blanket preference instruction would just cause the opposite bias, rather than fixing the underlying selection logic.',
+      },
+      {
+        id: 'D',
+        text: 'The two tools should be given identical descriptions so the model treats them as interchangeable.',
+        rationale: 'Wrong — identical descriptions would make the ambiguity worse; the model would have even less basis to differentiate them.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Ambiguous, near-identical tool descriptions are the direct cause of misrouting between similar tools; the fix is expanding descriptions with specific purpose, inputs, outputs, and examples.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s3-0002',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.3'],
+    selectCount: 1,
+    stem: "Your synthesis subagent was originally scoped to just two tools: a text-formatting tool and a citation-formatting tool. Over time, engineers have added 16 more tools to it \"just in case they're useful\" — including web search, document parsing, and image analysis tools it rarely if ever needs. What is the most likely effect of this change, and the recommended fix?",
+    options: [
+      {
+        id: 'A',
+        text: 'The larger tool set degrades tool-selection reliability by increasing decision complexity, and can lead the synthesis agent to misuse tools outside its specialization (e.g., attempting web searches itself); the fix is scoping it back down to the tools its role actually needs.',
+        rationale:
+          'Correct — giving an agent access to many more tools than its role needs degrades selection reliability, and agents with tools outside their specialization tend to misuse them.',
+      },
+      {
+        id: 'B',
+        text: "There is no meaningful effect, since Claude can always ignore tools it doesn't need regardless of how many are available.",
+        rationale:
+          'Wrong — this contradicts the documented principle that excess tool access measurably degrades selection reliability.',
+      },
+      {
+        id: 'C',
+        text: 'The additional tools will make responses slower to generate but will not affect which tools get selected.',
+        rationale: "Wrong — the issue isn't only response latency; it's specifically about selection reliability and misuse of out-of-scope tools.",
+      },
+      {
+        id: 'D',
+        text: "The additional tools should be left in place, since having more capabilities available is always an improvement to a subagent's design.",
+        rationale: 'Wrong — this is the opposite of recommended practice; scoped access to what a role actually needs is preferred over unconditionally more tools.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Giving an agent access to too many tools degrades tool-selection reliability and leads to cross-specialization misuse. Scoped tool access — only what a role needs — is the recommended design.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s3-0003',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.3'],
+    selectCount: 1,
+    stem: "Your synthesis subagent occasionally needs to verify a simple, specific fact (e.g., confirming a date or statistic) while combining findings, but currently must route every such request through the coordinator to the web-search subagent and back — adding latency for what are usually simple lookups. Deeper investigations still need to go through the full coordinator-routed process. What's the most effective way to reduce this overhead while preserving the existing coordination pattern for complex cases?",
+    options: [
+      {
+        id: 'A',
+        text: 'Give the synthesis subagent a narrowly scoped fact-lookup tool for simple verifications, while still routing more complex verification needs through the coordinator to the web-search subagent.',
+        rationale:
+          'Correct — this is the principle of least privilege applied to cross-role needs: a narrowly scoped tool for the common, simple case reduces overhead while preserving the coordinator-routed pattern for genuinely complex verification.',
+      },
+      {
+        id: 'B',
+        text: "Give the synthesis subagent full access to all of the web-search subagent's tools so it never needs to route through the coordinator again.",
+        rationale:
+          'Wrong — granting full web-search access over-provisions the synthesis agent, reintroducing the cross-specialization misuse risk scoped tool access is meant to prevent.',
+      },
+      {
+        id: 'C',
+        text: 'Have the synthesis subagent skip verification entirely and trust the findings it already received without confirming them.',
+        rationale: 'Wrong — skipping verification entirely sacrifices the accuracy checks the process exists for, rather than making them more efficient.',
+      },
+      {
+        id: 'D',
+        text: "Increase the priority of the coordinator's message queue so verification round-trips complete faster.",
+        rationale:
+          'Wrong — this addresses queue latency, not the structural cost of routing every simple lookup through the full coordinator round trip.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Providing scoped cross-role tools for high-frequency, simple needs — while routing complex cases through the coordinator — balances efficiency with the principle of least privilege.',
+    difficulty: 'advanced',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s3-0004',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.4'],
+    selectCount: 1,
+    stem: 'Your research system needs to pull issue and documentation data from your team\'s existing Jira and Confluence instances. An engineer proposes building custom MCP servers for both from scratch. What guidance from best practice should inform this decision?',
+    options: [
+      {
+        id: 'A',
+        text: 'Prefer existing, well-supported community MCP servers for standard integrations like Jira and Confluence, reserving custom server development for genuinely team-specific workflows those integrations don\'t cover.',
+        rationale:
+          'Correct — choosing existing community MCP servers over custom implementations for standard integrations is the recommended practice.',
+      },
+      {
+        id: 'B',
+        text: 'Always build custom MCP servers in-house, since community servers cannot be trusted for production use.',
+        rationale: 'Wrong — this is an unsupported blanket claim; the guidance is to prefer existing servers for standard cases, not distrust them categorically.',
+      },
+      {
+        id: 'C',
+        text: 'MCP servers should never be used for anything beyond web search, so this integration should use a different mechanism entirely.',
+        rationale:
+          'Wrong — MCP servers are a general integration mechanism; Jira and Confluence integrations are exactly the kind of standard use case they are suited for.',
+      },
+      {
+        id: 'D',
+        text: 'Custom MCP servers are required whenever more than one external system needs to be integrated.',
+        rationale:
+          'Wrong — the number of external systems being integrated has no bearing on whether custom development is required; the deciding factor is whether the integration is standard or team-specific.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Best practice is to choose existing community MCP servers over custom implementations for standard integrations, reserving custom servers for team-specific workflows.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
+  {
+    id: 'q2-s3-0005',
+    domain: 2,
+    scenarioId: 3,
+    taskStatements: ['2.4'],
+    selectCount: 1,
+    stem: "Your document-analysis subagent currently has to make several exploratory tool calls just to discover what documents exist in your knowledge base and what topics they cover, before it can decide which ones are relevant to a research query. What MCP mechanism could reduce this exploratory overhead?",
+    options: [
+      {
+        id: 'A',
+        text: "Expose a catalog of available documents and their topics as an MCP resource, giving the subagent visibility into what's available without requiring exploratory tool calls.",
+        rationale:
+          'Correct — MCP resources exist specifically to expose content catalogs so agents have visibility into what is available without needing exploratory tool calls to discover it.',
+      },
+      {
+        id: 'B',
+        text: 'Add a new MCP tool called list_everything that returns the full text of every document in the knowledge base in one call.',
+        rationale:
+          "Wrong — returning full text of every document in one call would consume enormous amounts of context for what's meant to be a lightweight discovery step.",
+      },
+      {
+        id: 'C',
+        text: 'Increase the subagent\'s max_tokens so it can make more exploratory tool calls within a single turn.',
+        rationale: 'Wrong — more tokens for more exploratory calls treats the symptom without addressing why those calls are needed in the first place.',
+      },
+      {
+        id: 'D',
+        text: "Remove the document-analysis subagent's access to the knowledge base entirely to eliminate exploratory calls.",
+        rationale: "Wrong — removing access entirely eliminates the subagent's ability to do its job, rather than making discovery more efficient.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'MCP resources are the designed mechanism for exposing content catalogs (documents, schemas, issue summaries) to reduce exploratory tool calls needed just to discover what data is available.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-01',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-01',
+  },
 ]
