@@ -984,4 +984,93 @@ export const domain4Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q4-s5-0011',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.1'],
+    selectCount: 1,
+    stem: "Your CI review prompt says: \"Report all security issues and all style issues.\" Developers want security issues always flagged, but style issues flagged only when they violate the team's documented style guide — not just any subjective style preference. What's the most effective prompt design?",
+    options: [
+      {
+        id: 'A',
+        text: 'Explicitly state that security issues are always in scope, while style issues should only be reported when they violate the team\'s specific documented style guide, referencing the criteria in that guide.',
+        rationale:
+          'Correct — explicit criteria specifying exactly what counts (documented style guide violations, not general subjective preference) alongside an always-in-scope category gives precise, actionable scope.',
+      },
+      {
+        id: 'B',
+        text: "Keep the instruction exactly as it is, since 'all style issues' is already a clear and objective criterion.",
+        rationale:
+          'Wrong — "all style issues" without reference to a specific standard is exactly the kind of vague criterion likely to produce inconsistent, subjective flagging.',
+      },
+      {
+        id: 'C',
+        text: 'Remove security reporting entirely to simplify the instruction, keeping only the style criterion.',
+        rationale: 'Wrong — removing security reporting entirely contradicts the stated requirement that security issues should always be flagged.',
+      },
+      {
+        id: 'D',
+        text: "Replace both categories with a single instruction to \"report anything that looks slightly off.\"",
+        rationale: 'Wrong — "looks slightly off" is far vaguer than even the original instruction, and would likely worsen precision, not improve it.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Explicit criteria tied to a specific documented standard (not vague, subjective language) produce precise, actionable review scope and consistent classification.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s6-0009',
+    domain: 4,
+    scenarioId: 6,
+    taskStatements: ['4.3'],
+    selectCount: 1,
+    stem: 'Your invoice schema currently has flat fields like item_1_name, item_1_price, item_2_name, item_2_price, and so on, up to a fixed maximum of 10 items. Invoices with more than 10 line items lose data, and invoices with fewer leave many fields empty. What schema change would fix this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Increase the fixed maximum to 50 items instead of 10, keeping the same flat-field pattern.',
+        rationale:
+          "Wrong — raising the cap to 50 still imposes an arbitrary limit and still wastes fields on invoices with fewer items; it doesn't fix the structural problem.",
+      },
+      {
+        id: 'B',
+        text: "Replace the flat, numbered fields with an array of line-item objects, where each object has its own name and price fields, accommodating any number of items without a fixed cap or wasted fields.",
+        rationale:
+          'Correct — an array of objects naturally accommodates any number of line items without a fixed cap or wasted empty fields, the appropriate structural fix for repeating, variable-count data.',
+      },
+      {
+        id: 'C',
+        text: 'Remove line item extraction entirely and only extract the invoice total.',
+        rationale: 'Wrong — removing line item extraction discards valuable, extractable data instead of fixing the schema structure causing the problem.',
+      },
+      {
+        id: 'D',
+        text: 'Keep the flat fields but instruct the model to combine multiple items into a single field, separated by commas, when there are more than 10.',
+        rationale:
+          'Wrong — combining multiple items into one comma-separated field reintroduces unstructured, harder-to-parse data, undermining the purpose of structured extraction.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'An array of objects is the appropriate schema structure for repeating, variable-count data like invoice line items, avoiding fixed caps and wasted fields.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

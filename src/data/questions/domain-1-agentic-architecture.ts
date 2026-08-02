@@ -1220,4 +1220,137 @@ export const domain1Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q1-s1-0007',
+    domain: 1,
+    scenarioId: 1,
+    taskStatements: ['1.4'],
+    selectCount: 1,
+    stem: "A customer's message covers two unrelated concerns in the same conversation: a billing dispute about a charge from last month, and a separate question about whether a specific item is eligible for return. How should the agent handle this?",
+    options: [
+      {
+        id: 'A',
+        text: 'Address only the first concern mentioned and ignore the second unless the customer brings it up again separately.',
+        rationale:
+          'Wrong — ignoring the second concern unless raised again leaves a legitimate request unaddressed and creates unnecessary follow-up friction.',
+      },
+      {
+        id: 'B',
+        text: 'Respond with a single generic acknowledgment covering both topics without actually investigating either one.',
+        rationale: "Wrong — a generic acknowledgment without actual investigation doesn't resolve either concern, just defers the real work.",
+      },
+      {
+        id: 'C',
+        text: 'Decompose the message into its two distinct concerns, investigate each using shared context, and synthesize a single unified response addressing both.',
+        rationale:
+          'Correct — decomposing multi-concern requests into distinct items, investigating each, then synthesizing a unified resolution is the documented pattern for this kind of message.',
+      },
+      {
+        id: 'D',
+        text: 'Ask the customer to submit two separate support tickets, one for each concern, before proceeding with either.',
+        rationale: 'Wrong — requiring separate tickets adds friction the agent is capable of avoiding by handling both concerns directly.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Multi-concern customer requests should be decomposed into distinct items, investigated using shared context, and synthesized into a single unified resolution.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s3-0007',
+    domain: 1,
+    scenarioId: 3,
+    taskStatements: ['1.2'],
+    selectCount: 1,
+    stem: "After two rounds of search and synthesis, your coordinator's evaluation determines that the current draft report thoroughly covers all aspects of the original research request. A team member suggests re-delegating for a third round \"just to be safe.\" What should the coordinator do?",
+    options: [
+      {
+        id: 'A',
+        text: 'Always re-delegate for at least one additional round regardless of assessed coverage, since more research is always better.',
+        rationale:
+          'Wrong — "always" continuing regardless of assessed sufficiency ignores the actual purpose of the refinement loop, which is to close identified gaps, not run for its own sake.',
+      },
+      {
+        id: 'B',
+        text: 'Conclude the iterative refinement loop, since re-invoking subagents once coverage is already assessed as sufficient adds cost and latency without addressing an actual identified gap.',
+        rationale:
+          'Correct — the iterative refinement loop continues until coverage is sufficient; once that assessment is met, further re-delegation without an identified gap adds unnecessary cost and latency.',
+      },
+      {
+        id: 'C',
+        text: 'Re-delegate to a completely different set of subagents than the ones already used, regardless of the topic.',
+        rationale: "Wrong — switching to different subagents isn't motivated by anything in the scenario and doesn't address any identified gap.",
+      },
+      {
+        id: 'D',
+        text: 'Discard the current draft entirely and start the research process over from scratch.',
+        rationale: 'Wrong — discarding a report already assessed as thorough wastes completed, valid work for no identified reason.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Iterative refinement loops continue until coverage is assessed as sufficient; further re-delegation without an identified gap adds unnecessary cost and latency.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q1-s4-0006',
+    domain: 1,
+    scenarioId: 4,
+    taskStatements: ['1.6'],
+    selectCount: 1,
+    stem: "You ask Claude Code to \"find and fix the cause of a slow memory leak in this legacy service\" with no further detail about where to start. What decomposition approach fits this task?",
+    options: [
+      {
+        id: 'A',
+        text: 'A fixed, prompt-chained pipeline that checks the same five files in the same order for every memory leak investigation, regardless of what is found.',
+        rationale:
+          "Wrong — a fixed sequence of the same five files regardless of findings ignores that leak investigations are inherently open-ended and dependent on what evidence actually shows.",
+      },
+      {
+        id: 'B',
+        text: 'No decomposition at all — attempt to fix the entire service in a single, undivided step.',
+        rationale:
+          'Wrong — treating a genuinely complex, poorly-scoped investigation as a single undivided step skips the incremental evidence-gathering debugging this kind of issue requires.',
+      },
+      {
+        id: 'C',
+        text: 'A fixed pipeline based on file size, always starting with the largest file in the repository.',
+        rationale: 'Wrong — file size has no established connection to where a memory leak originates; this is an arbitrary, unmotivated fixed rule.',
+      },
+      {
+        id: 'D',
+        text: 'Dynamic, adaptive decomposition: first gather evidence about where memory usage grows, form hypotheses based on what is found, then investigate the most likely areas, adapting the plan as findings emerge.',
+        rationale:
+          'Correct — open-ended investigation tasks with unknown scope are decomposed adaptively: gathering evidence, forming hypotheses, and adjusting the plan as findings emerge.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Open-ended, poorly-scoped investigation tasks are decomposed adaptively based on evidence gathered along the way, not via a fixed predetermined sequence.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

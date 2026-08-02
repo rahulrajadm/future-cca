@@ -950,4 +950,47 @@ export const domain2Questions: Question[] = [
     },
     createdAt: '2026-08-01',
   },
+  {
+    id: 'q2-s4-0007',
+    domain: 2,
+    scenarioId: 4,
+    taskStatements: ['2.5'],
+    selectCount: 1,
+    stem: 'You want Claude Code to view the history of changes to a specific file to understand why a particular line was added. Which built-in tool is appropriate, and how?',
+    options: [
+      {
+        id: 'A',
+        text: "Use Grep to search the file's current content for the word 'history'.",
+        rationale: "Wrong — searching the file's current content for a literal keyword has no connection to retrieving its actual version-control history.",
+      },
+      {
+        id: 'B',
+        text: "Use Edit to attempt a change and see what error message reveals about the file's past.",
+        rationale: 'Wrong — attempting an edit does not reveal file history and risks introducing an unwanted change to answer an informational question.',
+      },
+      {
+        id: 'C',
+        text: 'Use Bash to run a git command (e.g., git log or git blame) against the file, since retrieving version history means invoking the version control system.',
+        rationale:
+          'Correct — retrieving version control history requires invoking the version control system itself, which is a command execution task suited to Bash.',
+      },
+      {
+        id: 'D',
+        text: 'Use Glob to find other files with similar names that might contain historical versions.',
+        rationale: 'Wrong — searching for similarly-named files does not correspond to actual version history and would not reliably find anything relevant.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Retrieving version control history requires invoking the version control system (e.g., via git log/git blame), which is a command-execution task suited to Bash, not the file-search tools.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
