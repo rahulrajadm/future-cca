@@ -1073,4 +1073,270 @@ export const domain4Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q4-s5-0012',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.2'],
+    selectCount: 1,
+    stem: "Your automated code review flags every use of a specific async/await pattern as a potential race condition, even though your team has a well-established, safe convention for using it correctly. Simply telling the review to \"recognize safe patterns\" hasn't reduced the false positives. What would help?",
+    options: [
+      {
+        id: 'A',
+        text: "Provide few-shot examples showing your team's safe async/await convention alongside a genuinely unsafe race-condition example, so the model can learn to distinguish the two patterns.",
+        rationale:
+          'Correct — few-shot examples distinguishing acceptable code patterns from genuine issues are effective at reducing false positives while preserving genuine detection ability.',
+      },
+      {
+        id: 'B',
+        text: 'Disable race-condition detection for async/await code entirely.',
+        rationale: 'Wrong — disabling detection entirely discards legitimate race-condition detection for other, genuinely unsafe patterns.',
+      },
+      {
+        id: 'C',
+        text: 'Tell the review to only check for race conditions in files longer than 200 lines.',
+        rationale:
+          'Wrong — file length has no established connection to whether an async/await pattern is safe or not; this is an arbitrary, unrelated filter.',
+      },
+      {
+        id: 'D',
+        text: 'Increase the review\'s temperature setting so it considers more possibilities.',
+        rationale:
+          "Wrong — temperature affects output randomness, not the model's ability to distinguish safe from unsafe patterns.",
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Few-shot examples distinguishing acceptable patterns from genuine issues reduce false positives while preserving genuine detection, more effectively than a vague instruction to "recognize safe patterns."',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s5-0013',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.2'],
+    selectCount: 1,
+    stem: "Your CI review outputs findings in a consistent JSON structure most of the time, but for a specific class of subtle style findings, the \"suggested_fix\" field is sometimes a code snippet and sometimes a prose description, inconsistently. Detailed prose instructions describing the desired format haven't fixed this. What would help?",
+    options: [
+      {
+        id: 'A',
+        text: 'Remove the suggested_fix field from the schema entirely for style findings.',
+        rationale: 'Wrong — removing the field discards genuinely useful information instead of fixing its format consistency.',
+      },
+      {
+        id: 'B',
+        text: 'Increase the length of the prose instructions describing the desired format even further.',
+        rationale:
+          "Wrong — longer prose instructions have already been tried in a similar vein without success; this doesn't add new, concrete guidance to pattern-match against.",
+      },
+      {
+        id: 'C',
+        text: 'Add 2-4 few-shot examples showing exactly how suggested_fix should be formatted for this class of finding, with a code snippet in every case.',
+        rationale:
+          'Correct — few-shot examples demonstrating the exact desired output format are more effective than additional prose when detailed instructions alone produce inconsistent results.',
+      },
+      {
+        id: 'D',
+        text: "Ask a human to manually reformat every style finding's suggested_fix field after the fact.",
+        rationale: 'Wrong — manual reformatting after the fact does not fix the underlying inconsistency and does not scale.',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Few-shot examples demonstrating the exact desired output format are more effective than additional prose instructions at achieving consistent formatting.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s5-0014',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: 'Your CI review sometimes generates findings that reference a line number outside the actual file\'s range (e.g., citing line 500 in a 200-line file) — a structural validation error, not a judgment call. What\'s the most effective way to handle this?',
+    options: [
+      {
+        id: 'A',
+        text: 'Silently drop the line number field from findings that fail validation, keeping the rest of the finding unchanged.',
+        rationale:
+          'Wrong — silently dropping the line number removes useful information a developer needs to locate the issue, without fixing the root inconsistency.',
+      },
+      {
+        id: 'B',
+        text: 'Retry the specific failed finding with the validation error (the actual line count) included in the follow-up request, giving the model a chance to self-correct.',
+        rationale:
+          'Correct — retry-with-error-feedback, providing the specific validation error, gives the model the concrete information needed to self-correct a structural mismatch.',
+      },
+      {
+        id: 'C',
+        text: 'Discard the entire review\'s results whenever any single finding has an invalid line number.',
+        rationale: 'Wrong — discarding the entire review over one finding\'s error wastes many other, valid findings.',
+      },
+      {
+        id: 'D',
+        text: 'Manually assign line number 1 to any finding that fails line-number validation.',
+        rationale:
+          'Wrong — assigning an arbitrary placeholder line number misleads the developer to a wrong location, which is worse than a clearly-flagged failure.',
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Retry-with-error-feedback, appending the specific validation error to the prompt, gives the model the information needed to self-correct a structural mismatch like an out-of-range line number.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s5-0015',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.4'],
+    selectCount: 1,
+    stem: "Your CI review occasionally references a helper function from a file that wasn't included in the diff or context provided to the review. Retrying the same review request with the same context doesn't fix this. Why, and what should you do instead?",
+    options: [
+      {
+        id: 'A',
+        text: 'Retry with an even more detailed prompt describing what the helper function should do.',
+        rationale: "Wrong — no amount of additional prompt detail substitutes for the actual missing file content the review needs to reference correctly.",
+      },
+      {
+        id: 'B',
+        text: 'Retry indefinitely until the review eventually stops mentioning the missing file.',
+        rationale: "Wrong — indefinite retries won't succeed if the underlying information genuinely isn't available in what's provided.",
+      },
+      {
+        id: 'C',
+        text: 'Reduce max_tokens so the review has to be more concise and avoid mentioning files it doesn\'t have.',
+        rationale: 'Wrong — reducing output length doesn\'t address the actual cause, which is missing input content, not overly verbose output.',
+      },
+      {
+        id: 'D',
+        text: "Recognize that retries are ineffective when the required information (the missing file's actual content) simply isn't available in the provided context; include the relevant file in context instead of retrying.",
+        rationale:
+          'Correct — retries are ineffective when required information is genuinely absent from what was provided; the fix is including the actual missing content, not repeating the same incomplete request.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      'Retries are ineffective when required information is simply absent from what was provided — the fix is supplying the missing content, not repeating the same incomplete request.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s5-0016',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.5'],
+    selectCount: 1,
+    stem: 'Your team wants Claude to review every dependency in package.json for known vulnerabilities. You\'re deciding between running this as (1) a real-time check that blocks every PR touching package.json until it completes, or (2) a nightly batch scan across the whole dependency tree with a summary email each morning. Which API approach fits each, and why?',
+    options: [
+      {
+        id: 'A',
+        text: 'Use the synchronous API for the blocking PR check (developers are actively waiting), and the Message Batches API for the nightly scan (latency-tolerant, and eligible for the 50% cost savings).',
+        rationale:
+          'Correct — synchronous for blocking, actively-waited-on checks; the Message Batches API for non-blocking, latency-tolerant overnight work, taking advantage of its cost savings.',
+      },
+      {
+        id: 'B',
+        text: 'Use the Message Batches API for both, since batch processing is always cheaper and the cost savings apply regardless of use case.',
+        rationale: "Wrong — the Batches API's lack of a guaranteed latency SLA makes it unsuitable for the blocking check, regardless of cost savings.",
+      },
+      {
+        id: 'C',
+        text: 'Use the synchronous API for both, since dependency vulnerability data is too sensitive for batch processing.',
+        rationale:
+          "Wrong — there's no batch-processing restriction based on data sensitivity; the deciding factor is latency tolerance, not data sensitivity.",
+      },
+      {
+        id: 'D',
+        text: 'Use the Message Batches API for the blocking PR check and the synchronous API for the nightly scan.',
+        rationale: 'Wrong — this reverses the correct mapping; the blocking check is exactly the one that needs synchronous, low-latency responses.',
+      },
+    ],
+    correctOptionIds: ['A'],
+    explanationSummary:
+      'Synchronous API fits blocking, actively-waited-on workflows; the Message Batches API fits non-blocking, latency-tolerant workflows where its cost savings can be captured.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q4-s5-0017',
+    domain: 4,
+    scenarioId: 5,
+    taskStatements: ['4.5'],
+    selectCount: 1,
+    stem: "Your nightly technical-debt scan must always be ready by 8 AM for the team's morning standup, and you're using the Message Batches API, which can take up to 24 hours to complete with no guaranteed faster turnaround. What does this imply about when you must submit the batch?",
+    options: [
+      {
+        id: 'A',
+        text: 'It can be submitted at any time before 8 AM, even a few minutes prior, since batches typically process quickly in practice.',
+        rationale:
+          'Wrong — relying on batches typically processing quickly isn\'t a guarantee, and a "just before deadline" submission risks missing the deadline.',
+      },
+      {
+        id: 'B',
+        text: "It should be submitted exactly at 8 AM, since that's when the report is needed.",
+        rationale: 'Wrong — submitting exactly at the deadline provides zero buffer for the batch\'s processing time, guaranteeing a miss.',
+      },
+      {
+        id: 'C',
+        text: 'It must be submitted with enough lead time — accounting for the full 24-hour worst case — to reliably guarantee completion by 8 AM, since there is no guaranteed faster turnaround.',
+        rationale:
+          'Correct — since the Batches API has no guaranteed latency SLA, up to 24 hours, submission timing must account for the full worst-case window to reliably meet a hard deadline.',
+      },
+      {
+        id: 'D',
+        text: 'Submission timing does not matter, since the Batches API always completes within a few minutes.',
+        rationale:
+          'Wrong — this ignores the Batches API\'s documented lack of a guaranteed fast turnaround; "up to 24 hours" is not "always within a few minutes."',
+      },
+    ],
+    correctOptionIds: ['C'],
+    explanationSummary:
+      'Since the Message Batches API has no guaranteed latency SLA (up to 24 hours), meeting a hard deadline requires submitting with enough lead time to cover the full worst case.',
+    difficulty: 'applied',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]

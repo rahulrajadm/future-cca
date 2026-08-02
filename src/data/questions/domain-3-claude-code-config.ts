@@ -1254,4 +1254,91 @@ export const domain3Questions: Question[] = [
     },
     createdAt: '2026-08-02',
   },
+  {
+    id: 'q3-s5-0006',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: 'Your CI-invoked Claude Code test-generation step keeps suggesting test cases for scenarios that are already covered by your existing test suite, wasting reviewer time confirming duplicates. What would most directly fix this?',
+    options: [
+      {
+        id: 'A',
+        text: "Reduce the number of test cases the step is allowed to generate per run, regardless of what's already covered.",
+        rationale:
+          "Wrong — an arbitrary cap on suggestion count doesn't address which specific suggestions are duplicates; it might cut a genuinely new one instead.",
+      },
+      {
+        id: 'B',
+        text: "Provide the existing test files in context so test generation can see what's already covered and avoid suggesting duplicate scenarios.",
+        rationale:
+          'Correct — providing existing test files in context so test generation avoids suggesting duplicate scenarios already covered is the documented fix for this issue.',
+      },
+      {
+        id: 'C',
+        text: "Disable test generation entirely, since duplicate suggestions can't be avoided.",
+        rationale: 'Wrong — disabling the feature discards its genuine value instead of fixing the specific duplication problem.',
+      },
+      {
+        id: 'D',
+        text: "Increase the review's max_tokens so it can generate even more test suggestions.",
+        rationale: "Wrong — more generation capacity doesn't help the model know what's already covered; it could produce even more duplicates.",
+      },
+    ],
+    correctOptionIds: ['B'],
+    explanationSummary:
+      'Providing existing test files in context lets test generation see what is already covered, avoiding duplicate suggestions and the reviewer time wasted confirming them.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
+  {
+    id: 'q3-s5-0007',
+    domain: 3,
+    scenarioId: 5,
+    taskStatements: ['3.6'],
+    selectCount: 1,
+    stem: "You want Claude Code's CI output to strictly conform to a specific JSON schema you've defined for your findings format, not just be valid JSON in some arbitrary shape. What CLI option, in addition to --output-format json, enforces this?",
+    options: [
+      {
+        id: 'A',
+        text: '--strict-mode',
+        rationale: 'Wrong — this is not a real Claude Code CLI flag.',
+      },
+      {
+        id: 'B',
+        text: '--validate-output',
+        rationale: 'Wrong — this is not a real Claude Code CLI flag.',
+      },
+      {
+        id: 'C',
+        text: '--format-check',
+        rationale: 'Wrong — this is not a real Claude Code CLI flag.',
+      },
+      {
+        id: 'D',
+        text: '--json-schema, pointing to your schema definition',
+        rationale:
+          'Correct — --json-schema is the documented flag that, combined with --output-format json, enforces conformance to a specific defined schema rather than arbitrary valid JSON.',
+      },
+    ],
+    correctOptionIds: ['D'],
+    explanationSummary:
+      '--json-schema, combined with --output-format json, is the documented CLI mechanism for enforcing conformance to a specific defined schema in CI output.',
+    difficulty: 'foundational',
+    verification: {
+      status: 'verified',
+      reviewer: 'claude-blind-pass',
+      method: 'human+llm',
+      date: '2026-08-02',
+      notes: 'Independent fresh-context LLM blind pass matched the authored key.',
+    },
+    createdAt: '2026-08-02',
+  },
 ]
