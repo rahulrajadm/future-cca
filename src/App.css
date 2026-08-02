@@ -119,6 +119,44 @@
   margin: 1rem 0;
 }
 
+.custom-practice__count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.custom-practice__count button.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.custom-practice__strategy {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+
+.custom-practice__strategy legend {
+  padding: 0 0.4em;
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.custom-practice__strategy label {
+  display: block;
+  margin: 0.4em 0;
+}
+
+.custom-practice__unseen-toggle {
+  display: block;
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
 .exam-mode__timer-toggle {
   display: block;
   margin: 1rem 0;

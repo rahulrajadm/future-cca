@@ -39,6 +39,10 @@ export function Home() {
           <h2>Scenario Practice</h2>
           <p>Drill one of the 6 official exam scenarios end-to-end.</p>
         </Link>
+        <Link className="mode-card" to="/custom">
+          <h2>Custom Practice</h2>
+          <p>Pick a question count (5/10/25/60) and split it equally across domains or by exam-blueprint ratio.</p>
+        </Link>
         <Link className="mode-card" to="/review">
           <h2>Review Missed Questions</h2>
           <p>Revisit questions you've flagged or answered incorrectly ({missedCount} available).</p>

@@ -1,6 +1,6 @@
 import type { DomainId, Question, ScenarioId } from './question'
 
-export type PracticeMode = 'exam' | 'domain' | 'scenario' | 'review'
+export type PracticeMode = 'exam' | 'domain' | 'scenario' | 'review' | 'custom'
 
 export interface ExamSession {
   id: string
