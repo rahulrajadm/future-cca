@@ -1,4 +1,8 @@
 .app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   border-bottom: 1px solid var(--border);
   padding: 1rem 1.5rem;
 }
@@ -7,6 +11,12 @@
   font-weight: 700;
   text-decoration: none;
   color: var(--text-h);
+}
+
+.page-view-counter {
+  color: var(--muted);
+  font-size: 0.85em;
+  white-space: nowrap;
 }
 
 .app-main {

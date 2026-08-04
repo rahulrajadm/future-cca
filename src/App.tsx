@@ -9,6 +9,7 @@ import { ReviewMode } from './pages/ReviewMode'
 import { Session } from './pages/Session'
 import { Results } from './pages/Results'
 import { About } from './pages/About'
+import { PageViewCounter } from './components/PageViewCounter'
 import './App.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Link to="/" className="app-header__brand">
             CCAR-F Practice
           </Link>
+          <PageViewCounter />
         </header>
         <main className="app-main">
           <Routes>
